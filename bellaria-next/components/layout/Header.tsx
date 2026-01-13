@@ -10,7 +10,7 @@ const Header = () => {
             {/* Main box */}
             <div className="main-box">
                 <div className="menu-box">
-                    <div className="logo" style={{ top: '50%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}><Link href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
+                    <div className="logo" style={{ top: '55%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}><Link href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
 
                     {/*Nav Box*/}
                     <div className="nav-outer clearfix">
@@ -133,7 +133,7 @@ const Header = () => {
             <div className="sticky-header">
                 <div className="auto-container clearfix">
                     {/*Logo*/}
-                    <div className="logo">
+                    <div className="logo" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
                         <Link href="#" title="Sticky Logo" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link>
                     </div>
 
