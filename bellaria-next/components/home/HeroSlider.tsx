@@ -175,7 +175,7 @@ const HeroSlider = () => {
                         data-paddingright="[0,0,0,0]"
                         data-paddingbottom="[0,0,0,0]"
                         data-paddingleft="[0,0,0,0]"
-                        style="z-index: 8; min-width: 399px; max-width: 399px; white-space: normal; font-size: 72px; line-height: 72px; font-weight: 400; color: #4b4342;font-family:Leckerli One;">Welcome <br>to Bellaria </div>
+                        style="z-index: 8; min-width: 399px; max-width: 399px; white-space: normal; font-size: 72px; line-height: 72px; font-weight: 400; color: #4b4342;font-family:Leckerli One;">Welcome <br>to Slice of Cake </div>
 
                     <!-- LAYER NR. 5 -->
                     <div class="tp-caption   tp-resizeme" 
@@ -303,7 +303,7 @@ const HeroSlider = () => {
                             data-paddingright="[0,0,0,0]"
                             data-paddingbottom="[0,0,0,0]"
                             data-paddingleft="[0,0,0,0]"
-                            style="z-index: 8; min-width: 441px; max-width: 441px; white-space: normal; font-size: 72px; line-height: 72px; font-weight: 400; color: #4b4342; font-family:Leckerli One;">Welcome <br>to Bellaria </div>
+                            style="z-index: 8; min-width: 441px; max-width: 441px; white-space: normal; font-size: 72px; line-height: 72px; font-weight: 400; color: #4b4342; font-family:Leckerli One;">Welcome <br>to Slice of Cake </div>
 
                         <!-- LAYER NR. 12 -->
                         <div class="tp-caption   tp-resizeme" 
@@ -430,7 +430,7 @@ const HeroSlider = () => {
                             data-paddingright="[0,0,0,0]"
                             data-paddingbottom="[0,0,0,0]"
                             data-paddingleft="[0,0,0,0]"
-                            style="z-index: 8; min-width: 394px; max-width: 394px; white-space: normal; font-size: 72px; line-height: 72px; font-weight: 400; color: #4b4342;font-family:Leckerli One;">Welcome <br>to Bellaria </div>
+                            style="z-index: 8; min-width: 394px; max-width: 394px; white-space: normal; font-size: 72px; line-height: 72px; font-weight: 400; color: #4b4342;font-family:Leckerli One;">Welcome <br>to Slice of Cake </div>
 
                         <!-- LAYER NR. 19 -->
                         <div class="tp-caption   tp-resizeme" 

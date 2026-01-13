@@ -81,7 +81,7 @@ const Footer = () => {
             <div className="footer-bottom">
                 <div className="auto-container">
                     <div className="copyright-text">
-                        <p>Bellaria - A Delicious Cakes and Bakery WordPress Theme</p>
+                        <p>Slice of Cake - A Delicious Cakes and Bakery Theme</p>
                     </div>
                 </div>
             </div>
