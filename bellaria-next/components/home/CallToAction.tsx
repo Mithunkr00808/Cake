@@ -8,7 +8,7 @@ const CallToAction = () => {
                 <div
                     className="shape_inner shape_two"
                     style={{
-                        backgroundImage: "url(/assets/images/main-slider/slider_bg_1.png)",
+                        backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url(/assets/images/background/call-to-action-bg.png)",
                     }}
                 >
                     <div className="overlay"></div>
