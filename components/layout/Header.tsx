@@ -19,6 +19,7 @@ const Header = () => {
                             <div className="collapse navbar-collapse clearfix" id="navbarSupportedContent">
                                 <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1 }}>
                                     <li className="current dropdown"><Link href="/">Home</Link>
+                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li className="current"><Link href="/">Cakes</Link></li>
                                             <li><Link href="#">Lollipop</Link></li>
@@ -31,6 +32,7 @@ const Header = () => {
                                         </ul>
                                     </li>
                                     <li className="dropdown"><Link href="#">Pages</Link>
+                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">About Us</Link></li>
                                             <li><Link href="#">Our Staff</Link></li>
@@ -40,6 +42,7 @@ const Header = () => {
                                         </ul>
                                     </li>
                                     <li className="dropdown"><Link href="#">Portfolio</Link>
+                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">Masonry</Link></li>
                                             <li><Link href="#">Masonry Wide</Link></li>
@@ -55,6 +58,7 @@ const Header = () => {
 
                                 <ul className="navigation menu-right clearfix" style={{ visibility: 'visible', opacity: 1 }}>
                                     <li className="dropdown"><Link href="#">Blog</Link>
+                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">Checkerboard</Link></li>
                                             <li><Link href="#">Standard</Link></li>
@@ -63,6 +67,7 @@ const Header = () => {
                                             <li><Link href="#">Two Columns Grid</Link></li>
                                             <li><Link href="#">Three Columns Wide</Link></li>
                                             <li className="dropdown"><Link href="#">Post Types</Link>
+                                                <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                                 <ul>
                                                     <li><Link href="#">Standard Post</Link></li>
                                                     <li><Link href="#">Gallery Post</Link></li>
@@ -75,6 +80,7 @@ const Header = () => {
                                         </ul>
                                     </li>
                                     <li className="dropdown"><Link href="#">Shop</Link>
+                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">Shop</Link></li>
                                             <li><Link href="#">Cart</Link></li>

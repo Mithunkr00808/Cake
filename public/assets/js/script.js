@@ -34,18 +34,20 @@
 		$(window).scroll(function () {
 		    var iCurScrollPos = $(this).scrollTop();
 		    if (iCurScrollPos > iScrollPos) {
-		        $('.main-header .sticky-header').css({"position": "fixed", "width": "100%", "top": "-120px"});
+		        // Scroll Down
+		        sticky_header.addClass('header-hidden');
 		    } else {
-		        $('.main-header .sticky-header').css({"top": "0"});
+		        // Scroll Up
+		        sticky_header.removeClass('header-hidden');
 		    }
 		    iScrollPos = iCurScrollPos;
 		});
 	})(jQuery);
 
 	//Submenu Dropdown Toggle
-	if($('.main-header li.dropdown ul').length){
+	/*if($('.main-header li.dropdown ul').length){
 		$('.main-header .navigation li.dropdown').append('<div class="dropdown-btn"><span class="fa fa-plus"></span></div>');
-	}
+	}*/
 
 	//Mobile Nav Hide Show
 	if($('.mobile-menu').length){
