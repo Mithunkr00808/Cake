@@ -22,6 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Helper function to prefix assets path */}
+        {/* Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css?family=ABeeZee:400,400i|Roboto:300,400,500,700|Leckerli+One|Merienda+One&display=swap" rel="stylesheet" />
+        
         {/* Stylesheets */}
         <link href="/assets/css/bootstrap.css" rel="stylesheet" />
         <link href="/assets/plugins/revolution/css/settings.css" rel="stylesheet" type="text/css" />
@@ -30,6 +35,7 @@ export default function RootLayout({
         <link href="/assets/css/style.css" rel="stylesheet" />
         <link href="/assets/css/responsive.css" rel="stylesheet" />
         <link href="/assets/css/fontawesome-all.css" rel="stylesheet" />
+        <link href="/assets/css/flaticon.css" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" rel="stylesheet" />
       </head>
       <body>
