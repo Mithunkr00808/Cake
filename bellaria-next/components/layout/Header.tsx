@@ -10,14 +10,14 @@ const Header = () => {
             {/* Main box */}
             <div className="main-box">
                 <div className="menu-box">
-                    <div className="logo"><Link href="/"><img src="/assets/images/logo.png" alt="" title="" /></Link></div>
+                    <div className="logo" style={{ top: '50%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}><Link href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
 
                     {/*Nav Box*/}
                     <div className="nav-outer clearfix">
                         {/* Main Menu */}
                         <nav className="main-menu navbar-expand-md navbar-light">
                             <div className="collapse navbar-collapse clearfix" id="navbarSupportedContent">
-                                <ul className="navigation menu-left clearfix">
+                                <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1 }}>
                                     <li className="current dropdown"><Link href="/">Home</Link>
                                         <ul>
                                             <li className="current"><Link href="/">Cakes</Link></li>
@@ -53,7 +53,7 @@ const Header = () => {
                                     </li>
                                 </ul>
 
-                                <ul className="navigation menu-right clearfix">
+                                <ul className="navigation menu-right clearfix" style={{ visibility: 'visible', opacity: 1 }}>
                                     <li className="dropdown"><Link href="#">Blog</Link>
                                         <ul>
                                             <li><Link href="#">Checkerboard</Link></li>
@@ -134,7 +134,7 @@ const Header = () => {
                 <div className="auto-container clearfix">
                     {/*Logo*/}
                     <div className="logo">
-                        <Link href="#" title="Sticky Logo"><img src="/assets/images/logo-small.png" alt="Sticky Logo" /></Link>
+                        <Link href="#" title="Sticky Logo" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link>
                     </div>
 
                     {/*Nav Outer*/}
@@ -149,7 +149,7 @@ const Header = () => {
 
             {/* Mobile Header */}
             <div className="mobile-header">
-                <div className="logo"><Link href="/"><img src="/assets/images/logo-small.png" alt="" title="" /></Link></div>
+                <div className="logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
 
                 {/*Nav Box*/}
                 <div className="nav-outer clearfix">
@@ -160,7 +160,7 @@ const Header = () => {
             {/* Mobile Menu  */}
             <div className="mobile-menu">
                 <nav className="menu-box">
-                    <div className="nav-logo"><Link href="/"><img src="/assets/images/logo-small.png" alt="" title="" /></Link></div>
+                    <div className="nav-logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
                     {/*Here Menu Will Come Automatically Via Javascript / Same Menu as in Header*/}
                 </nav>
             </div>{/* End Mobile Menu */}
