@@ -53,7 +53,7 @@ const ServicesSection = () => {
     }, []);
 
     return (
-        <section className="services-section" style={{ backgroundImage: 'url(/assets/images/main-slider/slider_bg_1.png)' }}>
+        <section className="services-section" style={{ backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url(/assets/images/background/services-bg.jpg)' }}>
             <div className="auto-container">
 
                 <div className="sec-title text-center">
