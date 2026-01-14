@@ -25,8 +25,9 @@
 			}
 		}
 	}
-	headerStyle();
+	// headerStyle();
 
+	/*
 	//Sticky Header Hide/Show On Scroll
 	(function($) {
 		var iScrollPos = 0;
@@ -43,6 +44,7 @@
 		    iScrollPos = iCurScrollPos;
 		});
 	})(jQuery);
+	*/
 
 	//Submenu Dropdown Toggle
 	/*if($('.main-header li.dropdown ul').length){
@@ -634,7 +636,7 @@
    ========================================================================== */
 	
 	$(window).on('scroll', function() {
-		headerStyle();
+		// headerStyle();
 	});
 	
 /* ==========================================================================

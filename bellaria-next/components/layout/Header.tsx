@@ -1,25 +1,168 @@
+"use client";
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const Header = () => {
+    const pathname = usePathname();
+    const [isSticky, setIsSticky] = useState(false);
+    const [isStickyHidden, setIsStickyHidden] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
+
+    // Sticky Header Scroll Logic
+    useEffect(() => {
+        let lastScrollY = window.scrollY;
+
+        const handleScroll = () => {
+             const currentScrollY = window.scrollY;
+
+            // Fixed header class logic (> 700px)
+            if (currentScrollY > 700) {
+                setIsSticky(true);
+            } else {
+                setIsSticky(false);
+            }
+
+            // Smart sticky hide/show logic
+            if (currentScrollY > lastScrollY && currentScrollY > 700) {
+                 // Scrolling Down
+                setIsStickyHidden(true);
+            } else {
+                 // Scrolling Up
+                setIsStickyHidden(false);
+            }
+            lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+        if (!isMobileMenuOpen) {
+            document.body.classList.add('mobile-menu-visible');
+        } else {
+            document.body.classList.remove('mobile-menu-visible');
+        }
+    };
+
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
+        document.body.classList.remove('mobile-menu-visible');
+    };
+
+    const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+    const closeSearch = () => setIsSearchOpen(false);
+
+    const toggleMobileDropdown = (name: string) => {
+        setActiveMobileDropdown(activeMobileDropdown === name ? null : name);
+    };
+
+    // Shared Navigation Links Data/Component to avoid duplication
+    const NavLinks = ({ mobile = false }) => (
+        <ul className="navigation clearfix" style={mobile ? { display: 'block' } : { visibility: 'visible', opacity: 1}}>
+             <li className={`${pathname === '/' ? 'current' : ''} dropdown`}>
+                <Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</Link>
+                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('home'); }}><span className="fa fa-plus"></span></div>
+                <ul style={{ display: mobile && activeMobileDropdown === 'home' ? 'block' : undefined }}>
+                    <li className="current"><Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Cakes</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Lollipop</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Wedding</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Coffee</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Ice-Cream</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Macaron</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Landing</Link></li>
+                </ul>
+            </li>
+            <li className="dropdown">
+                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pages</Link>
+                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('pages'); }}><span className="fa fa-plus"></span></div>
+                <ul style={{ display: mobile && activeMobileDropdown === 'pages' ? 'block' : undefined }}>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Our Staff</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pricing Tables</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Content Elements</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Recipes Grid</Link></li>
+                </ul>
+            </li>
+            <li className="dropdown">
+                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Portfolio</Link>
+                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('portfolio'); }}><span className="fa fa-plus"></span></div>
+                <ul style={{ display: mobile && activeMobileDropdown === 'portfolio' ? 'block' : undefined }}>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry Wide</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Wide</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>With Filter</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Two Columns</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>With Sidebar</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Square</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>single Post</Link></li>
+                </ul>
+            </li>
+             <li className="dropdown">
+                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Blog</Link>
+                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('blog'); }}><span className="fa fa-plus"></span></div>
+                <ul style={{ display: mobile && activeMobileDropdown === 'blog' ? 'block' : undefined }}>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Checkerboard</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Standard</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry Full Width</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Two Columns Grid</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Three Columns Wide</Link></li>
+                    <li className="dropdown">
+                        <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Post Types</Link>
+                        <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('post-types'); }}><span className="fa fa-plus"></span></div>
+                         <ul style={{ display: mobile && activeMobileDropdown === 'post-types' ? 'block' : undefined }}>
+                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Standard Post</Link></li>
+                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Gallery Post</Link></li>
+                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Video Post</Link></li>
+                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Audio Post</Link></li>
+                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Quote Post</Link></li>
+                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Link Post</Link></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li className="dropdown">
+                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link>
+                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('shop'); }}><span className="fa fa-plus"></span></div>
+                <ul style={{ display: mobile && activeMobileDropdown === 'shop' ? 'block' : undefined }}>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Cart</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Checkout</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>My account</Link></li>
+                </ul>
+            </li>
+            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Contacts</Link></li>
+        </ul>
+    );
+
     return (
-        <header className="main-header">
+        <header className={`main-header ${isSticky ? 'fixed-header' : ''} ${isSearchOpen ? 'search-active' : ''}`}>
             {/* Menu Wave */}
             <div className="menu_wave"></div>
 
             {/* Main box */}
             <div className="main-box">
                 <div className="menu-box">
-                    <div className="logo" style={{ top: '50%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}><Link href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
+                    <div className="logo" style={{ top: '55%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
+                        <Link href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link>
+                    </div>
 
                     {/*Nav Box*/}
                     <div className="nav-outer clearfix">
                         {/* Main Menu */}
                         <nav className="main-menu navbar-expand-md navbar-light">
-                            <div className="collapse navbar-collapse clearfix" id="navbarSupportedContent">
-                                <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1 }}>
-                                    <li className="current dropdown"><Link href="/">Home</Link>
-                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
+                            <div className="clearfix">
+                                {/* Desktop Menu: Split into left and right logic manually for now to match design if needed, or use the unified NavLinks for both if we can style it via CSS.
+                                    The original code had `menu-left` and `menu-right`. Let's reconstruct that locally to preserve exact layout.
+                                */}
+                                <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
+                                     <li className={`${pathname === '/' ? 'current' : ''} dropdown`}><Link href="/">Home</Link>
                                         <ul>
                                             <li className="current"><Link href="/">Cakes</Link></li>
                                             <li><Link href="#">Lollipop</Link></li>
@@ -32,7 +175,6 @@ const Header = () => {
                                         </ul>
                                     </li>
                                     <li className="dropdown"><Link href="#">Pages</Link>
-                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">About Us</Link></li>
                                             <li><Link href="#">Our Staff</Link></li>
@@ -42,7 +184,6 @@ const Header = () => {
                                         </ul>
                                     </li>
                                     <li className="dropdown"><Link href="#">Portfolio</Link>
-                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">Masonry</Link></li>
                                             <li><Link href="#">Masonry Wide</Link></li>
@@ -56,9 +197,8 @@ const Header = () => {
                                     </li>
                                 </ul>
 
-                                <ul className="navigation menu-right clearfix" style={{ visibility: 'visible', opacity: 1 }}>
+                                <ul className="navigation menu-right clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
                                     <li className="dropdown"><Link href="#">Blog</Link>
-                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">Checkerboard</Link></li>
                                             <li><Link href="#">Standard</Link></li>
@@ -67,7 +207,6 @@ const Header = () => {
                                             <li><Link href="#">Two Columns Grid</Link></li>
                                             <li><Link href="#">Three Columns Wide</Link></li>
                                             <li className="dropdown"><Link href="#">Post Types</Link>
-                                                <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                                 <ul>
                                                     <li><Link href="#">Standard Post</Link></li>
                                                     <li><Link href="#">Gallery Post</Link></li>
@@ -80,7 +219,6 @@ const Header = () => {
                                         </ul>
                                     </li>
                                     <li className="dropdown"><Link href="#">Shop</Link>
-                                        <div className="dropdown-btn"><span className="fa fa-plus"></span></div>
                                         <ul>
                                             <li><Link href="#">Shop</Link></li>
                                             <li><Link href="#">Cart</Link></li>
@@ -128,7 +266,7 @@ const Header = () => {
 
                             {/* Search Btn */}
                             <div className="search-box">
-                                <button className="search-btn"><i className="fa fa-search"></i></button>
+                                <button className="search-btn" onClick={toggleSearch}><i className="fa fa-search"></i></button>
                             </div>
                         </div>
                     </div>
@@ -136,7 +274,7 @@ const Header = () => {
             </div>
 
             {/* Sticky Header  */}
-            <div className="sticky-header">
+            <div className={`sticky-header ${isStickyHidden ? 'header-hidden' : ''}`}>
                 <div className="auto-container clearfix">
                     {/*Logo*/}
                     <div className="logo" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
@@ -147,7 +285,10 @@ const Header = () => {
                     <div className="nav-outer">
                         {/* Main Menu */}
                         <nav className="main-menu">
-                            {/*Keep This Empty / Menu will come through Javascript*/}
+                            {/* Sticky Header Desktop Menu */}
+                             <div className="collapse navbar-collapse show clearfix">
+                                 <NavLinks />
+                             </div>
                         </nav>{/* Main Menu End*/}
                     </div>
                 </div>
@@ -159,24 +300,37 @@ const Header = () => {
 
                 {/*Nav Box*/}
                 <div className="nav-outer clearfix">
-                    {/*Keep This Empty / Menu will come through Javascript*/}
+                    <div className="outer-box">
+                        <div className="search-box">
+                            <button className="search-btn mobile-search-btn" onClick={toggleSearch}><i className="fa fa-search"></i></button>
+                        </div>
+                        <div className="cart-btn">
+                            <Link href="#"><i className="icon flaticon-commerce"></i> <span className="count">2</span></Link>
+                        </div>
+                    </div>
+                    <div className="mobile-nav-toggler" onClick={toggleMobileMenu}><span className="icon fa fa-bars"></span></div>
                 </div>
             </div>
 
             {/* Mobile Menu  */}
-            <div className="mobile-menu">
+            <div className={`mobile-menu ${isMobileMenuOpen ? 'visible' : ''}`}>
+                 <div className="menu-backdrop" onClick={closeMobileMenu}></div>
+                 <div className="close-btn" onClick={closeMobileMenu}><span className="icon fa fa-times"></span></div>
+
                 <nav className="menu-box">
                     <div className="nav-logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
-                    {/*Here Menu Will Come Automatically Via Javascript / Same Menu as in Header*/}
+                    <div className="menu-outer">
+                        <NavLinks mobile={true} />
+                    </div>
                 </nav>
             </div>{/* End Mobile Menu */}
 
             {/* Header Search */}
             <div className="search-popup">
-                <span className="search-back-drop"></span>
+                <span className="search-back-drop" onClick={closeSearch}></span>
 
                 <div className="search-inner">
-                    <button className="close-search"><span className="fa fa-times"></span></button>
+                    <button className="close-search" onClick={closeSearch}><span className="fa fa-times"></span></button>
                     <form method="post" action="#">
                         <div className="form-group">
                             <input type="search" name="search-field" placeholder="Search..." required />
