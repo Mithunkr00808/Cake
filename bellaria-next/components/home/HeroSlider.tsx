@@ -158,7 +158,7 @@ const HeroSlider = () => {
                         data-paddingright="[0,0,0,0]"
                         data-paddingbottom="[0,0,0,0]"
                         data-paddingleft="[0,0,0,0]"
-                        style="z-index: 7; white-space: nowrap; font-size: 16px; line-height: 24px; font-weight: 400; color: #4b4342;font-family:ABeeZee;">We offer now a great range of different<br>flavoured bite-size pastries and cakes </div>
+                        style="z-index: 7; white-space: nowrap; font-size: 16px; line-height: 24px; font-weight: 400; color: #4b4342;font-family:ABeeZee;">Layered in Love </div>
 
                     <!-- LAYER NR. 4 -->
                     <div class="tp-caption   tp-resizeme" 
@@ -192,7 +192,7 @@ const HeroSlider = () => {
                         data-paddingright="[0,0,0,0]"
                         data-paddingbottom="[0,0,0,0]"
                         data-paddingleft="[0,0,0,0]"
-                        style="z-index: 9;"><img src="/assets/images/main-slider/slider_bg_4.png" alt="" data-ww="125px" data-hh="60px" width="125" height="60" data-no-retina> </div>
+                        style="z-index: 9; display: none;"><img src="/assets/images/main-slider/slider_bg_4.png" alt="" data-ww="125px" data-hh="60px" width="125" height="60" data-no-retina> </div>
 
                     <!-- LAYER NR. 6 -->
                     <div class="tp-caption tp-resizeme hide-sm" 
@@ -255,6 +255,24 @@ const HeroSlider = () => {
 
 
 
+
+                        <!-- LAYER NR. 9 -->
+                        <div class="tp-caption   tp-resizeme" 
+                            id="slide-5-layer-40" 
+                            data-x="center" data-hoffset="" 
+                            data-y="center" data-voffset="" 
+                            data-width="['none','none','none','none']"
+                            data-height="['none','none','none','none']"
+                            data-type="image" 
+                            data-responsive_offset="on" 
+                            data-frames='[{"delay":500,"speed":1000,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
+                            data-textAlign="['inherit','inherit','inherit','inherit']"
+                            data-paddingtop="[0,0,0,0]"
+                            data-paddingright="[0,0,0,0]"
+                            data-paddingbottom="[0,0,0,0]"
+                            data-paddingleft="[0,0,0,0]"
+                            style="z-index: 6;"><img src="/assets/images/main-slider/slider_bg_1.png" alt="" data-ww="654px" data-hh="654px" width="654" height="654" data-no-retina> </div>
+
                         <!-- LAYER NR. 10 -->
                         <div class="tp-caption tp-resizeme" 
                             id="slide-5-layer-33" 
@@ -305,7 +323,7 @@ const HeroSlider = () => {
                             data-paddingright="[0,0,0,0]"
                             data-paddingbottom="[0,0,0,0]"
                             data-paddingleft="[0,0,0,0]"
-                            style="z-index: 9;"><img src="/assets/images/main-slider/slider_bg_4.png" alt="" data-ww="125px" data-hh="60px" width="125" height="60" data-no-retina> </div>
+                            style="z-index: 9; display: none;"><img src="/assets/images/main-slider/slider_bg_4.png" alt="" data-ww="125px" data-hh="60px" width="125" height="60" data-no-retina> </div>
 
                         <!-- LAYER NR. 13 -->
                         <div class="tp-caption tp-resizeme hide-sm" 
@@ -398,7 +416,7 @@ const HeroSlider = () => {
                             data-paddingright="[0,0,0,0]"
                             data-paddingbottom="[0,0,0,0]"
                             data-paddingleft="[0,0,0,0]"
-                            style="z-index: 7; white-space: nowrap; font-size: 16px; line-height: 24px; font-weight: 400; color: #4b4342; font-family:ABeeZee;">We offer now a great range of different<br> flavoured bite-size pastries and cakes </div>
+                            style="z-index: 7; white-space: nowrap; font-size: 16px; line-height: 24px; font-weight: 400; color: #4b4342; font-family:ABeeZee;">Layered in Love </div>
 
                         <!-- LAYER NR. 18 -->
                         <div class="tp-caption   tp-resizeme" 
@@ -432,7 +450,7 @@ const HeroSlider = () => {
                             data-paddingright="[0,0,0,0]"
                             data-paddingbottom="[0,0,0,0]"
                             data-paddingleft="[0,0,0,0]"
-                            style="z-index: 9;"><img src="/assets/images/main-slider/slider_bg_4.png" alt="" data-ww="125px" data-hh="60px" width="125" height="60" data-no-retina> </div>
+                            style="z-index: 9; display: none;"><img src="/assets/images/main-slider/slider_bg_4.png" alt="" data-ww="125px" data-hh="60px" width="125" height="60" data-no-retina> </div>
 
                         <!-- LAYER NR. 20 -->
                         <div class="tp-caption tp-resizeme hide-sm" 
