@@ -16,7 +16,7 @@ const Header = () => {
         let lastScrollY = window.scrollY;
 
         const handleScroll = () => {
-             const currentScrollY = window.scrollY;
+            const currentScrollY = window.scrollY;
 
             // Fixed header class logic (> 700px)
             if (currentScrollY > 700) {
@@ -27,10 +27,10 @@ const Header = () => {
 
             // Smart sticky hide/show logic
             if (currentScrollY > lastScrollY && currentScrollY > 700) {
-                 // Scrolling Down
+                // Scrolling Down
                 setIsStickyHidden(true);
             } else {
-                 // Scrolling Up
+                // Scrolling Up
                 setIsStickyHidden(false);
             }
             lastScrollY = currentScrollY;
@@ -63,9 +63,9 @@ const Header = () => {
 
     // Shared Navigation Links Data/Component to avoid duplication
     const NavLinks = ({ mobile = false }) => (
-        <ul className="navigation clearfix" style={mobile ? { display: 'block' } : { visibility: 'visible', opacity: 1}}>
-             <li className={`${pathname === '/' ? 'current' : ''} dropdown`}>
-                <Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</Link>
+        <ul className="navigation clearfix" style={mobile ? { display: 'block' } : { visibility: 'visible', opacity: 1 }}>
+            <li className={`${pathname === '/' ? 'current' : ''} dropdown`}>
+                <a href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</a>
                 <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('home'); }}><span className="fa fa-plus"></span></div>
                 <ul style={{ display: mobile && activeMobileDropdown === 'home' ? 'block' : undefined }}>
                     <li className="current"><Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Cakes</Link></li>
@@ -103,7 +103,7 @@ const Header = () => {
                     <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>single Post</Link></li>
                 </ul>
             </li>
-             <li className="dropdown">
+            <li className="dropdown">
                 <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Blog</Link>
                 <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('blog'); }}><span className="fa fa-plus"></span></div>
                 <ul style={{ display: mobile && activeMobileDropdown === 'blog' ? 'block' : undefined }}>
@@ -116,7 +116,7 @@ const Header = () => {
                     <li className="dropdown">
                         <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Post Types</Link>
                         <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('post-types'); }}><span className="fa fa-plus"></span></div>
-                         <ul style={{ display: mobile && activeMobileDropdown === 'post-types' ? 'block' : undefined }}>
+                        <ul style={{ display: mobile && activeMobileDropdown === 'post-types' ? 'block' : undefined }}>
                             <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Standard Post</Link></li>
                             <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Gallery Post</Link></li>
                             <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Video Post</Link></li>
@@ -150,7 +150,7 @@ const Header = () => {
             <div className="main-box">
                 <div className="menu-box">
                     <div className="logo" style={{ top: '55%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
-                        <Link href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link>
+                        <a href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a>
                     </div>
 
                     {/*Nav Box*/}
@@ -162,7 +162,7 @@ const Header = () => {
                                     The original code had `menu-left` and `menu-right`. Let's reconstruct that locally to preserve exact layout.
                                 */}
                                 <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
-                                     <li className={`${pathname === '/' ? 'current' : ''} dropdown`}><Link href="/">Home</Link>
+                                    <li className={`${pathname === '/' ? 'current' : ''} dropdown`}><a href="/">Home</a>
                                         <ul>
                                             <li className="current"><Link href="/">Cakes</Link></li>
                                             <li><Link href="#">Lollipop</Link></li>
@@ -278,7 +278,7 @@ const Header = () => {
                 <div className="auto-container clearfix">
                     {/*Logo*/}
                     <div className="logo" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
-                        <Link href="#" title="Sticky Logo" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link>
+                        <a href="/" title="Sticky Logo" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a>
                     </div>
 
                     {/*Nav Outer*/}
@@ -286,9 +286,9 @@ const Header = () => {
                         {/* Main Menu */}
                         <nav className="main-menu">
                             {/* Sticky Header Desktop Menu */}
-                             <div className="collapse navbar-collapse show clearfix">
-                                 <NavLinks />
-                             </div>
+                            <div className="collapse navbar-collapse show clearfix">
+                                <NavLinks />
+                            </div>
                         </nav>{/* Main Menu End*/}
                     </div>
                 </div>
@@ -296,7 +296,7 @@ const Header = () => {
 
             {/* Mobile Header */}
             <div className="mobile-header">
-                <div className="logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
+                <div className="logo"><a href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a></div>
 
                 {/*Nav Box*/}
                 <div className="nav-outer clearfix">
@@ -314,8 +314,8 @@ const Header = () => {
 
             {/* Mobile Menu  */}
             <div className={`mobile-menu ${isMobileMenuOpen ? 'visible' : ''}`}>
-                 <div className="menu-backdrop" onClick={closeMobileMenu}></div>
-                 <div className="close-btn" onClick={closeMobileMenu}><span className="icon fa fa-times"></span></div>
+                <div className="menu-backdrop" onClick={closeMobileMenu}></div>
+                <div className="close-btn" onClick={closeMobileMenu}><span className="icon fa fa-times"></span></div>
 
                 <nav className="menu-box">
                     <div className="nav-logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
