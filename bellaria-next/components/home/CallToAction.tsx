@@ -1,7 +1,11 @@
+'use client';
+
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 const CallToAction = () => {
+    const [isHovered, setIsHovered] = useState(false);
+
     return (
         <section className="call-to-action">
             <div className="shape_wrapper shape_one">
@@ -33,7 +37,13 @@ const CallToAction = () => {
                         Nam auctor magna mauris, non lacinia felis mattis nec.
                     </p>
                     <div className="btn-box">
-                        <Link href="#" className="theme-btn btn-style-one large">
+                        <Link 
+                            href="#" 
+                            className="theme-btn btn-style-one large" 
+                            style={{ color: isHovered ? '#5fcac7' : '#ffffff' }}
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                        >
                             <span></span>Discover More<span></span>
                         </Link>
                     </div>
