@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
+import Preloader from "@/components/layout/Preloader";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,6 +42,7 @@ export default function RootLayout({
       </head>
       <body>
         <div className="page-wrapper">
+          <Preloader />
           <Header />
           {children}
           <Footer />
