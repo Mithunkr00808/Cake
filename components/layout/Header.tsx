@@ -61,9 +61,9 @@ const Header = () => {
         setActiveMobileDropdown(activeMobileDropdown === name ? null : name);
     };
 
-    // Shared Navigation Links Data/Component to avoid duplication
-    const NavLinks = ({ mobile = false }) => (
-        <ul className="navigation clearfix" style={mobile ? { display: 'block' } : { visibility: 'visible', opacity: 1 }}>
+    // Navigation Items - Left Part
+    const ItemsLeft = ({ mobile = false }) => (
+        <>
             <li className={`${pathname === '/' ? 'current' : ''} dropdown`}>
                 <a href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</a>
                 <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('home'); }}><span className="fa fa-plus"></span></div>
@@ -103,6 +103,12 @@ const Header = () => {
                     <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>single Post</Link></li>
                 </ul>
             </li>
+        </>
+    );
+
+    // Navigation Items - Right Part
+    const ItemsRight = ({ mobile = false }) => (
+        <>
             <li className="dropdown">
                 <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Blog</Link>
                 <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('blog'); }}><span className="fa fa-plus"></span></div>
@@ -138,16 +144,38 @@ const Header = () => {
                 </ul>
             </li>
             <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Contacts</Link></li>
+        </>
+    );
+
+    // Mobile Menu (Unified)
+    const NavLinksMobile = ({ mobile = true }) => (
+        <ul className="navigation clearfix" style={{ display: 'block' }}>
+            <ItemsLeft mobile={mobile} />
+            <ItemsRight mobile={mobile} />
+        </ul>
+    );
+
+    // Desktop Left Menu
+    const NavLinksLeft = () => (
+        <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
+            <ItemsLeft />
+        </ul>
+    );
+
+    // Desktop Right Menu
+    const NavLinksRight = () => (
+        <ul className="navigation menu-right clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
+            <ItemsRight />
         </ul>
     );
 
     return (
-        <header className={`main-header ${isSticky ? 'fixed-header' : ''} ${isSearchOpen ? 'search-active' : ''}`}>
+        <header className={`main-header ${isSticky ? 'fixed-header' : ''} ${isSearchOpen ? 'search-active' : ''}`} style={{ position: 'relative' }}>
             {/* Menu Wave */}
-            <div className="menu_wave"></div>
+            <div className="menu_wave" style={{ display: isSticky ? 'none' : 'block' }}></div>
 
             {/* Main box */}
-            <div className="main-box">
+            <div className="main-box" style={{ display: isSticky ? 'none' : 'block' }}>
                 <div className="menu-box">
                     <div className="logo" style={{ top: '55%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
                         <a href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a>
@@ -274,7 +302,12 @@ const Header = () => {
             </div>
 
             {/* Sticky Header  */}
-            <div className={`sticky-header ${isStickyHidden ? 'header-hidden' : ''}`}>
+            <div className={`sticky-header ${isStickyHidden ? 'header-hidden' : ''}`} style={{
+                visibility: isSticky ? 'visible' : 'hidden',
+                opacity: isSticky ? 1 : 0,
+                pointerEvents: isSticky ? 'auto' : 'none',
+                transition: 'all 500ms cubic-bezier(0.4, 0.0, 0.2, 1)'
+            }}>
                 <div className="auto-container clearfix">
                     {/*Logo*/}
                     <div className="logo" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
@@ -287,7 +320,8 @@ const Header = () => {
                         <nav className="main-menu">
                             {/* Sticky Header Desktop Menu */}
                             <div className="collapse navbar-collapse show clearfix">
-                                <NavLinks />
+                                <NavLinksLeft />
+                                <NavLinksRight />
                             </div>
                         </nav>{/* Main Menu End*/}
                     </div>
@@ -320,7 +354,7 @@ const Header = () => {
                 <nav className="menu-box">
                     <div className="nav-logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
                     <div className="menu-outer">
-                        <NavLinks mobile={true} />
+                        <NavLinksMobile mobile={true} />
                     </div>
                 </nav>
             </div>{/* End Mobile Menu */}
