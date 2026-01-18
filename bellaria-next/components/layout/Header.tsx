@@ -67,7 +67,20 @@ const Header = () => {
             <li className={`${pathname === '/' ? 'current' : ''}`}>
                 <a href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</a>
             </li>
-
+            <li className="dropdown">
+                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pages</Link>
+                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('pages'); }}><span className="fa fa-plus"></span></div>
+                <ul style={{ display: mobile && activeMobileDropdown === 'pages' ? 'block' : undefined }}>
+                    <li className="current"><Link href="/about-us" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Lollipop</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Wedding</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Coffee</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Ice-Cream</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Macaron</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
+                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Landing</Link></li>
+                </ul>
+            </li>
             <li>
                 <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Portfolio</Link>
             </li>
@@ -88,7 +101,7 @@ const Header = () => {
                     <li><Link href="/login" onClick={mobile ? closeMobileMenu : undefined}>My account</Link></li>
                 </ul>
             </li>
-            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Contacts</Link></li>
+            <li><Link href="/about-us" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
         </>
     );
 
