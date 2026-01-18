@@ -79,7 +79,7 @@ const ShoppingCart = () => {
                         <ul className="totals-table">
                             <li><h3>Cart Totals</h3></li>
                             <li className="clearfix"><span className="col">Subtotal</span><span className="col price">$99.00</span></li>
-                            <li className="clearfix"><span class="col">Total</span><span class="col total-price">$99.00</span></li>
+                            <li className="clearfix"><span className="col">Total</span><span className="col total-price">$99.00</span></li>
                             <li className="text-right"><button type="submit" className="theme-btn proceed-btn">Proceed to Checkout</button></li>
                         </ul>
                     </div>
