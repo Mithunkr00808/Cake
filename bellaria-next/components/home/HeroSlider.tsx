@@ -54,7 +54,7 @@ const HeroSlider = () => {
                     }
                 },
                 visibilityLevels: [1240, 1024, 778, 480],
-                responsiveLevels: [1200, 1040, 778, 480],
+                responsiveLevels: [1240, 1024, 778, 480],
                 gridheight: [850, 850, 850, 850],
                 gridwidth: [1920, 1920, 1280, 800],
                 lazyType: "none",
@@ -87,7 +87,22 @@ const HeroSlider = () => {
             }
         }, 100);
 
-        return () => clearInterval(checkReady);
+        return () => {
+            clearInterval(checkReady);
+            const $ = (window as any).jQuery;
+            if ($ && $.fn.revolution && $("#rev_slider_one").length > 0) {
+                 // Attempt to find if there's a destroy method or just let it be, but strictly clearing interval is key.
+                 // Revolution slider 5.4 doesn't always have a clean destroy on the jQuery object directly exposed easily without instance data.
+                 // However, safe checking prevents errors.
+                 try {
+                     if($("#rev_slider_one").revkill) {
+                         $("#rev_slider_one").revkill();
+                     }
+                 } catch (e) {
+                     // ignore error on cleanup
+                 }
+            }
+        };
     }, []);
 
     return (
