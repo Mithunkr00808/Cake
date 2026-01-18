@@ -65,23 +65,10 @@ const Header = () => {
     const ItemsLeft = ({ mobile = false }) => (
         <>
             <li className={`${pathname === '/' ? 'current' : ''}`}>
-                <a href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</a>
+                <Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</Link>
             </li>
-            <li className="dropdown">
-                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pages</Link>
-                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('pages'); }}><span className="fa fa-plus"></span></div>
-                <ul style={{ display: mobile && activeMobileDropdown === 'pages' ? 'block' : undefined }}>
-                    <li className="current"><Link href="/about-us" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Lollipop</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Wedding</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Coffee</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Ice-Cream</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Macaron</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Landing</Link></li>
-                </ul>
-            </li>
-            <li>
+
+            <li className={pathname === '/portfolio' ? 'current' : ''}>
                 <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Portfolio</Link>
             </li>
         </>
@@ -91,17 +78,17 @@ const Header = () => {
     const ItemsRight = ({ mobile = false }) => (
         <>
 
-            <li className="dropdown">
+            <li className={`dropdown ${pathname.startsWith('/shop') || pathname === '/cart' || pathname === '/checkout' || pathname === '/login' ? 'current' : ''}`}>
                 <Link href="/shop" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link>
                 <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('shop'); }}><span className="fa fa-plus"></span></div>
                 <ul style={{ display: mobile && activeMobileDropdown === 'shop' ? 'block' : undefined }}>
-                    <li><Link href="/shop" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
-                    <li><Link href="/cart" onClick={mobile ? closeMobileMenu : undefined}>Cart</Link></li>
-                    <li><Link href="/checkout" onClick={mobile ? closeMobileMenu : undefined}>Checkout</Link></li>
-                    <li><Link href="/login" onClick={mobile ? closeMobileMenu : undefined}>My account</Link></li>
+                    <li className={pathname === '/shop' ? 'current' : ''}><Link href="/shop" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
+                    <li className={pathname === '/cart' ? 'current' : ''}><Link href="/cart" onClick={mobile ? closeMobileMenu : undefined}>Cart</Link></li>
+                    <li className={pathname === '/checkout' ? 'current' : ''}><Link href="/checkout" onClick={mobile ? closeMobileMenu : undefined}>Checkout</Link></li>
+                    <li className={pathname === '/login' ? 'current' : ''}><Link href="/login" onClick={mobile ? closeMobileMenu : undefined}>My account</Link></li>
                 </ul>
             </li>
-            <li><Link href="/about-us" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
+            <li className={pathname === '/about-us' ? 'current' : ''}><Link href="/about-us" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
         </>
     );
 

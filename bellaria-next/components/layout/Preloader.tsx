@@ -9,23 +9,18 @@ const Preloader = () => {
     const pathname = usePathname();
 
     useEffect(() => {
-        setLoading(true);
-        setFading(false);
-
-        // Start fading out after 600ms
-        const fadeTimer = setTimeout(() => {
+        const handleLoad = () => {
             setFading(true);
-        }, 600);
-
-        // Remove from DOM after 1000ms (giving 400ms for fade out)
-        const removeTimer = setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-
-        return () => {
-            clearTimeout(fadeTimer);
-            clearTimeout(removeTimer);
+            setTimeout(() => setLoading(false), 500); // Small buffer for fade animation
         };
+
+        if (document.readyState === 'complete') {
+            handleLoad();
+        } else {
+            window.addEventListener('load', handleLoad);
+        }
+
+        return () => window.removeEventListener('load', handleLoad);
     }, [pathname]);
 
     if (!loading) return null;
