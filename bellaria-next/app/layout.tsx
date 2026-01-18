@@ -3,8 +3,8 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Slice of Cake - a Delicious Cakes and Bakery HTML Template",
-  description: "Slice of Cake - a Delicious Cakes and Bakery HTML Template",
+  title: "Slice of Cake - Layered in love",
+  description: "Slice of Cake - Layered in love",
   icons: {
     icon: "/assets/images/favicon.png",
   },
