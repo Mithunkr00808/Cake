@@ -1,14 +1,23 @@
+"use client";
+
 import Link from 'next/link';
 import React from 'react';
+import { usePathname } from 'next/navigation';
 
 const Footer = () => {
+    const pathname = usePathname();
+    const isAboutPage = pathname === '/about-us';
+    const backgroundImage = isAboutPage 
+        ? '/assets/images/background/footer-about-bg.png' 
+        : '/assets/images/background/footer-chocolate-heart.png';
+
     return (
         <footer className="main-footer">
             {/* Shape Wrapper - Restoring Legacy Structure for correct wave effect */}
             <div className="shape_wrapper shape_one">
                 <div 
                     className="shape_inner" 
-                    style={{ backgroundImage: "url('/assets/images/background/footer-chocolate-heart.png')" }}
+                    style={{ backgroundImage: `url('${backgroundImage}')` }}
                 >
                     <div className="overlay"></div>
                 </div>
