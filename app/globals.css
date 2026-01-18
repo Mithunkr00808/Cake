@@ -24,3 +24,43 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Page Transition Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: fadeInUp 0.5s ease-out 0.6s backwards;
+}
+
+/* Preloader Transition Overrides */
+.preloader {
+  transition: opacity 0.4s ease-out;
+  opacity: 1;
+}
+
+.preloader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Shop Item Styles */
+.shop-item-card {
+  border: 1px solid #ff91a4;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.shop-item-card:hover {
+  box-shadow: 0 10px 20px rgba(255, 145, 164, 0.2);
+  border-color: #ff758c;
+}
