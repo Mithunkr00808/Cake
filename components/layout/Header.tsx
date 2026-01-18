@@ -64,10 +64,13 @@ const Header = () => {
     // Navigation Items - Left Part
     const ItemsLeft = ({ mobile = false }) => (
         <>
-            <li className={`${pathname === '/' ? 'current' : ''} dropdown`}>
+            <li className={`${pathname === '/' ? 'current' : ''}`}>
                 <a href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</a>
-                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('home'); }}><span className="fa fa-plus"></span></div>
-                <ul style={{ display: mobile && activeMobileDropdown === 'home' ? 'block' : undefined }}>
+            </li>
+            <li className="dropdown">
+                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pages</Link>
+                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('pages'); }}><span className="fa fa-plus"></span></div>
+                <ul style={{ display: mobile && activeMobileDropdown === 'pages' ? 'block' : undefined }}>
                     <li className="current"><Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Cakes</Link></li>
                     <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Lollipop</Link></li>
                     <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Wedding</Link></li>
@@ -78,30 +81,8 @@ const Header = () => {
                     <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Landing</Link></li>
                 </ul>
             </li>
-            <li className="dropdown">
-                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pages</Link>
-                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('pages'); }}><span className="fa fa-plus"></span></div>
-                <ul style={{ display: mobile && activeMobileDropdown === 'pages' ? 'block' : undefined }}>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Our Staff</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pricing Tables</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Content Elements</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Recipes Grid</Link></li>
-                </ul>
-            </li>
-            <li className="dropdown">
+            <li>
                 <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Portfolio</Link>
-                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('portfolio'); }}><span className="fa fa-plus"></span></div>
-                <ul style={{ display: mobile && activeMobileDropdown === 'portfolio' ? 'block' : undefined }}>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry Wide</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Wide</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>With Filter</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Two Columns</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>With Sidebar</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Square</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>single Post</Link></li>
-                </ul>
             </li>
         </>
     );
@@ -186,76 +167,9 @@ const Header = () => {
                         {/* Main Menu */}
                         <nav className="main-menu navbar-expand-md navbar-light">
                             <div className="clearfix">
-                                {/* Desktop Menu: Split into left and right logic manually for now to match design if needed, or use the unified NavLinks for both if we can style it via CSS.
-                                    The original code had `menu-left` and `menu-right`. Let's reconstruct that locally to preserve exact layout.
-                                */}
-                                <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
-                                    <li className={`${pathname === '/' ? 'current' : ''} dropdown`}><a href="/">Home</a>
-                                        <ul>
-                                            <li className="current"><Link href="/">Cakes</Link></li>
-                                            <li><Link href="#">Lollipop</Link></li>
-                                            <li><Link href="#">Wedding</Link></li>
-                                            <li><Link href="#">Coffee</Link></li>
-                                            <li><Link href="#">Ice-Cream</Link></li>
-                                            <li><Link href="#">Macaron</Link></li>
-                                            <li><Link href="#">Shop</Link></li>
-                                            <li><Link href="#">Landing</Link></li>
-                                        </ul>
-                                    </li>
-                                    <li className="dropdown"><Link href="#">Pages</Link>
-                                        <ul>
-                                            <li><Link href="#">About Us</Link></li>
-                                            <li><Link href="#">Our Staff</Link></li>
-                                            <li><Link href="#">Pricing Tables</Link></li>
-                                            <li><Link href="#">Content Elements</Link></li>
-                                            <li><Link href="#">Recipes Grid</Link></li>
-                                        </ul>
-                                    </li>
-                                    <li className="dropdown"><Link href="#">Portfolio</Link>
-                                        <ul>
-                                            <li><Link href="#">Masonry</Link></li>
-                                            <li><Link href="#">Masonry Wide</Link></li>
-                                            <li><Link href="#">Wide</Link></li>
-                                            <li><Link href="#">With Filter</Link></li>
-                                            <li><Link href="#">Two Columns</Link></li>
-                                            <li><Link href="#">With Sidebar</Link></li>
-                                            <li><Link href="#">Square</Link></li>
-                                            <li><Link href="#">single Post</Link></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-
-                                <ul className="navigation menu-right clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
-                                    <li className="dropdown"><Link href="#">Blog</Link>
-                                        <ul>
-                                            <li><Link href="#">Checkerboard</Link></li>
-                                            <li><Link href="#">Standard</Link></li>
-                                            <li><Link href="#">Masonry</Link></li>
-                                            <li><Link href="#">Masonry Full Width</Link></li>
-                                            <li><Link href="#">Two Columns Grid</Link></li>
-                                            <li><Link href="#">Three Columns Wide</Link></li>
-                                            <li className="dropdown"><Link href="#">Post Types</Link>
-                                                <ul>
-                                                    <li><Link href="#">Standard Post</Link></li>
-                                                    <li><Link href="#">Gallery Post</Link></li>
-                                                    <li><Link href="#">Video Post</Link></li>
-                                                    <li><Link href="#">Audio Post</Link></li>
-                                                    <li><Link href="#">Quote Post</Link></li>
-                                                    <li><Link href="#">Link Post</Link></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li className="dropdown"><Link href="#">Shop</Link>
-                                        <ul>
-                                            <li><Link href="#">Shop</Link></li>
-                                            <li><Link href="#">Cart</Link></li>
-                                            <li><Link href="#">Checkout</Link></li>
-                                            <li><Link href="#">My account</Link></li>
-                                        </ul>
-                                    </li>
-                                    <li><Link href="#">Contacts</Link></li>
-                                </ul>
+                                {/* Desktop Menu: Using shared components to ensure sync between Main, Sticky, and Mobile menus */}
+                                <NavLinksLeft />
+                                <NavLinksRight />
                             </div>
                         </nav>
                         {/* Main Menu End*/}
