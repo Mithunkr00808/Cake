@@ -92,4 +92,4 @@ const ServicesSection = () => {
     );
 };
 
-export default ServicesSection;
+export default React.memo(ServicesSection);
