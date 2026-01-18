@@ -141,7 +141,7 @@ const Header = () => {
                         <div className="outer-box clearfix">
                             {/* Shoppping Car */}
                             <div className="cart-btn">
-                                <Link href="#"><i className="icon flaticon-commerce"></i> <span className="count">2</span></Link>
+                                <Link href="/cart"><i className="icon flaticon-commerce"></i> <span className="count">2</span></Link>
 
                                 <div className="shopping-cart">
                                     <ul className="shopping-cart-items">
@@ -149,7 +149,7 @@ const Header = () => {
                                             <img src="/assets/images/resource/birthday-cake.png" alt="#" className="thumb" />
                                             <span className="item-name">Birthday Cake</span>
                                             <span className="item-quantity">1 x <span className="item-amount">$84.00</span></span>
-                                            <Link href="#" className="product-detail"></Link>
+                                            <Link href="/shop/product-single" className="product-detail"></Link>
                                             <button className="remove-item"><span className="fa fa-times"></span></button>
                                         </li>
 
@@ -157,15 +157,15 @@ const Header = () => {
                                             <img src="/assets/images/resource/macarons.png" alt="#" className="thumb" />
                                             <span className="item-name">French Macaroon</span>
                                             <span className="item-quantity">1 x <span className="item-amount">$13.00</span></span>
-                                            <Link href="#" className="product-detail"></Link>
+                                            <Link href="/shop/product-single" className="product-detail"></Link>
                                             <button className="remove-item"><span className="fa fa-times"></span></button>
                                         </li>
                                     </ul>
 
                                     <div className="cart-footer">
                                         <div className="shopping-cart-total"><strong>Subtotal:</strong> $97.00</div>
-                                        <Link href="#" className="theme-btn">View Cart</Link>
-                                        <Link href="#" className="theme-btn">Checkout</Link>
+                                        <Link href="/cart" className="theme-btn">View Cart</Link>
+                                        <Link href="/checkout" className="theme-btn">Checkout</Link>
                                     </div>
                                 </div> {/*end shopping-cart */}
                             </div>
