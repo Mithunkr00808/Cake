@@ -39,7 +39,7 @@ export default function Home() {
           }
         ]}
         buttonText="Know Us Better"
-        buttonLink="#"
+        buttonLink="/about-us"
       />
     </main>
   );
