@@ -1,25 +1,37 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const Preloader = () => {
     const [loading, setLoading] = useState(true);
+    const [fading, setFading] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
-        // Simulate loading time or wait for window load event if possible, 
-        // but in SPA/Next.js effective 'load' is quick. 
-        // Emulating the legacy delay(200).fadeOut(500)
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 800); // 200ms delay + some buffer
+        setLoading(true);
+        setFading(false);
 
-        return () => clearTimeout(timer);
-    }, []);
+        // Start fading out after 600ms
+        const fadeTimer = setTimeout(() => {
+            setFading(true);
+        }, 600);
+
+        // Remove from DOM after 1000ms (giving 400ms for fade out)
+        const removeTimer = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+
+        return () => {
+            clearTimeout(fadeTimer);
+            clearTimeout(removeTimer);
+        };
+    }, [pathname]);
 
     if (!loading) return null;
 
     return (
-        <div className="preloader" style={{ display: loading ? 'block' : 'none' }}>
+        <div className={`preloader ${fading ? 'fade-out' : ''}`}>
             <div className="loader_overlay"></div>
             <div className="loader_cogs">
                 <div className="loader_cogs__top">
