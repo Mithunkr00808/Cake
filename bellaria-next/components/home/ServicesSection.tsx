@@ -94,7 +94,6 @@ const ServicesSection = () => {
                                         <img
                                             src={service.image}
                                             alt={service.title}
-                                            style={service.blend ? { mixBlendMode: 'multiply' } : {}}
                                         />
                                     </figure>
                                 </div>

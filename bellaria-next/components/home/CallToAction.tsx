@@ -37,14 +37,14 @@ const CallToAction = () => {
                         Nam auctor magna mauris, non lacinia felis mattis nec.
                     </p>
                     <div className="btn-box">
-                        <Link 
-                            href="#" 
-                            className="theme-btn btn-style-one large" 
+                        <Link
+                            href="/shop"
+                            className="theme-btn btn-style-one large"
                             style={{ color: isHovered ? '#5fcac7' : '#ffffff' }}
                             onMouseEnter={() => setIsHovered(true)}
                             onMouseLeave={() => setIsHovered(false)}
                         >
-                            <span></span>Discover More<span></span>
+                            <span></span>Shop Now<span></span>
                         </Link>
                     </div>
                 </div>

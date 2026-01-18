@@ -67,20 +67,7 @@ const Header = () => {
             <li className={`${pathname === '/' ? 'current' : ''}`}>
                 <a href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</a>
             </li>
-            <li className="dropdown">
-                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Pages</Link>
-                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('pages'); }}><span className="fa fa-plus"></span></div>
-                <ul style={{ display: mobile && activeMobileDropdown === 'pages' ? 'block' : undefined }}>
-                    <li className="current"><Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Cakes</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Lollipop</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Wedding</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Coffee</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Ice-Cream</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Macaron</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Landing</Link></li>
-                </ul>
-            </li>
+
             <li>
                 <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Portfolio</Link>
             </li>
@@ -90,38 +77,15 @@ const Header = () => {
     // Navigation Items - Right Part
     const ItemsRight = ({ mobile = false }) => (
         <>
+
             <li className="dropdown">
-                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Blog</Link>
-                <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('blog'); }}><span className="fa fa-plus"></span></div>
-                <ul style={{ display: mobile && activeMobileDropdown === 'blog' ? 'block' : undefined }}>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Checkerboard</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Standard</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Masonry Full Width</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Two Columns Grid</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Three Columns Wide</Link></li>
-                    <li className="dropdown">
-                        <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Post Types</Link>
-                        <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('post-types'); }}><span className="fa fa-plus"></span></div>
-                        <ul style={{ display: mobile && activeMobileDropdown === 'post-types' ? 'block' : undefined }}>
-                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Standard Post</Link></li>
-                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Gallery Post</Link></li>
-                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Video Post</Link></li>
-                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Audio Post</Link></li>
-                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Quote Post</Link></li>
-                            <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Link Post</Link></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li className="dropdown">
-                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link>
+                <Link href="/shop" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link>
                 <div className="dropdown-btn" onClick={(e) => { e.preventDefault(); toggleMobileDropdown('shop'); }}><span className="fa fa-plus"></span></div>
                 <ul style={{ display: mobile && activeMobileDropdown === 'shop' ? 'block' : undefined }}>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Cart</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Checkout</Link></li>
-                    <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>My account</Link></li>
+                    <li><Link href="/shop" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
+                    <li><Link href="/cart" onClick={mobile ? closeMobileMenu : undefined}>Cart</Link></li>
+                    <li><Link href="/checkout" onClick={mobile ? closeMobileMenu : undefined}>Checkout</Link></li>
+                    <li><Link href="/login" onClick={mobile ? closeMobileMenu : undefined}>My account</Link></li>
                 </ul>
             </li>
             <li><Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Contacts</Link></li>
@@ -182,7 +146,7 @@ const Header = () => {
                                 <div className="shopping-cart">
                                     <ul className="shopping-cart-items">
                                         <li className="cart-item">
-                                            <img src="https://via.placeholder.com/300x300" alt="#" className="thumb" />
+                                            <img src="/assets/images/resource/birthday-cake.png" alt="#" className="thumb" />
                                             <span className="item-name">Birthday Cake</span>
                                             <span className="item-quantity">1 x <span className="item-amount">$84.00</span></span>
                                             <Link href="#" className="product-detail"></Link>
@@ -190,7 +154,7 @@ const Header = () => {
                                         </li>
 
                                         <li className="cart-item">
-                                            <img src="https://via.placeholder.com/300x300" alt="#" className="thumb" />
+                                            <img src="/assets/images/resource/macarons.png" alt="#" className="thumb" />
                                             <span className="item-name">French Macaroon</span>
                                             <span className="item-quantity">1 x <span className="item-amount">$13.00</span></span>
                                             <Link href="#" className="product-detail"></Link>
