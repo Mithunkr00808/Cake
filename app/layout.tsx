@@ -31,9 +31,7 @@ export default function RootLayout({
         
         {/* Stylesheets */}
         <link href="/assets/css/bootstrap.css" rel="stylesheet" />
-        <link href="/assets/plugins/revolution/css/settings.css" rel="stylesheet" type="text/css" />
-        <link href="/assets/plugins/revolution/css/layers.css" rel="stylesheet" type="text/css" />
-        <link href="/assets/plugins/revolution/css/navigation.css" rel="stylesheet" type="text/css" />
+
         <link href="/assets/css/style.css" rel="stylesheet" />
         <link href="/assets/css/responsive.css" rel="stylesheet" />
         <link href="/assets/css/fontawesome-all.css" rel="stylesheet" />
@@ -54,17 +52,7 @@ export default function RootLayout({
         <Script src="/assets/js/bootstrap.min.js" strategy="afterInteractive" />
 
         {/* Revolution Slider */}
-        <Script src="/assets/plugins/revolution/js/jquery.themepunch.revolution.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/jquery.themepunch.tools.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.actions.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.carousel.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.kenburn.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.migration.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.navigation.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.parallax.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js" strategy="afterInteractive" />
-        <Script src="/assets/plugins/revolution/js/extensions/revolution.extension.video.min.js" strategy="afterInteractive" />
+
 
 
         <Script src="/assets/js/jquery.fancybox.js" strategy="afterInteractive" />
