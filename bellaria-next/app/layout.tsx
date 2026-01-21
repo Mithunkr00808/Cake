@@ -14,6 +14,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 import Preloader from "@/components/layout/Preloader";
+import { Toaster } from 'react-hot-toast';
+import { CartProvider } from "@/context/CartContext";
 
 export default function RootLayout({
   children,
@@ -40,10 +42,13 @@ export default function RootLayout({
       </head>
       <body>
         <div className="page-wrapper">
-          <Preloader />
-          <Header />
-          {children}
-          <Footer />
+          <CartProvider>
+            <Preloader />
+            <Header />
+            {children}
+            <Footer />
+            <Toaster position="bottom-right" reverseOrder={false} />
+          </CartProvider>
         </div>
 
         {/* Scripts */}
