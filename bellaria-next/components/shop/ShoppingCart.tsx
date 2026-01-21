@@ -48,8 +48,9 @@ const ShoppingCart = () => {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.3, ease: "easeOut" }}
                                         >
-                                            <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>Your cart is currently empty.</td>
+                                            <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>Your cart is currently empty.</td>
                                         </motion.tr>
                                     ) : (
                                         cartItems.map((item) => (
@@ -57,10 +58,24 @@ const ShoppingCart = () => {
                                                 className="cart-item" 
                                                 key={item.id}
                                                 layout
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                exit={{ opacity: 0, scale: 0.9 }}
-                                                transition={{ duration: 0.2 }}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ 
+                                                    opacity: 0,
+                                                    x: -100,
+                                                    height: 0,
+                                                    transition: { 
+                                                        opacity: { duration: 0.2, ease: "easeOut" },
+                                                        x: { duration: 0.3, ease: "easeInOut" },
+                                                        height: { duration: 0.3, delay: 0.1, ease: "easeInOut" }
+                                                    }
+                                                }}
+                                                transition={{ 
+                                                    type: "spring", 
+                                                    stiffness: 500, 
+                                                    damping: 30,
+                                                    mass: 0.4
+                                                }}
                                             >
                                                 <td className="product-thumbnail">
                                                     <Link href="#"><img src={item.image} alt={item.name} className="thumb" /></Link>
@@ -84,8 +99,9 @@ const ShoppingCart = () => {
                                                 <td className="product-remove"> 
                                                     <motion.a 
                                                         href="#"
-                                                        whileHover={{ scale: 1.2, color: '#ff0000' }}
-                                                        whileTap={{ scale: 0.9 }}
+                                                        whileHover={{ scale: 1.3, rotate: 90 }}
+                                                        whileTap={{ scale: 0.8 }}
+                                                        transition={{ type: "spring", stiffness: 500, damping: 15 }}
                                                         onClick={(e) => { e.preventDefault(); handleRemove(item.id, item.name); }} 
                                                         className="remove"
                                                     >
@@ -133,7 +149,20 @@ const ShoppingCart = () => {
                             <li><h3>Cart Totals</h3></li>
                             <li className="clearfix"><span className="col">Subtotal</span><span className="col price">${cartTotal.toFixed(2)}</span></li>
                             <li className="clearfix"><span className="col">Total</span><span className="col total-price">${cartTotal.toFixed(2)}</span></li>
-                            <li className="text-right"><button type="submit" className="theme-btn proceed-btn">Proceed to Checkout</button></li>
+                            <li className="text-right">
+                                <button 
+                                    onClick={() => {
+                                        if (cartItems.length === 0) {
+                                            toast.error("Please add items to cart first");
+                                        } else {
+                                            window.location.href = "/checkout";
+                                        }
+                                    }}
+                                    className="theme-btn proceed-btn"
+                                >
+                                    Proceed to Checkout
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>
