@@ -115,3 +115,11 @@ body {
   content: '';
   display: block;
 }
+
+/* Fix for Wavy Border Gaps on Wide Screens */
+.main-header .menu_wave {
+  -webkit-mask-size: cover !important;
+  mask-size: cover !important;
+  width: 101% !important;
+  left: -0.5% !important;
+}
