@@ -115,7 +115,7 @@ const Header = () => {
     );
 
     return (
-        <header className={`main-header ${isSticky ? 'fixed-header' : ''} ${isSearchOpen ? 'search-active' : ''}`} style={{ position: 'relative' }}>
+        <header className={`main-header ${isSticky ? 'fixed-header' : ''} ${isSearchOpen ? 'search-active' : ''}`} style={{ position: 'relative', backgroundColor: 'transparent' }}>
             {/* Menu Wave */}
             <div className="menu_wave" style={{ display: isSticky ? 'none' : 'block' }}></div>
 
