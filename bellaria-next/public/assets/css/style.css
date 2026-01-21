@@ -1276,15 +1276,15 @@ ul,li{
 .btn-style-two,
 .btn-style-two span:before{
 	box-shadow: 0px 0px 0px 3px #fff;
-	color: #4b4342;
-    background-color: #ffffff;
-    border-color: #4b4342;
+	color: #ffffff !important;
+    background-color: #4b4342;
+    border-color: #4b4342 !important;
 }
 
 .btn-style-two:hover,
 .btn-style-two:hover span:before{
-	color: #ffffff;
-    background-color: #4b4342;
+	color: #4b4342 !important;
+    background-color: #ffffff;
 }
 
 .btn-style-two.alt span:before,
