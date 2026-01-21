@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { toast } from 'react-hot-toast';
 
 const Header = () => {
     const pathname = usePathname();
@@ -13,32 +14,39 @@ const Header = () => {
     const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
     const { cartItems, cartCount, cartTotal, removeFromCart } = useCart();
 
-    // Sticky Header Scroll Logic
+    // Sticky Header Scroll Logic (optimized with throttling)
     useEffect(() => {
         let lastScrollY = window.scrollY;
+        let ticking = false;
 
         const handleScroll = () => {
-            const currentScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY;
 
-            // Fixed header class logic (> 700px)
-            if (currentScrollY > 700) {
-                setIsSticky(true);
-            } else {
-                setIsSticky(false);
-            }
+                    // Fixed header class logic (> 700px)
+                    if (currentScrollY > 700) {
+                        setIsSticky(true);
+                    } else {
+                        setIsSticky(false);
+                    }
 
-            // Smart sticky hide/show logic
-            if (currentScrollY > lastScrollY && currentScrollY > 700) {
-                // Scrolling Down
-                setIsStickyHidden(true);
-            } else {
-                // Scrolling Up
-                setIsStickyHidden(false);
+                    // Smart sticky hide/show logic
+                    if (currentScrollY > lastScrollY && currentScrollY > 700) {
+                        // Scrolling Down
+                        setIsStickyHidden(true);
+                    } else {
+                        // Scrolling Up
+                        setIsStickyHidden(false);
+                    }
+                    lastScrollY = currentScrollY;
+                    ticking = false;
+                });
+                ticking = true;
             }
-            lastScrollY = currentScrollY;
         };
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -156,7 +164,7 @@ const Header = () => {
                                                     <span className="item-name">{item.name}</span>
                                                     <span className="item-quantity">{item.quantity} x <span className="item-amount">${item.price.toFixed(2)}</span></span>
                                                     <Link href="/shop/product-single" className="product-detail"></Link>
-                                                    <button className="remove-item" onClick={() => removeFromCart(item.id)}><span className="fa fa-times"></span></button>
+                                                    <a href="#" className="remove-item" onClick={(e) => { e.preventDefault(); removeFromCart(item.id); }}><span className="fa fa-times"></span></a>
                                                 </li>
                                             ))
                                         )}
@@ -165,7 +173,18 @@ const Header = () => {
                                     <div className="cart-footer">
                                         <div className="shopping-cart-total"><strong>Subtotal:</strong> ${cartTotal.toFixed(2)}</div>
                                         <Link href="/cart" className="theme-btn">View Cart</Link>
-                                        <Link href="/checkout" className="theme-btn">Checkout</Link>
+                                        <button 
+                                            onClick={() => {
+                                                if (cartItems.length === 0) {
+                                                    toast.error("Please add items to cart first");
+                                                } else {
+                                                    window.location.href = "/checkout";
+                                                }
+                                            }} 
+                                            className="theme-btn"
+                                        >
+                                            Checkout
+                                        </button>
                                     </div>
                                 </div> {/*end shopping-cart */}
                             </div>
@@ -217,7 +236,7 @@ const Header = () => {
                             <button className="search-btn mobile-search-btn" onClick={toggleSearch}><i className="fa fa-search"></i></button>
                         </div>
                         <div className="cart-btn">
-                            <Link href="#"><i className="icon flaticon-commerce"></i> <span className="count">2</span></Link>
+                            <Link href="/cart"><i className="icon flaticon-commerce"></i> <span className="count">{cartCount}</span></Link>
                         </div>
                     </div>
                     <div className="mobile-nav-toggler" onClick={toggleMobileMenu}><span className="icon fa fa-bars"></span></div>

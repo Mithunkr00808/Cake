@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 
 // Define the shape of a Cart Item
 export interface CartItem {
@@ -49,8 +49,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [cartItems, isLoaded]);
 
-    // Add Item to Cart
-    const addToCart = (product: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+    // Add Item to Cart (memoized to prevent re-creation on every render)
+    const addToCart = useCallback((product: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
         setCartItems((prevItems) => {
             const existingItem = prevItems.find((item) => item.id === product.id);
             const quantityToAdd = product.quantity || 1;
@@ -64,42 +64,52 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
             }
             return [...prevItems, { ...product, quantity: quantityToAdd }];
         });
-    };
+    }, []);
 
-    // Remove Item from Cart
-    const removeFromCart = (id: number) => {
+    // Remove Item from Cart (memoized)
+    const removeFromCart = useCallback((id: number) => {
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-    };
+    }, []);
 
-    // Update Item Quantity
-    const updateQuantity = (id: number, quantity: number) => {
+    // Update Item Quantity (memoized)
+    const updateQuantity = useCallback((id: number, quantity: number) => {
         if (quantity < 1) return; // Prevent 0 or negative
         setCartItems((prevItems) =>
             prevItems.map((item) =>
                 item.id === id ? { ...item, quantity } : item
             )
         );
-    };
+    }, []);
 
-    // Clear Cart
-    const clearCart = () => {
+    // Clear Cart (memoized)
+    const clearCart = useCallback(() => {
         setCartItems([]);
-    };
+    }, []);
 
-    // Derived State
-    const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+    // Derived State (memoized to prevent recalculation on every render)
+    const cartTotal = useMemo(() => 
+        cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
+        [cartItems]
+    );
+    
+    const cartCount = useMemo(() => 
+        cartItems.reduce((count, item) => count + item.quantity, 0),
+        [cartItems]
+    );
+
+    // Memoize context value to prevent unnecessary re-renders of consumers
+    const contextValue = useMemo(() => ({
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        cartTotal,
+        cartCount
+    }), [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount]);
 
     return (
-        <CartContext.Provider value={{
-            cartItems,
-            addToCart,
-            removeFromCart,
-            updateQuantity,
-            clearCart,
-            cartTotal,
-            cartCount
-        }}>
+        <CartContext.Provider value={contextValue}>
             {children}
         </CartContext.Provider>
     );

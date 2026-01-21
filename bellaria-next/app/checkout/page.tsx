@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import CheckoutForm from '@/components/shop/CheckoutForm';
+import Checkout from '@/components/shop/Checkout';
 
 export default function CheckoutPage() {
     return (
@@ -18,7 +18,7 @@ export default function CheckoutPage() {
             {/* End Page Title */}
 
             {/* Checkout Section */}
-            <CheckoutForm />
+            <Checkout />
             {/* End Checkout Section */}
         </>
     );

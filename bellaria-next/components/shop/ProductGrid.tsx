@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
@@ -111,7 +111,7 @@ const products = [
 const ProductGrid = () => {
     const { addToCart } = useCart();
 
-    const handleAddToCart = (e: React.MouseEvent, product: any) => {
+    const handleAddToCart = useCallback((e: React.MouseEvent, product: any) => {
         e.preventDefault();
         addToCart({
             id: product.id,
@@ -120,14 +120,14 @@ const ProductGrid = () => {
             image: product.image
         });
         toast.success(`${product.name} added to cart!`);
-    };
+    }, [addToCart]);
 
     return (
         <div className="our-shop">
             <div className="shop-upper-box clearfix">
                 <div className="items-label">Showing all {products.length} results</div>
                 <div className="orderby">
-                    <select name="orderby" className="sortby-select select2-offscreen">
+                    <select name="orderby" className="sortby-select">
                         <option value="popularity">Sort by popularity</option>
                         <option value="rating">Sort by average rating</option>
                         <option value="date">Sort by newness</option>
