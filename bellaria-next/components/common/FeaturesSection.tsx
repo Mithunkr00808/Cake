@@ -50,7 +50,7 @@ const FeaturesSection = ({
                         <div key={index} className="feature-block col-lg-3 col-md-6 col-sm-12">
                             <div className="inner-box">
                                 <div className="icon-box">
-                                    <div className="icon-frame">
+                                    <div>
                                         {feature.iconSvg}
                                     </div>
                                     {feature.iconClass && <div className={`icon ${feature.iconClass}`}></div>}
