@@ -2,43 +2,49 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { toast } from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
 
 const ProductDetails = () => {
     const [activeTab, setActiveTab] = useState('details');
+    const { addToCart } = useCart();
+    const [quantity, setQuantity] = useState(1);
+
+    const handleAddToCart = () => {
+        addToCart({
+            id: 2, // Hardcoded ID for this example component
+            name: "Birthday Cake",
+            price: 84.00,
+            image: "/assets/images/resource/service-birthday-transparent-v3.png",
+            quantity: quantity
+        });
+        toast.success("Birthday Cake added to cart!");
+    };
 
     return (
         <div className="shop-single">
-            {/* Product Detail */}
+            {/* ... (existing code) ... */}
             <div className="product-details">
-                {/*Basic Details*/}
+                {/* ... (existing code) ... */}
                 <div className="basic-details">
                     <div className="row clearfix">
-                        <div className="image-column col-md-6 col-sm-12">
-                            <figure className="image">
-                                <a href="/assets/images/resource/service-birthday-transparent-v3.png" className="lightbox-image" title="Image Caption Here">
-                                    <img src="/assets/images/resource/service-birthday-transparent-v3.png" alt="" style={{ background: '#f9f9f9' }} />
-                                    <span className="icon fa fa-search"></span>
-                                </a>
-                            </figure>
-                        </div>
+                        {/* ... (existing code) ... */}
                         <div className="info-column col-md-6 col-sm-12">
-                            <div className="details-header">
-                                <h4>Birthday Cake</h4>
-                                <div className="rating">
-                                    <span className="fa fa-star"></span>
-                                    <span className="fa fa-star"></span>
-                                    <span className="fa fa-star"></span>
-                                    <span className="fa fa-star"></span>
-                                    <span className="fa fa-star"></span>
-                                </div>
-                                <a className="reviews" href="#">(2 Customer Reviews)</a>
-                                <div className="item-price">$84.00</div>
-                                <div className="text">Accumsan lectus, consectetuer et sagittis et commodo, massa et, sed facilisi mi, sit diam. Ultrices facilisi convallis nullam duis. Aliquam lacinia orci convallis erat ac, vitae neque in class.</div>
-                            </div>
+                            {/* ... (existing code) ... */}
+                            
 
                             <div className="other-options clearfix">
-                                <div className="item-quantity">Quantity <input className="qty" type="number" defaultValue="1" name="quantity" /></div>
-                                <button type="button" className="theme-btn add-to-cart"><span className="btn-title">Add To Cart</span></button>
+                                <div className="item-quantity">Quantity <input className="qty" type="number" min="1" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} name="quantity" /></div>
+                                <motion.button 
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    type="button" 
+                                    className="theme-btn add-to-cart" 
+                                    onClick={handleAddToCart}
+                                >
+                                    <span className="btn-title">Add To Cart</span>
+                                </motion.button>
                                 <ul className="product-meta">
                                     <li className="posted_in">Category: <Link href="#">Cake</Link></li>
                                     <li className="tagged_as">Tag: <Link href="#">Nuts</Link></li>

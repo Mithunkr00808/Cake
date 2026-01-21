@@ -1,11 +1,17 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
 
 const ShopSidebar = () => {
+    const { cartItems, cartTotal, removeFromCart } = useCart();
+
     return (
         <aside className="sidebar theiaStickySidebar">
             <div className="sticky-sidebar">
                 {/* Search Widget */}
+                {/* ... existing code ... */}
                 <div className="sidebar-widget search-widget">
                     <form method="post" action="#">
                         <div className="form-group">
@@ -22,27 +28,25 @@ const ShopSidebar = () => {
 
                         <div className="shopping-cart">
                             <ul className="shopping-cart-items">
-                                <li className="cart-item">
-                                    <img src="/assets/images/resource/service-birthday-transparent-v3.png" alt="#" className="thumb" />
-                                    <span className="item-name">Birthday Cake</span>
-                                    <span className="item-quantity">1 x <span className="item-amount">$84.00</span></span>
-                                    <Link href="#" className="product-detail"></Link>
-                                    <button className="remove-item"><span className="fa fa-times"></span></button>
-                                </li>
-
-                                <li className="cart-item">
-                                    <img src="/assets/images/resource/service-donuts-transparent-v3.png" alt="#" className="thumb" />
-                                    <span className="item-name">Donuts</span>
-                                    <span className="item-quantity">1 x <span className="item-amount">$13.00</span></span>
-                                    <Link href="#" className="product-detail"></Link>
-                                    <button className="remove-item"><span className="fa fa-times"></span></button>
-                                </li>
+                                {cartItems.length === 0 ? (
+                                    <li className="cart-item" style={{ textAlign: 'center', padding: '10px' }}>Cart is empty</li>
+                                ) : (
+                                    cartItems.map((item) => (
+                                        <li className="cart-item" key={item.id}>
+                                            <img src={item.image} alt={item.name} className="thumb" />
+                                            <span className="item-name">{item.name}</span>
+                                            <span className="item-quantity">{item.quantity} x <span className="item-amount">${item.price.toFixed(2)}</span></span>
+                                            <Link href="#" className="product-detail"></Link>
+                                            <button className="remove-item" onClick={() => removeFromCart(item.id)}><span className="fa fa-times"></span></button>
+                                        </li>
+                                    ))
+                                )}
                             </ul>
 
                             <div className="cart-footer">
-                                <div className="shopping-cart-total"><strong>Subtotal:</strong> $97.00</div>
-                                <Link href="#" className="theme-btn">View Cart</Link>
-                                <Link href="#" className="theme-btn">Checkout</Link>
+                                <div className="shopping-cart-total"><strong>Subtotal:</strong> ${cartTotal.toFixed(2)}</div>
+                                <Link href="/cart" className="theme-btn">View Cart</Link>
+                                <Link href="/checkout" className="theme-btn">Checkout</Link>
                             </div>
                         </div>
                     </div>

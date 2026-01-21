@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 const Header = () => {
     const pathname = usePathname();
@@ -10,6 +11,7 @@ const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
+    const { cartItems, cartCount, cartTotal, removeFromCart } = useCart();
 
     // Sticky Header Scroll Logic
     useEffect(() => {
@@ -141,29 +143,27 @@ const Header = () => {
                         <div className="outer-box clearfix">
                             {/* Shoppping Car */}
                             <div className="cart-btn">
-                                <Link href="/cart"><i className="icon flaticon-commerce"></i> <span className="count">2</span></Link>
+                                <Link href="/cart"><i className="icon flaticon-commerce"></i> <span className="count">{cartCount}</span></Link>
 
                                 <div className="shopping-cart">
                                     <ul className="shopping-cart-items">
-                                        <li className="cart-item">
-                                            <img src="/assets/images/resource/birthday-cake.png" alt="#" className="thumb" />
-                                            <span className="item-name">Birthday Cake</span>
-                                            <span className="item-quantity">1 x <span className="item-amount">$84.00</span></span>
-                                            <Link href="/shop/product-single" className="product-detail"></Link>
-                                            <button className="remove-item"><span className="fa fa-times"></span></button>
-                                        </li>
-
-                                        <li className="cart-item">
-                                            <img src="/assets/images/resource/macarons.png" alt="#" className="thumb" />
-                                            <span className="item-name">French Macaroon</span>
-                                            <span className="item-quantity">1 x <span className="item-amount">$13.00</span></span>
-                                            <Link href="/shop/product-single" className="product-detail"></Link>
-                                            <button className="remove-item"><span className="fa fa-times"></span></button>
-                                        </li>
+                                        {cartItems.length === 0 ? (
+                                            <li className="cart-item" style={{ textAlign: 'center', padding: '10px' }}>Cart is empty</li>
+                                        ) : (
+                                            cartItems.map((item) => (
+                                                <li className="cart-item" key={item.id}>
+                                                    <img src={item.image} alt={item.name} className="thumb" />
+                                                    <span className="item-name">{item.name}</span>
+                                                    <span className="item-quantity">{item.quantity} x <span className="item-amount">${item.price.toFixed(2)}</span></span>
+                                                    <Link href="/shop/product-single" className="product-detail"></Link>
+                                                    <button className="remove-item" onClick={() => removeFromCart(item.id)}><span className="fa fa-times"></span></button>
+                                                </li>
+                                            ))
+                                        )}
                                     </ul>
 
                                     <div className="cart-footer">
-                                        <div className="shopping-cart-total"><strong>Subtotal:</strong> $97.00</div>
+                                        <div className="shopping-cart-total"><strong>Subtotal:</strong> ${cartTotal.toFixed(2)}</div>
                                         <Link href="/cart" className="theme-btn">View Cart</Link>
                                         <Link href="/checkout" className="theme-btn">Checkout</Link>
                                     </div>
