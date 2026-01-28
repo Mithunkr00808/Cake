@@ -227,19 +227,21 @@ const Header = () => {
 
             {/* Mobile Header */}
             <div className="mobile-header">
-                <div className="logo"><a href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a></div>
-
-                {/*Nav Box*/}
-                <div className="nav-outer clearfix">
-                    <div className="outer-box">
-                        <div className="search-box">
-                            <button className="search-btn mobile-search-btn" onClick={toggleSearch}><i className="fa fa-search"></i></button>
-                        </div>
-                        <div className="cart-btn">
-                            <Link href="/cart"><i className="icon flaticon-commerce"></i> <span className="count">{cartCount}</span></Link>
-                        </div>
+                <div className="auto-container flex items-center justify-between px-4 py-3 relative z-[100]">
+                    <div className="logo relative z-10">
+                        <a href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a>
                     </div>
-                    <div className="mobile-nav-toggler" onClick={toggleMobileMenu}><span className="icon fa fa-bars"></span></div>
+
+                    {/*Nav Box*/}
+                    <div className="nav-outer flex items-center gap-5">
+                        <div className="search-box">
+                            <button className="search-btn mobile-search-btn !static !visible !opacity-100 !transform-none !m-0" onClick={toggleSearch}><i className="fa fa-search text-[18px]"></i></button>
+                        </div>
+                        <div className="cart-btn !static !float-none !m-0 !translate-x-0">
+                            <Link href="/cart" className="relative block"><i className="icon flaticon-commerce text-[20px]"></i> <span className="count absolute -top-2 -right-3">{cartCount}</span></Link>
+                        </div>
+                        <div className="mobile-nav-toggler !static !float-none !m-0 !translate-x-0 !block h-auto leading-none" onClick={toggleMobileMenu}><span className="icon fa fa-bars text-[24px]"></span></div>
+                    </div>
                 </div>
             </div>
 
