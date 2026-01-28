@@ -70,20 +70,20 @@ const HeroSlider = () => {
                                         alt="Decoration" 
                                         width={654} 
                                         height={654}
-                                        className="opacity-100 w-[280px] h-[280px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px] object-contain"
+                                        className="opacity-100 w-[280px] h-[280px] min-w-[280px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px] object-contain"
                                     />
                                 </div>
 
                                 {/* Text: Welcome */}
                                 <div className="relative z-20 text-center mb-4 md:mb-10 animate-hero-fade-in-down delay-200 smooth-layer">
-                                    <h2 className="text-[#4b4342] leading-[1.1] font-bold drop-shadow-md text-shadow-bold font-leckerli text-[35px] md:text-[50px] lg:text-[60px]">
+                                    <h2 className="text-[#4b4342] !leading-[24px] md:!leading-[1.1] drop-shadow-md text-shadow-bold font-leckerli !text-[20px] md:!text-[50px] lg:!text-[60px]">
                                         Welcome <br />To <br />Slice of Cake
                                     </h2>
                                 </div>
 
                                 {/* Text: Layered in Love */}
-                                <div className="relative z-20 text-center mt-16 md:mt-32 lg:mt-36 animate-hero-fade-in-up delay-500 smooth-layer">
-                                    <p className="text-[#4b4342] font-normal tracking-wide font-abeezee text-[14px] md:text-[18px]">
+                                <div className="relative z-20 text-center mt-10 md:mt-32 lg:mt-36 animate-hero-fade-in-up delay-500 smooth-layer">
+                                    <p className="text-[#4b4342] font-normal tracking-wide font-abeezee !text-[14px] md:!text-[24px]">
                                         Layered in Love
                                     </p>
                                 </div>
