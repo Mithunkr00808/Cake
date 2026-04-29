@@ -1,17 +1,22 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
-import dotenv from "dotenv";
+import admin from "firebase-admin";
+import { readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config({ path: ".env.local" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
+// Load service account
+const serviceAccountPath = join(__dirname, "../firebase-service-account.json");
+const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, "utf8"));
+
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+    });
+}
+
+const db = admin.firestore();
 
 const products = [
     {
@@ -115,20 +120,12 @@ const products = [
 ];
 
 const seed = async () => {
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const productsCol = collection(db, "products");
+    const productsCol = db.collection("products");
 
     console.log("Seeding products...");
 
-    // Optional: Clear existing products
-    // const snapshot = await getDocs(productsCol);
-    // for (const document of snapshot.docs) {
-    //     await deleteDoc(doc(db, "products", document.id));
-    // }
-
     for (const product of products) {
-        await addDoc(productsCol, product);
+        await productsCol.add(product);
         console.log(`Added: ${product.name}`);
     }
 
