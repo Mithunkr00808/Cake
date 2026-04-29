@@ -7,109 +7,28 @@ import { motion } from 'framer-motion';
 
 import { useCart } from '@/context/CartContext';
 
-const products = [
-    {
-        id: 1,
-        name: "Authentic Macaroons",
-        price: 25.00,
-        oldPrice: "$29.00",
-        rating: 4,
-        image: "/assets/images/resource/macarons.png",
-        sale: true
-    },
-    {
-        id: 2,
-        name: "Birthday Cake",
-        price: 84.00,
-        rating: 4.5,
-        image: "/assets/images/resource/birthday-cake.png",
-        sale: false
-    },
-    {
-        id: 3,
-        name: "Candy Lollipop",
-        price: 15.00,
-        rating: 3,
-        image: "/assets/images/resource/donuts.png",
-        sale: false
-    },
-    {
-        id: 4,
-        name: "Classic Macaroon",
-        price: 22.00,
-        rating: 4.5,
-        image: "/assets/images/resource/macarons.png",
-        sale: false
-    },
-    {
-        id: 5,
-        name: "Coffee Cake",
-        price: 39.00,
-        rating: 3,
-        image: "/assets/images/resource/cake.png",
-        sale: false
-    },
-    {
-        id: 6,
-        name: "French Macaroon",
-        price: 17.00,
-        rating: 5,
-        image: "/assets/images/resource/macarons.png",
-        sale: true
-    },
-    {
-        id: 7,
-        name: "Happy Ninja",
-        price: 35.00,
-        rating: 5,
-        image: "/assets/images/resource/occasion-cake.png",
-        sale: false
-    },
-    {
-        id: 8,
-        name: "Hearts Lollipop",
-        price: 17.00,
-        rating: 5,
-        image: "/assets/images/resource/donuts.png",
-        sale: false
-    },
-    {
-        id: 9,
-        name: "Lemon Lollipop",
-        price: 35.00,
-        rating: 5,
-        image: "/assets/images/resource/donuts.png",
-        sale: false
-    },
-    {
-        id: 10,
-        name: "Limo Lollipop",
-        price: 32.00,
-        rating: 0,
-        image: "/assets/images/resource/donuts.png",
-        sale: false
-    },
-    {
-        id: 11,
-        name: "Premium Lollipop",
-        price: 9.00,
-        oldPrice: "$15.00",
-        rating: 3,
-        image: "/assets/images/resource/donuts.png",
-        sale: true
-    },
-    {
-        id: 12,
-        name: "Yami Makaroons",
-        price: 17.00,
-        rating: 4.5,
-        image: "/assets/images/resource/macarons.png",
-        sale: false
-    }
-];
+import { getProducts, Product } from '@/lib/db/products';
 
 const ProductGrid = () => {
     const { addToCart } = useCart();
+    const [products, setProducts] = React.useState<Product[]>([]);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const data = await getProducts();
+                setProducts(data);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                toast.error("Failed to load products.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const handleAddToCart = useCallback((e: React.MouseEvent, product: any) => {
         e.preventDefault();
@@ -121,6 +40,10 @@ const ProductGrid = () => {
         });
         toast.success(`${product.name} added to cart!`);
     }, [addToCart]);
+
+    if (loading) {
+        return <div className="text-center py-5"><h4>Loading products...</h4></div>;
+    }
 
     return (
         <div className="our-shop">
@@ -138,7 +61,11 @@ const ProductGrid = () => {
             </div>
 
             <div className="row clearfix">
-                {products.map((product) => (
+                {products.length === 0 ? (
+                    <div className="col-12 text-center py-5">
+                        <p>No products found. Please seed the database.</p>
+                    </div>
+                ) : products.map((product) => (
                     <div className="shop-item col-lg-4 col-md-6 col-sm-12" key={product.id}>
                         <div className="inner-box">
                             <div className="image-box">
