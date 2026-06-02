@@ -56,6 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                         <ul className="blog-cat">
                                             <li><Link href="/admin">Dashboard</Link></li>
                                             <li><Link href="/admin/inventory">Inventory</Link></li>
+                                            <li><Link href="/admin/orders">Orders</Link></li>
                                             <li><Link href="/admin/settings">Store Settings</Link></li>
                                         </ul>
                                     </div>

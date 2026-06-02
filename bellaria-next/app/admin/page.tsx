@@ -10,7 +10,7 @@ export default function AdminDashboard() {
             </div>
             
             <div className="row clearfix">
-                <div className="col-lg-6 col-md-6 col-sm-12">
+                <div className="col-lg-4 col-md-6 col-sm-12">
                     <Link href="/admin/inventory" style={{ textDecoration: 'none' }}>
                         <div className="services-block-two" style={{ border: '1px solid #eee', padding: '30px', borderRadius: '10px', transition: 'all 0.3s', cursor: 'pointer', textAlign: 'center' }}>
                             <div className="inner-box">
@@ -20,7 +20,17 @@ export default function AdminDashboard() {
                         </div>
                     </Link>
                 </div>
-                <div className="col-lg-6 col-md-6 col-sm-12">
+                <div className="col-lg-4 col-md-6 col-sm-12">
+                    <Link href="/admin/orders" style={{ textDecoration: 'none' }}>
+                        <div className="services-block-two" style={{ border: '1px solid #eee', padding: '30px', borderRadius: '10px', transition: 'all 0.3s', cursor: 'pointer', textAlign: 'center' }}>
+                            <div className="inner-box">
+                                <h3 style={{ color: '#333', marginBottom: '15px' }}>Orders</h3>
+                                <p style={{ color: '#666' }}>View and manage customer orders and update delivery status.</p>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
+                <div className="col-lg-4 col-md-6 col-sm-12">
                     <Link href="/admin/settings" style={{ textDecoration: 'none' }}>
                         <div className="services-block-two" style={{ border: '1px solid #eee', padding: '30px', borderRadius: '10px', transition: 'all 0.3s', cursor: 'pointer', textAlign: 'center' }}>
                             <div className="inner-box">
@@ -31,6 +41,7 @@ export default function AdminDashboard() {
                     </Link>
                 </div>
             </div>
+
         </div>
     );
 }
