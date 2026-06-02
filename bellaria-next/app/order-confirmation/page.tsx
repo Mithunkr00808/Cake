@@ -63,11 +63,25 @@ function OrderConfirmationContent() {
                         )}
 
                         <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <Link href="/shop" className="theme-btn">
-                                <span className="btn-title">Continue Shopping</span>
+                            <Link 
+                                href="/shop" 
+                                style={{
+                                    padding: '12px 25px', background: '#ff7a7a', color: '#fff',
+                                    borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none',
+                                    transition: 'transform 0.2s', display: 'inline-block'
+                                }}
+                            >
+                                Continue Shopping
                             </Link>
-                            <Link href="/" className="theme-btn btn-style-two">
-                                <span>Back to Home</span>
+                            <Link 
+                                href="/" 
+                                style={{
+                                    padding: '12px 25px', background: '#f5f5f5', color: '#333',
+                                    borderRadius: '30px', fontWeight: 'bold', textDecoration: 'none',
+                                    border: '1px solid #ddd', transition: 'transform 0.2s', display: 'inline-block'
+                                }}
+                            >
+                                Back to Home
                             </Link>
                         </div>
                     </div>
