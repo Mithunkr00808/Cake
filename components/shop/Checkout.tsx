@@ -137,24 +137,8 @@ const Checkout = () => {
                                         <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} placeholder="" required />
                                     </div>
                                     
-                                    {/*Form Group*/}
-                                    <div className="form-group">
-                                        <div className="field-label">Company name (optional)</div>
-                                        <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} placeholder="" />
-                                    </div>
-                                    
-                                    {/*Form Group*/}
-                                    <div className="form-group">
-                                        <div className="field-label">Country <sup>*</sup></div>
-                                        <select name="country" className="sortby-select" autoComplete="country" value={formData.country} onChange={handleInputChange}>
-                                            <option value="">Select a country&hellip;</option>
-                                            <option value="US">United States (US)</option>
-                                            <option value="UK">United Kingdom (UK)</option>
-                                            <option value="IN">India</option>
-                                            <option value="AU">Australia</option>
-                                        </select>
-                                    </div>
-                                    
+
+
                                     {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">Street address <sup>*</sup></div>
