@@ -6,6 +6,7 @@ import {
     updateDoc,
     orderBy,
     query,
+    where,
     Timestamp,
 } from "firebase/firestore";
 import { db } from "../firebase";
@@ -41,6 +42,7 @@ export interface OrderCustomer {
 
 export interface Order {
     id: string;
+    userId?: string;
     customer: OrderCustomer;
     items: OrderItem[];
     total: number;
@@ -73,6 +75,18 @@ export const getOrders = async (): Promise<Order[]> => {
         return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Order));
     } catch (error) {
         console.error("Error fetching orders:", error);
+        return [];
+    }
+};
+
+export const getOrdersByUserId = async (userId: string): Promise<Order[]> => {
+    try {
+        const ordersCol = collection(db, 'orders');
+        const q = query(ordersCol, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Order));
+    } catch (error) {
+        console.error("Error fetching user orders:", error);
         return [];
     }
 };

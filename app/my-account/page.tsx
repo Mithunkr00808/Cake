@@ -7,7 +7,7 @@ import { signOut, updateProfile, updatePassword } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
-import { getOrders, Order } from '@/lib/db/orders';
+import { getOrdersByUserId, Order } from '@/lib/db/orders';
 import toast from 'react-hot-toast';
 import PageTitle from '@/components/common/PageTitle';
 
@@ -90,9 +90,7 @@ export default function MyAccountPage() {
     const fetchOrders = useCallback(async () => {
         if (!user) return;
         setLoadingOrders(true);
-        const allOrders = await getOrders();
-        // Filter orders by this user's email
-        const myOrders = allOrders.filter(o => o.customer.email === user.email);
+        const myOrders = await getOrdersByUserId(user.uid);
         setOrders(myOrders);
         setLoadingOrders(false);
     }, [user]);
