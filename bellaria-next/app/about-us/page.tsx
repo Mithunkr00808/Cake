@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import PageTitle from '@/components/common/PageTitle';
-import AboutSection from '@/components/about/AboutSection';
+import DynamicAboutSection from '@/components/about/DynamicAboutSection';
 
 const AboutUs = () => {
     return (
@@ -14,7 +14,7 @@ const AboutUs = () => {
                 ]}
                 backgroundImage="/assets/images/background/about-title-bg.png"
             />
-            <AboutSection />
+            <DynamicAboutSection />
         </div>
     );
 };

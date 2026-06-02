@@ -68,7 +68,7 @@ const Checkout = () => {
             <div className="auto-container">
                 {/*Default Links*/}
                 <div className="default-links">
-                    <div className="message-box with-icon info"><div className="icon-box"><span className="icon fa fa-info"></span></div> Have a coupon? <a href="#">Click here to enter your code</a></div>
+                    {/* Coupon removed */}
                 </div>
                 
                 {/*Checkout Details*/}
@@ -189,7 +189,7 @@ const Checkout = () => {
                                         <strong className="product-quantity">× {item.quantity}</strong>
                                     </td> 
                                     <td className="product-total">
-                                        <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">$</span>{(item.price * item.quantity).toFixed(2)}</span>
+                                        <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">₹</span>{(item.price * item.quantity).toFixed(2)}</span>
                                     </td>
                                 </tr>
                             ))}
@@ -197,11 +197,11 @@ const Checkout = () => {
                         <tfoot>
                             <tr className="cart-subtotal">
                                 <th>Subtotal</th>
-                                <td><span className="amount">${cartTotal.toFixed(2)}</span></td>
+                                <td><span className="amount">₹{cartTotal.toFixed(2)}</span></td>
                             </tr>
                             <tr className="order-total">
                                 <th>Total</th>
-                                <td><strong className="amount">${cartTotal.toFixed(2)}</strong> </td>
+                                <td><strong className="amount">₹{cartTotal.toFixed(2)}</strong> </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -216,21 +216,8 @@ const Checkout = () => {
                             <ul>
                                 <li>
                                     <div className="radio-option">
-                                        <input type="radio" name="payment-group" id="payment-2" defaultChecked />
-                                        <label htmlFor="payment-2"><strong>Direct Bank Transfer</strong><span className="small-text">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</span></label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div className="radio-option">
-                                        <input type="radio" name="payment-group" id="payment-1" />
-                                        <label htmlFor="payment-1"><strong>Check Payments</strong><span className="small-text">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</span></label>
-                                    </div>
-                                </li>
-                                
-                                <li>
-                                    <div className="radio-option">
-                                        <input type="radio" name="payment-group" id="payment-3" />
-                                        <label htmlFor="payment-3"><strong>Cash on Delivery</strong><span className="small-text">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</span></label>
+                                        <input type="radio" name="payment-group" id="payment-3" defaultChecked />
+                                        <label htmlFor="payment-3"><strong>Cash on Delivery</strong><span className="small-text">Pay with cash upon delivery. Your order will be shipped and you can pay when it arrives.</span></label>
                                     </div>
                                 </li>
                             </ul>

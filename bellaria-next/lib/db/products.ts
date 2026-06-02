@@ -5,6 +5,9 @@ import {
     where, 
     doc, 
     getDoc,
+    addDoc,
+    updateDoc,
+    deleteDoc,
     orderBy,
     limit 
 } from "firebase/firestore";
@@ -17,6 +20,7 @@ export interface Product {
     oldPrice?: string;
     rating: number;
     image: string;
+    images?: string[];
     sale: boolean;
     description?: string;
     category?: string;
@@ -50,5 +54,37 @@ export const getProductById = async (id: string): Promise<Product | null> => {
     } catch (error) {
         console.error("Error fetching product by ID:", error);
         return null;
+    }
+};
+
+export const addProduct = async (product: Omit<Product, 'id'>): Promise<string | null> => {
+    try {
+        const docRef = await addDoc(collection(db, 'products'), product);
+        return docRef.id;
+    } catch (error) {
+        console.error("Error adding product:", error);
+        return null;
+    }
+};
+
+export const updateProduct = async (id: string, product: Partial<Omit<Product, 'id'>>): Promise<boolean> => {
+    try {
+        const docRef = doc(db, 'products', id);
+        await updateDoc(docRef, product);
+        return true;
+    } catch (error) {
+        console.error("Error updating product:", error);
+        return false;
+    }
+};
+
+export const deleteProduct = async (id: string): Promise<boolean> => {
+    try {
+        const docRef = doc(db, 'products', id);
+        await deleteDoc(docRef);
+        return true;
+    } catch (error) {
+        console.error("Error deleting product:", error);
+        return false;
     }
 };

@@ -79,7 +79,7 @@ const Header = () => {
             </li>
 
             <li className={pathname === '/portfolio' ? 'current' : ''}>
-                <Link href="#" onClick={mobile ? closeMobileMenu : undefined}>Portfolio</Link>
+                <Link href="/portfolio" onClick={mobile ? closeMobileMenu : undefined}>Portfolio</Link>
             </li>
         </>
     );
@@ -132,6 +132,10 @@ const Header = () => {
             {/* Main box */}
             <div className="main-box" style={{ display: isSticky ? 'none' : 'block' }}>
                 <div className="menu-box">
+                    <div className="hidden md:block" style={{ position: 'absolute', left: '40px', top: '50%', transform: 'translateY(-50%)', fontWeight: 'bold', fontSize: '14px', letterSpacing: '2px', color: '#4b4342', zIndex: 10 }}>
+                        <i className="fa fa-map-marker-alt" style={{ marginRight: '8px', color: '#ff7a7a' }}></i>
+                        THRISSUR
+                    </div>
                     <div className="logo" style={{ top: '55%', transform: 'translate(-50%, -50%)', marginLeft: 0 }}>
                         <a href="/" style={{ fontSize: '30px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a>
                     </div>
@@ -162,8 +166,8 @@ const Header = () => {
                                                 <li className="cart-item" key={item.id}>
                                                     <img src={item.image} alt={item.name} className="thumb" />
                                                     <span className="item-name">{item.name}</span>
-                                                    <span className="item-quantity">{item.quantity} x <span className="item-amount">${item.price.toFixed(2)}</span></span>
-                                                    <Link href="/shop/product-single" className="product-detail"></Link>
+                                                    <span className="item-quantity">{item.quantity} x <span className="item-amount">₹{item.price.toFixed(2)}</span></span>
+                                                    <Link href={`/shop/${item.id}`} className="product-detail"></Link>
                                                     <a href="#" className="remove-item" onClick={(e) => { e.preventDefault(); removeFromCart(item.id); }}><span className="fa fa-times"></span></a>
                                                 </li>
                                             ))
@@ -171,7 +175,7 @@ const Header = () => {
                                     </ul>
 
                                     <div className="cart-footer">
-                                        <div className="shopping-cart-total"><strong>Subtotal:</strong> ${cartTotal.toFixed(2)}</div>
+                                        <div className="shopping-cart-total"><strong>Subtotal:</strong> ₹{cartTotal.toFixed(2)}</div>
                                         <Link href="/cart" className="theme-btn">View Cart</Link>
                                         <button 
                                             onClick={() => {
@@ -189,10 +193,7 @@ const Header = () => {
                                 </div> {/*end shopping-cart */}
                             </div>
 
-                            {/* Search Btn */}
-                            <div className="search-box">
-                                <button className="search-btn" onClick={toggleSearch}><i className="fa fa-search"></i></button>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -229,14 +230,16 @@ const Header = () => {
             <div className="mobile-header">
                 <div className="auto-container flex items-center justify-between px-4 py-3 relative z-[100]">
                     <div className="logo relative z-10">
-                        <a href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</a>
+                        <a href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none', display: 'block', lineHeight: '1' }}>Slice of Cake</a>
+                        <span style={{ fontSize: '10px', fontWeight: 'bold', letterSpacing: '2px', color: '#4b4342', display: 'block', marginTop: '2px' }}>
+                            <i className="fa fa-map-marker-alt" style={{ marginRight: '4px', color: '#ff7a7a', fontSize: '9px' }}></i>
+                            THRISSUR
+                        </span>
                     </div>
 
                     {/*Nav Box*/}
                     <div className="nav-outer flex items-center gap-5">
-                        <div className="search-box">
-                            <button className="search-btn mobile-search-btn !static !visible !opacity-100 !transform-none !m-0" onClick={toggleSearch}><i className="fa fa-search text-[18px]"></i></button>
-                        </div>
+
                         <div className="cart-btn !static !float-none !m-0 !translate-x-0">
                             <Link href="/cart" className="relative block"><i className="icon flaticon-commerce text-[20px]"></i> <span className="count absolute -top-2 -right-3">{cartCount}</span></Link>
                         </div>
@@ -258,21 +261,7 @@ const Header = () => {
                 </nav>
             </div>{/* End Mobile Menu */}
 
-            {/* Header Search */}
-            <div className="search-popup">
-                <span className="search-back-drop" onClick={closeSearch}></span>
 
-                <div className="search-inner">
-                    <button className="close-search" onClick={closeSearch}><span className="fa fa-times"></span></button>
-                    <form method="post" action="#">
-                        <div className="form-group">
-                            <input type="search" name="search-field" placeholder="Search..." required />
-                            <button type="submit"><i className="fa fa-search"></i></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            {/* End Header Search */}
 
         </header>
     );

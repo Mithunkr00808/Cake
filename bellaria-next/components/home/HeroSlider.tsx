@@ -84,7 +84,8 @@ const HeroSlider = () => {
                                 {/* Text: Layered in Love */}
                                 <div className="relative z-20 text-center mt-10 md:mt-32 lg:mt-36 animate-hero-fade-in-up delay-500 smooth-layer">
                                     <p className="text-[#4b4342] font-normal tracking-wide font-abeezee !text-[14px] md:!text-[24px]">
-                                        Layered in Love
+                                        Layered in Love<br />
+                                        Home made cakes
                                     </p>
                                 </div>
 
