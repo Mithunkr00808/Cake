@@ -3,7 +3,9 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
+
 
 const Header = () => {
     const pathname = usePathname();
@@ -13,6 +15,7 @@ const Header = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
     const { cartItems, cartCount, cartTotal, removeFromCart } = useCart();
+    const { user } = useAuth();
 
     // Sticky Header Scroll Logic (optimized with throttling)
     useEffect(() => {
@@ -95,7 +98,11 @@ const Header = () => {
                     <li className={pathname === '/shop' ? 'current' : ''}><Link href="/shop" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
                     <li className={pathname === '/cart' ? 'current' : ''}><Link href="/cart" onClick={mobile ? closeMobileMenu : undefined}>Cart</Link></li>
                     <li className={pathname === '/checkout' ? 'current' : ''}><Link href="/checkout" onClick={mobile ? closeMobileMenu : undefined}>Checkout</Link></li>
-                    <li className={pathname === '/login' ? 'current' : ''}><Link href="/login" onClick={mobile ? closeMobileMenu : undefined}>My account</Link></li>
+                    <li className={pathname === '/my-account' || pathname === '/login' ? 'current' : ''}>
+                        <Link href={user ? '/my-account' : '/login'} onClick={mobile ? closeMobileMenu : undefined}>
+                            {user ? 'My Account' : 'Login'}
+                        </Link>
+                    </li>
                 </ul>
             </li>
             <li className={pathname === '/about-us' ? 'current' : ''}><Link href="/about-us" onClick={mobile ? closeMobileMenu : undefined}>About Us</Link></li>
