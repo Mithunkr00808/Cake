@@ -82,9 +82,15 @@ export const getOrders = async (): Promise<Order[]> => {
 export const getOrdersByUserId = async (userId: string): Promise<Order[]> => {
     try {
         const ordersCol = collection(db, 'orders');
-        const q = query(ordersCol, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+        const q = query(ordersCol, where('userId', '==', userId));
         const snapshot = await getDocs(q);
-        return snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Order));
+        const orders = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Order));
+        // Sort client-side newest first — avoids needing a composite Firestore index
+        return orders.sort((a, b) => {
+            const aTime = (a.createdAt as unknown as { toMillis?: () => number }).toMillis?.() ?? 0;
+            const bTime = (b.createdAt as unknown as { toMillis?: () => number }).toMillis?.() ?? 0;
+            return bTime - aTime;
+        });
     } catch (error) {
         console.error("Error fetching user orders:", error);
         return [];

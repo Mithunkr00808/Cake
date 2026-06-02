@@ -8,16 +8,22 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 import PageTitle from '@/components/common/PageTitle';
+import { usePathname } from 'next/navigation';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const { user, loading, isAdmin } = useAuth();
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
-        if (!loading && (!user || !isAdmin)) {
-            router.push('/login');
+        if (!loading && (!user || !isAdmin) && pathname !== '/admin/login') {
+            router.push('/admin/login');
         }
-    }, [user, loading, isAdmin, router]);
+    }, [user, loading, isAdmin, router, pathname]);
+
+    if (pathname === '/admin/login') {
+        return <>{children}</>;
+    }
 
     if (loading || !isAdmin) {
         return (
