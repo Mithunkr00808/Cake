@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'react-hot-toast';
+import { createOrder } from '@/lib/db/orders';
+
 
 const Checkout = () => {
     const { cartItems, cartTotal, clearCart } = useCart();
@@ -44,11 +46,13 @@ const Checkout = () => {
         }));
     };
 
-    const handlePlaceOrder = (e: React.MouseEvent) => {
+    const [submitting, setSubmitting] = useState(false);
+
+    const handlePlaceOrder = async (e: React.MouseEvent) => {
         e.preventDefault();
         
         // Basic validation
-        if (!formData.firstName || !formData.lastName || !formData.streetAddress || !formData.city || !formData.zip || !formData.phone || !formData.email) {
+        if (!formData.firstName || !formData.lastName || !formData.streetAddress || !formData.city || !formData.zip || !formData.phone) {
             toast.error("Please fill in all required fields.");
             return;
         }
@@ -58,10 +62,45 @@ const Checkout = () => {
             return;
         }
 
-        toast.success("Order placed successfully!");
-        clearCart();
-        // Here you would typically redirect to a thank you page
+        setSubmitting(true);
+
+        const orderId = await createOrder({
+            customer: {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phone: formData.phone,
+                address: formData.streetAddress,
+                apartment: formData.apartment,
+                city: formData.city,
+                state: formData.state,
+                pincode: formData.zip,
+                country: formData.country || 'India',
+            },
+            items: cartItems.map(item => ({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.image,
+            })),
+            total: cartTotal,
+            paymentMethod: 'Cash on Delivery',
+            notes: formData.orderNotes,
+            status: 'pending',
+        });
+
+        setSubmitting(false);
+
+        if (orderId) {
+            clearCart();
+            toast.success('🎉 Order placed successfully!');
+            router.push(`/order-confirmation?id=${orderId}`);
+        } else {
+            toast.error('Failed to place order. Please try again.');
+        }
     };
+
 
     return (
         <section className="checkout-page">
@@ -224,8 +263,10 @@ const Checkout = () => {
                             <div className="text">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy.</a></div>
                         </div>
                     </div>
-                    <div className="lower-box">
-                        <a href="#" className="theme-btn" onClick={handlePlaceOrder}><span className="btn-title">Place Order</span></a>
+                        <div className="lower-box">
+                        <a href="#" className="theme-btn" onClick={handlePlaceOrder} style={{ opacity: submitting ? 0.7 : 1, pointerEvents: submitting ? 'none' : 'auto' }}>
+                            <span className="btn-title">{submitting ? 'Placing Order...' : 'Place Order'}</span>
+                        </a>
                     </div>
                 </div>
                 {/*End Payment Box*/}
