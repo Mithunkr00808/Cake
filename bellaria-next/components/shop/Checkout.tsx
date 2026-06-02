@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'react-hot-toast';
 import { createOrder } from '@/lib/db/orders';
+import { useAuth } from '@/context/AuthContext';
+
 
 
 const Checkout = () => {
     const { cartItems, cartTotal, clearCart } = useCart();
+    const { user } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
@@ -65,6 +68,7 @@ const Checkout = () => {
         setSubmitting(true);
 
         const orderId = await createOrder({
+            userId: user?.uid,
             customer: {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
