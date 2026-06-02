@@ -78,10 +78,10 @@ const ShoppingCart = () => {
                                                 }}
                                             >
                                                 <td className="product-thumbnail">
-                                                    <Link href="#"><img src={item.image} alt={item.name} className="thumb" /></Link>
+                                                    <Link href={`/shop/${item.id}`}><img src={item.image} alt={item.name} className="thumb" /></Link>
                                                 </td>
-                                                <td className="product-name"><Link href="#">{item.name}</Link></td>
-                                                <td className="product-price">${item.price.toFixed(2)}</td>
+                                                <td className="product-name"><Link href={`/shop/${item.id}`}>{item.name}</Link></td>
+                                                <td className="product-price">₹{item.price.toFixed(2)}</td>
                                                 <td className="product-quantity">
                                                     <div className="quantity">
                                                         <label>Quantity</label>
@@ -95,7 +95,7 @@ const ShoppingCart = () => {
                                                         />
                                                     </div>
                                                 </td>
-                                                <td className="product-subtotal"><span className="amount">${(item.price * item.quantity).toFixed(2)}</span></td>
+                                                <td className="product-subtotal"><span className="amount">₹{(item.price * item.quantity).toFixed(2)}</span></td>
                                                 <td className="product-remove"> 
                                                     <motion.a 
                                                         href="#"
@@ -118,14 +118,7 @@ const ShoppingCart = () => {
 
                     <div className="cart-options clearfix">
                         <div className="pull-left">
-                            <div className="apply-coupon clearfix">
-                                <div className="form-group clearfix">
-                                    <input type="text" name="coupon-code" placeholder="Coupon Code" />
-                                </div>
-                                <div className="form-group clearfix">
-                                    <button type="button" className="theme-btn coupon-btn">Apply Coupon</button>
-                                </div>
-                            </div>
+                            {/* Coupon removed */}
                         </div>
 
                         <div className="pull-right">
@@ -147,8 +140,8 @@ const ShoppingCart = () => {
                         {/*Totals Table*/}
                         <ul className="totals-table">
                             <li><h3>Cart Totals</h3></li>
-                            <li className="clearfix"><span className="col">Subtotal</span><span className="col price">${cartTotal.toFixed(2)}</span></li>
-                            <li className="clearfix"><span className="col">Total</span><span className="col total-price">${cartTotal.toFixed(2)}</span></li>
+                            <li className="clearfix"><span className="col">Subtotal</span><span className="col price">₹{cartTotal.toFixed(2)}</span></li>
+                            <li className="clearfix"><span className="col">Total</span><span className="col total-price">₹{cartTotal.toFixed(2)}</span></li>
                             <li className="text-right">
                                 <button 
                                     onClick={() => {

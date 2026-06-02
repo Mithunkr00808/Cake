@@ -7,7 +7,7 @@ const CheckoutForm = () => {
             <div className="auto-container">
                 {/*Default Links*/}
                 <div className="default-links">
-                    <div className="message-box with-icon info"><div className="icon-box"><span className="icon fa fa-info"></span></div> Have a coupon? <Link href="#">Click here to enter your code</Link></div>
+                    {/* Coupon removed */}
                 </div>
 
                 {/*Checkout Details*/}
@@ -127,7 +127,7 @@ const CheckoutForm = () => {
                                     <strong className="product-quantity">× 1</strong>
                                 </td>
                                 <td className="product-total">
-                                    <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">$</span>84.00</span>
+                                    <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">₹</span>84.00</span>
                                 </td>
                             </tr>
 
@@ -136,18 +136,18 @@ const CheckoutForm = () => {
                                     <strong className="product-quantity">× 1</strong>
                                 </td>
                                 <td className="product-total">
-                                    <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">$</span>15.00</span>
+                                    <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">₹</span>15.00</span>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr className="cart-subtotal">
                                 <th>Subtotal</th>
-                                <td><span className="amount">$99.00</span></td>
+                                <td><span className="amount">₹99.00</span></td>
                             </tr>
                             <tr className="order-total">
                                 <th>Total</th>
-                                <td><strong className="amount">$99.00</strong> </td>
+                                <td><strong className="amount">₹99.00</strong> </td>
                             </tr>
                         </tfoot>
                     </table>
