@@ -1,118 +1,188 @@
-import React from 'react';
-import Link from 'next/link';
+"use client";
+
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { useCart } from '@/context/CartContext';
+import { createOrder } from '@/lib/db/orders';
 
 const CheckoutForm = () => {
+    const router = useRouter();
+    const { cartItems, cartTotal, clearCart } = useCart();
+
+    const [form, setForm] = useState({
+        firstName: '',
+        lastName: '',
+        company: '',
+        country: 'India',
+        address: '',
+        apartment: '',
+        city: '',
+        state: '',
+        pincode: '',
+        phone: '',
+        email: '',
+        notes: '',
+        paymentMethod: 'cod',
+    });
+
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (cartItems.length === 0) {
+            toast.error('Your cart is empty!');
+            return;
+        }
+        if (!form.firstName || !form.lastName || !form.address || !form.city || !form.phone) {
+            toast.error('Please fill in all required fields.');
+            return;
+        }
+
+        setSubmitting(true);
+
+        const paymentLabels: Record<string, string> = {
+            bank: 'Direct Bank Transfer',
+            cheque: 'Cheque Payment',
+            cod: 'Cash on Delivery',
+        };
+
+        const orderId = await createOrder({
+            customer: {
+                firstName: form.firstName,
+                lastName: form.lastName,
+                email: form.email,
+                phone: form.phone,
+                address: form.address,
+                apartment: form.apartment,
+                city: form.city,
+                state: form.state,
+                pincode: form.pincode,
+                country: form.country,
+            },
+            items: cartItems.map(item => ({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.image,
+            })),
+            total: cartTotal,
+            paymentMethod: paymentLabels[form.paymentMethod] || form.paymentMethod,
+            notes: form.notes,
+            status: 'pending',
+        });
+
+        setSubmitting(false);
+
+        if (orderId) {
+            clearCart();
+            toast.success('🎉 Order placed successfully!');
+            router.push(`/order-confirmation?id=${orderId}`);
+        } else {
+            toast.error('Failed to place order. Please try again.');
+        }
+    };
+
     return (
         <section className="checkout-page">
             <div className="auto-container">
-                {/*Default Links*/}
-                <div className="default-links">
-                    {/* Coupon removed */}
-                </div>
-
-                {/*Checkout Details*/}
                 <div className="checkout-form">
-                    <form method="post" action="#">
+                    <form onSubmit={handleSubmit}>
                         <div className="row clearfix">
-                            {/*Column*/}
+                            {/* Billing Details */}
                             <div className="column col-lg-6 col-md-12 col-sm-12">
                                 <div className="inner-column">
                                     <div className="sec-title">
                                         <h3>Billing details</h3>
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">First name <sup>*</sup></div>
-                                        <input type="text" name="field-name" placeholder="" />
+                                        <input type="text" name="firstName" value={form.firstName} onChange={handleChange} required />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">Last name <sup>*</sup></div>
-                                        <input type="text" name="field-name" placeholder="" />
+                                        <input type="text" name="lastName" value={form.lastName} onChange={handleChange} required />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">Company name (optional)</div>
-                                        <input type="text" name="field-name" placeholder="" />
+                                        <input type="text" name="company" value={form.company} onChange={handleChange} />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">Country <sup>*</sup></div>
-                                        <select className="custom-select-box">
-                                            <option>Pakistan</option>
-                                            <option>United States</option>
-                                            <option>United Kingdom</option>
-                                            <option>Germany</option>
-                                            <option>France</option>
+                                        <select name="country" value={form.country} onChange={handleChange} className="custom-select-box">
+                                            <option value="India">India</option>
+                                            <option value="United States">United States</option>
+                                            <option value="United Kingdom">United Kingdom</option>
+                                            <option value="Germany">Germany</option>
+                                            <option value="France">France</option>
                                         </select>
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">Street address <sup>*</sup></div>
-                                        <input type="text" name="field-name" placeholder="House number and street name" />
+                                        <input type="text" name="address" value={form.address} onChange={handleChange} placeholder="House number and street name" required />
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="text" name="field-name" placeholder="Apartment,suite,unit etc. (optional)" />
+                                        <input type="text" name="apartment" value={form.apartment} onChange={handleChange} placeholder="Apartment, suite, unit etc. (optional)" />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">Town / City <sup>*</sup></div>
-                                        <input type="text" name="field-name" placeholder="" required />
+                                        <input type="text" name="city" value={form.city} onChange={handleChange} required />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">State / County <sup>*</sup></div>
-                                        <input type="text" name="field-name" placeholder="" required />
+                                        <input type="text" name="state" value={form.state} onChange={handleChange} required />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
-                                        <div className="field-label">Postcode/ ZIP <sup>*</sup></div>
-                                        <input type="text" name="field-name" placeholder="" required />
+                                        <div className="field-label">Postcode / ZIP <sup>*</sup></div>
+                                        <input type="text" name="pincode" value={form.pincode} onChange={handleChange} required />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
-                                        <div className="field-label">Phone</div>
-                                        <input type="text" name="field-name" placeholder="" />
+                                        <div className="field-label">Phone <sup>*</sup></div>
+                                        <input type="tel" name="phone" value={form.phone} onChange={handleChange} required />
                                     </div>
 
-                                    {/*Form Group*/}
                                     <div className="form-group">
                                         <div className="field-label">Email Address</div>
-                                        <input type="text" name="field-name" placeholder="" />
+                                        <input type="email" name="email" value={form.email} onChange={handleChange} />
                                     </div>
                                 </div>
                             </div>
 
-                            {/*Column*/}
+                            {/* Additional Info */}
                             <div className="column col-lg-6 col-md-12 col-sm-12">
                                 <div className="inner-column">
                                     <div className="sec-title">
                                         <h3>Additional information</h3>
                                     </div>
-
-                                    {/*Form Group*/}
-                                    <div className="form-group ">
+                                    <div className="form-group">
                                         <div className="field-label">Order notes (optional)</div>
-                                        <textarea placeholder="Notes about your order,e.g. special notes for delivery." ></textarea>
+                                        <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Notes about your order, e.g. special notes for delivery." />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
-                {/*End Checkout Details*/}
 
-                {/*Order Box*/}
+                {/* Order Summary */}
                 <div className="order-box">
                     <table>
                         <thead>
@@ -122,72 +192,93 @@ const CheckoutForm = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="cart-item">
-                                <td className="product-name">Birthday Cake&nbsp;
-                                    <strong className="product-quantity">× 1</strong>
-                                </td>
-                                <td className="product-total">
-                                    <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">₹</span>84.00</span>
-                                </td>
-                            </tr>
-
-                            <tr className="cart-item">
-                                <td className="product-name">Donuts&nbsp;
-                                    <strong className="product-quantity">× 1</strong>
-                                </td>
-                                <td className="product-total">
-                                    <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">₹</span>15.00</span>
-                                </td>
-                            </tr>
+                            {cartItems.length === 0 ? (
+                                <tr>
+                                    <td colSpan={2} style={{ textAlign: 'center', padding: '20px', color: '#999' }}>
+                                        Your cart is empty.
+                                    </td>
+                                </tr>
+                            ) : (
+                                cartItems.map(item => (
+                                    <tr key={item.id} className="cart-item">
+                                        <td className="product-name">
+                                            {item.name}&nbsp;
+                                            <strong className="product-quantity">× {item.quantity}</strong>
+                                        </td>
+                                        <td className="product-total">
+                                            <span className="woocommerce-Price-amount amount">
+                                                <span className="woocommerce-Price-currencySymbol">₹</span>
+                                                {(item.price * item.quantity).toFixed(2)}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                         <tfoot>
                             <tr className="cart-subtotal">
                                 <th>Subtotal</th>
-                                <td><span className="amount">₹99.00</span></td>
+                                <td><span className="amount">₹{cartTotal.toFixed(2)}</span></td>
                             </tr>
                             <tr className="order-total">
                                 <th>Total</th>
-                                <td><strong className="amount">₹99.00</strong> </td>
+                                <td><strong className="amount">₹{cartTotal.toFixed(2)}</strong></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-                {/*End Order Box*/}
 
-                {/*Payment Box*/}
+                {/* Payment */}
                 <div className="payment-box">
                     <div className="upper-box">
-                        {/*Payment Options*/}
                         <div className="payment-options">
                             <ul>
                                 <li>
                                     <div className="radio-option">
-                                        <input type="radio" name="payment-group" id="payment-2" defaultChecked />
-                                        <label htmlFor="payment-2"><strong>Direct Bank Transfer</strong><span className="small-text">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</span></label>
+                                        <input type="radio" name="paymentMethod" id="payment-bank" value="bank"
+                                            checked={form.paymentMethod === 'bank'} onChange={handleChange} />
+                                        <label htmlFor="payment-bank">
+                                            <strong>Direct Bank Transfer</strong>
+                                            <span className="small-text">Make your payment directly into our bank account. Please use your Order ID as the payment reference.</span>
+                                        </label>
                                     </div>
                                 </li>
                                 <li>
                                     <div className="radio-option">
-                                        <input type="radio" name="payment-group" id="payment-1" />
-                                        <label htmlFor="payment-1"><strong>Check Payments</strong><span className="small-text">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</span></label>
+                                        <input type="radio" name="paymentMethod" id="payment-cheque" value="cheque"
+                                            checked={form.paymentMethod === 'cheque'} onChange={handleChange} />
+                                        <label htmlFor="payment-cheque">
+                                            <strong>Cheque Payments</strong>
+                                            <span className="small-text">Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</span>
+                                        </label>
                                     </div>
                                 </li>
-
                                 <li>
                                     <div className="radio-option">
-                                        <input type="radio" name="payment-group" id="payment-3" />
-                                        <label htmlFor="payment-3"><strong>Cash on Delivery</strong><span className="small-text">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order won’t be shipped until the funds have cleared in our account.</span></label>
+                                        <input type="radio" name="paymentMethod" id="payment-cod" value="cod"
+                                            checked={form.paymentMethod === 'cod'} onChange={handleChange} />
+                                        <label htmlFor="payment-cod">
+                                            <strong>Cash on Delivery</strong>
+                                            <span className="small-text">Pay with cash upon delivery.</span>
+                                        </label>
                                     </div>
                                 </li>
                             </ul>
-                            <div className="text">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <Link href="#">privacy policy.</Link></div>
+                            <div className="text">Your personal data will be used to process your order and support your experience throughout this website.</div>
                         </div>
                     </div>
                     <div className="lower-box">
-                        <Link href="#" className="theme-btn"><span className="btn-title">Place Order</span></Link>
+                        <button
+                            type="submit"
+                            className="theme-btn"
+                            onClick={handleSubmit}
+                            disabled={submitting}
+                            style={{ border: 'none', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1 }}
+                        >
+                            <span className="btn-title">{submitting ? 'Placing Order...' : 'Place Order'}</span>
+                        </button>
                     </div>
                 </div>
-                {/*End Payment Box*/}
             </div>
         </section>
     );
