@@ -6,6 +6,8 @@ import { useCart } from '@/context/CartContext';
 import { toast } from 'react-hot-toast';
 import { createOrder } from '@/lib/db/orders';
 import { useAuth } from '@/context/AuthContext';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 
 
@@ -40,6 +42,47 @@ const Checkout = () => {
         email: '',
         orderNotes: ''
     });
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (user) {
+                // Populate email automatically from auth
+                setFormData(prev => ({ ...prev, email: user.email || '' }));
+                
+                try {
+                    const docRef = doc(db, 'users', user.uid);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        
+                        // Parse name if it exists (assuming full name is stored)
+                        let firstName = '';
+                        let lastName = '';
+                        if (data.name) {
+                            const nameParts = data.name.split(' ');
+                            firstName = nameParts[0] || '';
+                            lastName = nameParts.slice(1).join(' ') || '';
+                        }
+
+                        setFormData(prev => ({
+                            ...prev,
+                            firstName: firstName || prev.firstName,
+                            lastName: lastName || prev.lastName,
+                            phone: data.phone || prev.phone,
+                            streetAddress: data.address || prev.streetAddress,
+                            city: data.city || prev.city,
+                            state: data.state || prev.state,
+                            zip: data.pincode || prev.zip,
+                        }));
+                    }
+                } catch (error) {
+                    console.error("Error fetching user profile for checkout:", error);
+                }
+            }
+        };
+
+        fetchUserProfile();
+    }, [user]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
