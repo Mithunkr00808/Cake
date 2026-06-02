@@ -59,7 +59,7 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
         }
         
         addToCart({
-            id: product.id,
+            id: Number(product.id),
             name: product.name,
             price: product.price,
             image: product.image || images[0],
