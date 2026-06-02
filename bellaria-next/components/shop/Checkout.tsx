@@ -60,6 +60,29 @@ const Checkout = () => {
             return;
         }
 
+        // Phone number validation (10 digits)
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(formData.phone.replace(/\D/g, ''))) {
+            toast.error("Please enter a valid 10-digit phone number.");
+            return;
+        }
+
+        // Pincode validation (6 digits)
+        const pincodeRegex = /^\d{6}$/;
+        if (!pincodeRegex.test(formData.zip.trim())) {
+            toast.error("Please enter a valid 6-digit pincode.");
+            return;
+        }
+
+        // Email validation (optional but validated if provided)
+        if (formData.email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email.trim())) {
+                toast.error("Please enter a valid email address.");
+                return;
+            }
+        }
+
         if (cartItems.length === 0) {
             toast.error("Your cart is empty.");
             return;
