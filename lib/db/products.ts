@@ -41,6 +41,22 @@ export const getProducts = async (): Promise<Product[]> => {
     }
 };
 
+export const getRelatedProducts = async (currentProductId: string, count: number = 3): Promise<Product[]> => {
+    try {
+        const productsCol = collection(db, 'products');
+        const q = query(productsCol, limit(count + 1));
+        const productSnapshot = await getDocs(q);
+        const productList = productSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        } as Product));
+        return productList.filter(p => p.id !== currentProductId).slice(0, count);
+    } catch (error) {
+        console.error("Error fetching related products from Firestore:", error);
+        return [];
+    }
+};
+
 export const getProductById = async (id: string): Promise<Product | null> => {
     try {
         const docRef = doc(db, 'products', id);
