@@ -6,7 +6,7 @@ export default function AdminDashboard() {
         <div>
             <div className="sec-title">
                 <h2>Dashboard</h2>
-                <div className="text">Welcome to the Bellaria Admin Panel.</div>
+                <div className="text">Welcome to the Slice of Cake Admin Panel.</div>
             </div>
             
             <div className="row clearfix">
