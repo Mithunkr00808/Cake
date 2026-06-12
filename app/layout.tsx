@@ -17,12 +17,37 @@ import Preloader from "@/components/layout/Preloader";
 import { Toaster } from 'react-hot-toast';
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { db } from "@/lib/firebase-admin";
+import SiteAccessControl from "@/components/common/SiteAccessControl";
+import ConditionalFooter from "@/components/layout/ConditionalFooter";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let isLive = true;
+  let facebook = "#";
+  let instagram = "#";
+
+  try {
+    const docSnap = await db.collection('store').doc('settings').get();
+    if (docSnap.exists) {
+      const data = docSnap.data();
+      if (typeof data?.isLive === 'boolean') {
+        isLive = data.isLive;
+      }
+      if (typeof data?.facebook === 'string') {
+        facebook = data.facebook;
+      }
+      if (typeof data?.instagram === 'string') {
+        instagram = data.instagram;
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching settings for layout:", error);
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -45,11 +70,15 @@ export default function RootLayout({
         <div className="page-wrapper">
           <AuthProvider>
             <CartProvider>
-              <Preloader />
-              <Header />
-              {children}
-              <Footer />
-              <Toaster position="bottom-right" reverseOrder={false} />
+              <SiteAccessControl isLive={isLive}>
+                <Preloader />
+                <Header />
+                {children}
+                <ConditionalFooter isLive={isLive}>
+                  <Footer facebook={facebook} instagram={instagram} />
+                </ConditionalFooter>
+                <Toaster position="bottom-right" reverseOrder={false} />
+              </SiteAccessControl>
             </CartProvider>
           </AuthProvider>
         </div>

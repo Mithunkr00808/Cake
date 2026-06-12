@@ -6,6 +6,12 @@ export interface StoreSettings {
     contactEmail?: string;
     contactPhone?: string;
     deliverablePincodes?: string[];
+    // New fields to match Layana Boutique features
+    instagram?: string;
+    facebook?: string;
+    refundPolicy?: string;
+    termsOfUse?: string;
+    isLive?: boolean;
 }
 
 export const getSettings = async (): Promise<StoreSettings | null> => {
