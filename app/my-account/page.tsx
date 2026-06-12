@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getOrdersByUserId, Order } from '@/lib/db/orders';
 import toast from 'react-hot-toast';
 import PageTitle from '@/components/common/PageTitle';
+import Skeleton from '@/components/common/Skeleton';
 
 type Tab = 'profile' | 'orders' | 'password';
 
@@ -44,8 +45,57 @@ export default function MyAccountPage() {
         city: '',
         state: '',
         pincode: '',
+        email: '',
     });
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [savingProfile, setSavingProfile] = useState(false);
+    const [profileLoading, setProfileLoading] = useState(true);
+
+    // Hydrate from cache on mount
+    useEffect(() => {
+        try {
+            const cachedProfile = sessionStorage.getItem('my_account_profile');
+            if (cachedProfile) {
+                setProfile(JSON.parse(cachedProfile));
+                setProfileLoading(false);
+            }
+            const cachedOrders = sessionStorage.getItem('my_account_orders');
+            if (cachedOrders) {
+                setOrders(JSON.parse(cachedOrders));
+                setLoadingOrders(false);
+            }
+        } catch (e) {}
+    }, []);
+
+    const validateField = (name: keyof typeof profile, value: string) => {
+        let error = '';
+        switch (name) {
+            case 'displayName':
+                if (value.trim().length < 3) error = 'Full name must be at least 3 characters.';
+                break;
+            case 'phone':
+                if (!/^[6-9]\d{9}$/.test(value)) error = 'Please enter a valid Indian phone number.';
+                break;
+            case 'pincode':
+                if (!/^[1-9]\d{5}$/.test(value)) error = 'Please enter a valid Indian pincode.';
+                break;
+            case 'address':
+                if (!value.trim()) error = 'Address is required.';
+                break;
+            case 'city':
+                if (!value.trim()) error = 'City is required.';
+                break;
+            case 'state':
+                if (!value.trim()) error = 'State is required.';
+                break;
+        }
+        setErrors(prev => ({ ...prev, [name]: error }));
+        return !error;
+    };
+
+    const handleBlur = (name: keyof typeof profile, value: string) => {
+        validateField(name, value);
+    };
 
     // Password state
     const [passwordForm, setPasswordForm] = useState({ newPassword: '', confirmPassword: '' });
@@ -53,7 +103,7 @@ export default function MyAccountPage() {
 
     // Orders state
     const [orders, setOrders] = useState<Order[]>([]);
-    const [loadingOrders, setLoadingOrders] = useState(false);
+    const [loadingOrders, setLoadingOrders] = useState(true);
     const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
     // Redirect if not logged in
@@ -63,36 +113,68 @@ export default function MyAccountPage() {
         }
     }, [user, loading, router]);
 
+    // Hydrate from cache on mount
+    useEffect(() => {
+        try {
+            const cachedProfile = sessionStorage.getItem('my_account_profile');
+            if (cachedProfile) {
+                setProfile(JSON.parse(cachedProfile));
+                setProfileLoading(false);
+            }
+            const cachedOrders = sessionStorage.getItem('my_account_orders');
+            if (cachedOrders) {
+                setOrders(JSON.parse(cachedOrders));
+                setLoadingOrders(false); // Cache exists, don't show loading spinner
+            }
+        } catch (e) {}
+    }, []);
+
     // Load profile from Firestore
     useEffect(() => {
         if (!user) return;
         const fetchProfile = async () => {
-            const docRef = doc(db, 'users', user.uid);
-            const snap = await getDoc(docRef);
-            if (snap.exists()) {
-                const data = snap.data();
-                setProfile({
-                    displayName: user.displayName || data.displayName || '',
-                    phone: data.phone || '',
-                    address: data.address || '',
-                    city: data.city || '',
-                    state: data.state || '',
-                    pincode: data.pincode || '',
-                });
-            } else {
-                setProfile(prev => ({ ...prev, displayName: user.displayName || '' }));
+            try {
+                const docRef = doc(db, 'users', user.uid);
+                const snap = await getDoc(docRef);
+                let newProfile = { ...profile };
+                if (snap.exists()) {
+                    const data = snap.data();
+                    newProfile = {
+                        displayName: user.displayName || data.displayName || '',
+                        email: user.email || data.email || '',
+                        phone: data.phone || '',
+                        address: data.address || '',
+                        city: data.city || '',
+                        state: data.state || '',
+                        pincode: data.pincode || '',
+                    };
+                } else {
+                    newProfile = { ...profile, displayName: user.displayName || '', email: user.email || '' };
+                }
+                setProfile(newProfile);
+                sessionStorage.setItem('my_account_profile', JSON.stringify(newProfile));
+            } finally {
+                setProfileLoading(false);
             }
         };
         fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     // Load user's orders
     const fetchOrders = useCallback(async () => {
         if (!user) return;
-        setLoadingOrders(true);
-        const myOrders = await getOrdersByUserId(user.uid);
-        setOrders(myOrders);
-        setLoadingOrders(false);
+        // Only show loading spinner if we don't have orders and haven't cached an empty state
+        if (!sessionStorage.getItem('my_account_orders')) {
+            setLoadingOrders(true);
+        }
+        try {
+            const myOrders = await getOrdersByUserId(user.uid);
+            setOrders(myOrders);
+            sessionStorage.setItem('my_account_orders', JSON.stringify(myOrders));
+        } finally {
+            setLoadingOrders(false);
+        }
     }, [user]);
 
     useEffect(() => {
@@ -102,6 +184,20 @@ export default function MyAccountPage() {
     const handleProfileSave = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) return;
+
+        // Run all validations before save
+        const isNameValid = validateField('displayName', profile.displayName);
+        const isPhoneValid = validateField('phone', profile.phone);
+        const isAddressValid = validateField('address', profile.address);
+        const isCityValid = validateField('city', profile.city);
+        const isStateValid = validateField('state', profile.state);
+        const isPincodeValid = validateField('pincode', profile.pincode);
+
+        if (!isNameValid || !isPhoneValid || !isAddressValid || !isCityValid || !isStateValid || !isPincodeValid) {
+            toast.error('Please fix the errors before saving.');
+            return;
+        }
+
         setSavingProfile(true);
         try {
             // Update Firebase Auth display name
@@ -160,14 +256,6 @@ export default function MyAccountPage() {
         router.push('/');
     };
 
-    if (loading || !user) {
-        return (
-            <div className="auto-container" style={{ padding: '100px 0', textAlign: 'center' }}>
-                <p style={{ color: '#999' }}>Loading your account...</p>
-            </div>
-        );
-    }
-
     const tabStyle = (tab: Tab): React.CSSProperties => ({
         padding: '10px 20px',
         borderRadius: '6px',
@@ -219,13 +307,13 @@ export default function MyAccountPage() {
                                         margin: '0 auto 12px', fontSize: '28px', color: '#fff',
                                         fontWeight: 700,
                                     }}>
-                                        {(profile.displayName || user.email || 'U')[0].toUpperCase()}
+                                        {profileLoading ? '...' : (profile.displayName || user?.email || profile.email || 'U')[0].toUpperCase()}
                                     </div>
                                     <div style={{ color: '#fff', fontWeight: 700, fontSize: '16px' }}>
-                                        {profile.displayName || 'User'}
+                                        {profileLoading ? <Skeleton type="text" width="80%" height="20px" style={{ margin: '0 auto' }} /> : (profile.displayName || 'User')}
                                     </div>
                                     <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', marginTop: '4px', wordBreak: 'break-all' }}>
-                                        {user.email}
+                                        {profileLoading ? <Skeleton type="text" width="60%" height="15px" style={{ margin: '4px auto 0 auto' }} /> : (user?.email || profile.email)}
                                     </div>
                                 </div>
 
@@ -283,87 +371,137 @@ export default function MyAccountPage() {
                                     <form onSubmit={handleProfileSave}>
                                         <h3 style={{ marginBottom: '24px', fontSize: '20px', color: '#222' }}>Personal Information</h3>
                                         <div className="row clearfix">
-                                            <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
-                                                <label style={labelStyle}>Full Name</label>
-                                                <input
-                                                    style={inputStyle}
-                                                    type="text"
-                                                    value={profile.displayName}
-                                                    onChange={e => setProfile(p => ({ ...p, displayName: e.target.value }))}
-                                                    placeholder="Your full name"
-                                                />
-                                            </div>
-                                            <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
-                                                <label style={labelStyle}>Email Address</label>
-                                                <input
-                                                    style={{ ...inputStyle, background: '#f0f0f0', color: '#888' }}
-                                                    type="email"
-                                                    value={user.email || ''}
-                                                    readOnly
-                                                    title="Email cannot be changed here"
-                                                />
-                                            </div>
-                                            <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
-                                                <label style={labelStyle}>Phone Number</label>
-                                                <input
-                                                    style={inputStyle}
-                                                    type="tel"
-                                                    value={profile.phone}
-                                                    onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))}
-                                                    placeholder="+91 XXXXX XXXXX"
-                                                />
-                                            </div>
-                                            <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
-                                                <label style={labelStyle}>City</label>
-                                                <input
-                                                    style={inputStyle}
-                                                    type="text"
-                                                    value={profile.city}
-                                                    onChange={e => setProfile(p => ({ ...p, city: e.target.value }))}
-                                                    placeholder="City"
-                                                />
-                                            </div>
-                                            <div className="col-lg-12 col-md-12 col-sm-12" style={{ marginBottom: '18px' }}>
-                                                <label style={labelStyle}>Street Address</label>
-                                                <input
-                                                    style={inputStyle}
-                                                    type="text"
-                                                    value={profile.address}
-                                                    onChange={e => setProfile(p => ({ ...p, address: e.target.value }))}
-                                                    placeholder="House No, Street name"
-                                                />
-                                            </div>
-                                            <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
-                                                <label style={labelStyle}>State</label>
-                                                <input
-                                                    style={inputStyle}
-                                                    type="text"
-                                                    value={profile.state}
-                                                    onChange={e => setProfile(p => ({ ...p, state: e.target.value }))}
-                                                    placeholder="State"
-                                                />
-                                            </div>
-                                            <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
-                                                <label style={labelStyle}>Pincode / ZIP</label>
-                                                <input
-                                                    style={inputStyle}
-                                                    type="text"
-                                                    value={profile.pincode}
-                                                    onChange={e => setProfile(p => ({ ...p, pincode: e.target.value }))}
-                                                    placeholder="Pincode"
-                                                />
-                                            </div>
+                                            {profileLoading ? (
+                                                // Skeleton Loaders
+                                                <>
+                                                    {[1, 2, 3, 4, 5, 6, 7].map(i => (
+                                                        <div key={i} className={`col-lg-${i === 5 ? '12' : '6'} col-md-${i === 5 ? '12' : '6'} col-sm-12`} style={{ marginBottom: '18px' }}>
+                                                            <Skeleton type="text" width="100px" height="15px" style={{ marginBottom: '6px' }} />
+                                                            <Skeleton type="button" width="100%" height="40px" />
+                                                        </div>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                // Actual Form
+                                                <>
+                                                    <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                        <label style={labelStyle}>Full Name</label>
+                                                        <input
+                                                            style={{ ...inputStyle, border: errors.displayName ? '1px solid #ff7a7a' : inputStyle.border }}
+                                                            type="text"
+                                                            value={profile.displayName}
+                                                            onChange={e => {
+                                                                setProfile(p => ({ ...p, displayName: e.target.value }));
+                                                                if (errors.displayName) validateField('displayName', e.target.value);
+                                                            }}
+                                                            onBlur={() => handleBlur('displayName', profile.displayName)}
+                                                            placeholder="Your full name"
+                                                        />
+                                                        {errors.displayName && <span style={{ color: '#ff7a7a', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.displayName}</span>}
+                                                    </div>
+                                                    <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                        <label style={labelStyle}>Email Address</label>
+                                                        <input
+                                                            style={{ ...inputStyle, background: '#f0f0f0', color: '#888' }}
+                                                            type="email"
+                                                            value={user?.email || profile.email || ''}
+                                                            readOnly
+                                                            title="Email cannot be changed here"
+                                                        />
+                                                    </div>
+                                                    <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                        <label style={labelStyle}>Phone Number</label>
+                                                        <input
+                                                            style={{ ...inputStyle, border: errors.phone ? '1px solid #ff7a7a' : inputStyle.border }}
+                                                            type="tel"
+                                                            value={profile.phone}
+                                                            onChange={e => {
+                                                                const val = e.target.value.replace(/\D/g, '');
+                                                                setProfile(p => ({ ...p, phone: val }));
+                                                                if (errors.phone) validateField('phone', val);
+                                                            }}
+                                                            onBlur={() => handleBlur('phone', profile.phone)}
+                                                            placeholder="+91 XXXXX XXXXX"
+                                                            maxLength={10}
+                                                        />
+                                                        {errors.phone && <span style={{ color: '#ff7a7a', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.phone}</span>}
+                                                    </div>
+                                                    <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                        <label style={labelStyle}>City</label>
+                                                        <input
+                                                            style={{ ...inputStyle, border: errors.city ? '1px solid #ff7a7a' : inputStyle.border }}
+                                                            type="text"
+                                                            value={profile.city}
+                                                            onChange={e => {
+                                                                setProfile(p => ({ ...p, city: e.target.value }));
+                                                                if (errors.city) validateField('city', e.target.value);
+                                                            }}
+                                                            onBlur={() => handleBlur('city', profile.city)}
+                                                            placeholder="City"
+                                                        />
+                                                        {errors.city && <span style={{ color: '#ff7a7a', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.city}</span>}
+                                                    </div>
+                                                    <div className="col-lg-12 col-md-12 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                        <label style={labelStyle}>Street Address</label>
+                                                        <input
+                                                            style={{ ...inputStyle, border: errors.address ? '1px solid #ff7a7a' : inputStyle.border }}
+                                                            type="text"
+                                                            value={profile.address}
+                                                            onChange={e => {
+                                                                setProfile(p => ({ ...p, address: e.target.value }));
+                                                                if (errors.address) validateField('address', e.target.value);
+                                                            }}
+                                                            onBlur={() => handleBlur('address', profile.address)}
+                                                            placeholder="House No, Street name"
+                                                        />
+                                                        {errors.address && <span style={{ color: '#ff7a7a', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.address}</span>}
+                                                    </div>
+                                                    <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                        <label style={labelStyle}>State</label>
+                                                        <input
+                                                            style={{ ...inputStyle, border: errors.state ? '1px solid #ff7a7a' : inputStyle.border }}
+                                                            type="text"
+                                                            value={profile.state}
+                                                            onChange={e => {
+                                                                setProfile(p => ({ ...p, state: e.target.value }));
+                                                                if (errors.state) validateField('state', e.target.value);
+                                                            }}
+                                                            onBlur={() => handleBlur('state', profile.state)}
+                                                            placeholder="State"
+                                                        />
+                                                        {errors.state && <span style={{ color: '#ff7a7a', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.state}</span>}
+                                                    </div>
+                                                    <div className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                        <label style={labelStyle}>Pincode / ZIP</label>
+                                                        <input
+                                                            style={{ ...inputStyle, border: errors.pincode ? '1px solid #ff7a7a' : inputStyle.border }}
+                                                            type="text"
+                                                            value={profile.pincode}
+                                                            onChange={e => {
+                                                                let val = e.target.value.replace(/\D/g, '');
+                                                                if (val.startsWith('0')) val = val.substring(1);
+                                                                setProfile(p => ({ ...p, pincode: val }));
+                                                                if (errors.pincode) validateField('pincode', val);
+                                                            }}
+                                                            onBlur={() => handleBlur('pincode', profile.pincode)}
+                                                            placeholder="Pincode"
+                                                            maxLength={6}
+                                                        />
+                                                        {errors.pincode && <span style={{ color: '#ff7a7a', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.pincode}</span>}
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
 
                                         <div style={{ marginTop: '10px' }}>
                                             <button
                                                 type="submit"
-                                                disabled={savingProfile}
+                                                disabled={savingProfile || loading || profileLoading}
                                                 style={{
                                                     padding: '12px 32px', background: '#ff7a7a', color: '#fff',
                                                     border: 'none', borderRadius: '6px', cursor: 'pointer',
                                                     fontWeight: 700, fontSize: '14px',
-                                                    opacity: savingProfile ? 0.7 : 1,
+                                                    opacity: (savingProfile || loading || profileLoading) ? 0.7 : 1,
                                                 }}
                                             >
                                                 {savingProfile ? 'Saving...' : 'Save Changes'}

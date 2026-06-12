@@ -18,8 +18,8 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
     const [deliveryStatus, setDeliveryStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle');
 
     const handlePincodeCheck = async () => {
-        if (pincode.length !== 6) {
-            toast.error("Please enter a valid 6-digit pincode");
+        if (!/^[1-9]\d{5}$/.test(pincode)) {
+            toast.error("Please enter a valid 6-digit Indian pincode");
             return;
         }
 
@@ -133,9 +133,12 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                         placeholder="Enter 6-digit Pincode" 
                                         value={pincode}
                                         onChange={(e) => {
-                                            setPincode(e.target.value.replace(/\D/g, '').slice(0, 6));
+                                            let val = e.target.value.replace(/\D/g, '');
+                                            if (val.startsWith('0')) val = val.substring(1);
+                                            setPincode(val.slice(0, 6));
                                             setDeliveryStatus('idle');
                                         }}
+                                        maxLength={6}
                                         style={{ padding: '8px 12px', border: '1px solid #ccc', borderRadius: '4px', flex: '1', maxWidth: '200px' }}
                                     />
                                     <button 

@@ -31,7 +31,16 @@ const CheckoutForm = () => {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
-        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        let val = e.target.value;
+        if (e.target.name === 'phone') {
+            val = val.replace(/\D/g, '').slice(0, 10);
+        }
+        if (e.target.name === 'pincode') {
+            val = val.replace(/\D/g, '');
+            if (val.startsWith('0')) val = val.substring(1);
+            val = val.slice(0, 6);
+        }
+        setForm(prev => ({ ...prev, [e.target.name]: val }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -41,8 +50,17 @@ const CheckoutForm = () => {
             toast.error('Your cart is empty!');
             return;
         }
-        if (!form.firstName || !form.lastName || !form.address || !form.city || !form.phone) {
+        if (!form.firstName || !form.lastName || !form.address || !form.city || !form.phone || !form.pincode) {
             toast.error('Please fill in all required fields.');
+            return;
+        }
+
+        if (!/^[6-9]\d{9}$/.test(form.phone)) {
+            toast.error('Please enter a valid Indian phone number.');
+            return;
+        }
+        if (!/^[1-9]\d{5}$/.test(form.pincode)) {
+            toast.error('Please enter a valid Indian pincode.');
             return;
         }
 
@@ -151,12 +169,12 @@ const CheckoutForm = () => {
 
                                     <div className="form-group">
                                         <div className="field-label">Postcode / ZIP <sup>*</sup></div>
-                                        <input type="text" name="pincode" value={form.pincode} onChange={handleChange} required />
+                                        <input type="text" name="pincode" value={form.pincode} onChange={handleChange} required maxLength={6} />
                                     </div>
 
                                     <div className="form-group">
                                         <div className="field-label">Phone <sup>*</sup></div>
-                                        <input type="tel" name="phone" value={form.phone} onChange={handleChange} required />
+                                        <input type="tel" name="phone" value={form.phone} onChange={handleChange} required maxLength={10} />
                                     </div>
 
                                     <div className="form-group">
