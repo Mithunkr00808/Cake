@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ShopSidebar from '@/components/shop/ShopSidebar';
 import ProductGrid from '@/components/shop/ProductGrid';
 import Link from 'next/link';
+import { getCachedProducts } from '@/lib/db/cache';
 
-export default function ShopPage() {
+export default async function ShopPage() {
+    const initialProducts = await getCachedProducts();
+
     return (
         <>
             {/* Page Title */}
@@ -24,7 +27,7 @@ export default function ShopPage() {
 
                         {/* Content Side */}
                         <div className="content-side col-lg-9 col-md-12 col-sm-12">
-                            <ProductGrid />
+                            <ProductGrid initialProducts={initialProducts} />
                         </div>
 
                         {/* Sidebar Side */}

@@ -3,17 +3,16 @@ import FeaturesSection from "@/components/common/FeaturesSection";
 import ServicesSection from "@/components/home/ServicesSection";
 import CallToAction from "@/components/home/CallToAction";
 import PortfolioSection from "@/components/home/PortfolioSection";
-import { db } from "@/lib/firebase-admin";
+import { getCachedSettings } from "@/lib/db/cache";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   let isLive = true;
   try {
-    const docSnap = await db.collection('store').doc('settings').get();
-    if (docSnap.exists) {
-      const data = docSnap.data();
-      if (typeof data?.isLive === 'boolean') {
+    const data = await getCachedSettings();
+    if (data) {
+      if (typeof data.isLive === 'boolean') {
         isLive = data.isLive;
       }
     }

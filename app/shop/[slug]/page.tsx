@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import ProductDetails from '@/components/shop/ProductDetails';
 import ProductSidebar from '@/components/shop/ProductSidebar';
 import Skeleton from '@/components/common/Skeleton';
-import { getProductByIdAdmin, getRelatedProductsAdmin } from '@/lib/db/products-admin';
+import { getCachedProductById, getCachedRelatedProducts } from '@/lib/db/cache';
 
 function ShopSingleLoading() {
     return (
@@ -33,13 +33,13 @@ function ShopSingleLoading() {
 }
 
 async function ShopSingleContent({ slug }: { slug: string }) {
-    const product = await getProductByIdAdmin(slug);
+    const product = await getCachedProductById(slug);
     
     if (!product) {
         notFound();
     }
     
-    const relatedProducts = await getRelatedProductsAdmin(product.id, 3);
+    const relatedProducts = await getCachedRelatedProducts(product.id, 3);
 
     return (
         <>

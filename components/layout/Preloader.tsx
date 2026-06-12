@@ -9,26 +9,19 @@ const Preloader = () => {
     const pathname = usePathname();
 
     useEffect(() => {
-        // Show loader on route change
-        setLoading(true);
-        setFading(false);
-
         const handleLoad = () => {
             setFading(true);
             setTimeout(() => setLoading(false), 500); // Small buffer for fade animation
         };
 
         if (document.readyState === 'complete') {
-            // On client-side navigation, document is already complete.
-            // Add a short artificial delay to show the loading animation for smooth transitions.
-            const timer = setTimeout(handleLoad, 400);
-            return () => clearTimeout(timer);
+            handleLoad();
         } else {
             // On initial hard load, wait for window load event
             window.addEventListener('load', handleLoad);
             return () => window.removeEventListener('load', handleLoad);
         }
-    }, [pathname]);
+    }, []);
 
     if (!loading) return null;
 

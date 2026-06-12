@@ -1,6 +1,21 @@
 import { db } from '../firebase-admin';
 import { Product } from './products';
 
+export const getProductsAdmin = async (): Promise<Product[]> => {
+    try {
+        const productsCol = db.collection('products');
+        const productSnapshot = await productsCol.get();
+        const productList = productSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        } as Product));
+        return productList;
+    } catch (error) {
+        console.error("Error fetching all products via Admin SDK:", error);
+        return [];
+    }
+};
+
 export const getProductByIdAdmin = async (id: string): Promise<Product | null> => {
     try {
         const docRef = db.collection('products').doc(id);

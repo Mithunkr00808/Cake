@@ -1,9 +1,13 @@
 import React from 'react';
 import { Metadata } from 'next';
 import PageTitle from '@/components/common/PageTitle';
-import DynamicAboutSection from '@/components/about/DynamicAboutSection';
+import AboutSection from '@/components/about/AboutSection';
+import { getCachedSettings } from '@/lib/db/cache';
 
-const AboutUs = () => {
+const AboutUs = async () => {
+    const settings = await getCachedSettings();
+    const aboutUsText = settings?.aboutUsText || '';
+
     return (
         <div className="page-wrapper">
              <PageTitle 
@@ -14,7 +18,7 @@ const AboutUs = () => {
                 ]}
                 backgroundImage="/assets/images/background/about-title-bg.png"
             />
-            <DynamicAboutSection />
+            <AboutSection aboutUsText={aboutUsText} />
         </div>
     );
 };

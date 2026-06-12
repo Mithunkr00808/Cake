@@ -115,7 +115,7 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                     ))}
                                 </div>
                                 <div className="item-price">
-                                    {product.oldPrice && <del>₹{product.oldPrice}</del>}
+                                    {product.oldPrice && <><del>₹{product.oldPrice}</del>{' '}</>}
                                     ₹{product.price.toFixed(2)}
                                 </div>
                             </div>

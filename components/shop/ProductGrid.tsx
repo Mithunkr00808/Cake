@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import Skeleton from '@/components/common/Skeleton';
 
-import { getProducts, Product } from '@/lib/db/products';
+import { Product } from '@/lib/db/products';
 
 const sortOptions = [
     { value: 'popularity', label: 'Sort by popularity' },
@@ -18,31 +18,23 @@ const sortOptions = [
     { value: 'price-desc', label: 'Sort by price: high to low' }
 ];
 
-const ProductGrid = () => {
+interface ProductGridProps {
+    initialProducts?: Product[];
+}
+
+const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
     const { addToCart } = useCart();
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [products, setProducts] = useState<Product[]>(initialProducts);
     
     // Custom dropdown state
     const [isSortOpen, setIsSortOpen] = useState(false);
     const [sortBy, setSortBy] = useState('popularity');
     const sortRef = useRef<HTMLDivElement>(null);
 
+    // Update products if initialProducts change (e.g. navigation)
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const data = await getProducts();
-                setProducts(data);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-                toast.error("Failed to load products.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, []);
+        setProducts(initialProducts);
+    }, [initialProducts]);
 
     // Handle outside click for dropdown
     useEffect(() => {
@@ -65,22 +57,6 @@ const ProductGrid = () => {
         });
         toast.success(`${product.name} added to cart!`);
     }, [addToCart]);
-
-    if (loading) {
-        return (
-            <div className="row">
-                {[1, 2, 3, 4, 5, 6].map((n) => (
-                    <div className="shop-item col-lg-4 col-md-6 col-sm-12" key={n}>
-                        <div className="inner-box">
-                            <Skeleton type="image" height="300px" style={{ marginBottom: '15px' }} />
-                            <Skeleton type="title" width="70%" style={{ margin: '0 auto 10px auto' }} />
-                            <Skeleton type="text" width="40%" style={{ margin: '0 auto' }} />
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    }
 
     return (
         <div className="our-shop">

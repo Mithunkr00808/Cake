@@ -17,9 +17,9 @@ import Preloader from "@/components/layout/Preloader";
 import { Toaster } from 'react-hot-toast';
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { db } from "@/lib/firebase-admin";
 import SiteAccessControl from "@/components/common/SiteAccessControl";
 import ConditionalFooter from "@/components/layout/ConditionalFooter";
+import { getCachedSettings } from "@/lib/db/cache";
 
 export default async function RootLayout({
   children,
@@ -31,16 +31,15 @@ export default async function RootLayout({
   let instagram = "#";
 
   try {
-    const docSnap = await db.collection('store').doc('settings').get();
-    if (docSnap.exists) {
-      const data = docSnap.data();
-      if (typeof data?.isLive === 'boolean') {
+    const data = await getCachedSettings();
+    if (data) {
+      if (typeof data.isLive === 'boolean') {
         isLive = data.isLive;
       }
-      if (typeof data?.facebook === 'string') {
+      if (typeof data.facebook === 'string') {
         facebook = data.facebook;
       }
-      if (typeof data?.instagram === 'string') {
+      if (typeof data.instagram === 'string') {
         instagram = data.instagram;
       }
     }
