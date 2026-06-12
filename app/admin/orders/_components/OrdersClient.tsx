@@ -57,19 +57,25 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
 
     const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
         setUpdatingId(orderId);
-        const { success, error } = await updateOrderStatusServer(orderId, newStatus);
-        if (success) {
-            setOrders(prev =>
-                prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o)
-            );
-            toast.success('Order status updated and email sent!');
-        } else {
-            toast.error(error || 'Failed to update status.');
+        try {
+            const { success, error } = await updateOrderStatusServer(orderId, newStatus);
+            if (success) {
+                setOrders(prev =>
+                    prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o)
+                );
+                toast.success('Order status updated and email sent!');
+            } else {
+                toast.error(error || 'Failed to update status.');
+            }
+        } catch (err: any) {
+            console.error("Action error:", err);
+            toast.error(err.message || "An unexpected error occurred");
+        } finally {
+            setUpdatingId(null);
         }
-        setUpdatingId(null);
     };
 
-    const formatDate = (ts: any) => {
+    const renderDate = (ts: any) => {
         if (!ts) return '—';
         let dateObj;
         if (typeof ts === 'string') {
@@ -81,10 +87,18 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
         } else {
             return '—';
         }
-        return dateObj.toLocaleDateString('en-IN', {
-            day: '2-digit', month: 'short', year: 'numeric',
-            hour: '2-digit', minute: '2-digit',
+        const dateStr = dateObj.toLocaleDateString('en-IN', {
+            day: '2-digit', month: 'short', year: 'numeric'
         });
+        const timeStr = dateObj.toLocaleTimeString('en-IN', {
+            hour: '2-digit', minute: '2-digit'
+        });
+        return (
+            <>
+                <div style={{ color: '#444', fontWeight: 500 }}>{dateStr}</div>
+                <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>{timeStr}</div>
+            </>
+        );
     };
 
     return (
@@ -124,7 +138,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
                         <thead>
                             <tr style={{ background: '#f9f9f9', borderBottom: '2px solid #eee' }}>
-                                {['Order ID', 'Customer', 'Items', 'Total', 'Payment', 'Date', 'Status', 'Action'].map(h => (
+                                {['Order ID', 'Customer', 'Items', 'Total', 'Payment', 'Date', 'Status'].map(h => (
                                     <th key={h} style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 600, color: '#555', whiteSpace: 'nowrap' }}>
                                         {h}
                                     </th>
@@ -142,18 +156,32 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                                         }}
                                     >
                                         {/* Order ID */}
-                                        <td style={{ padding: '14px', fontFamily: 'monospace', fontSize: '12px', color: '#888', maxWidth: '100px' }}>
+                                        <td style={{ padding: '14px', fontFamily: 'monospace', fontSize: '13px', color: '#888', whiteSpace: 'nowrap' }}>
+                                            <button
+                                                onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}
+                                                style={{
+                                                    background: 'none', border: 'none', cursor: 'pointer',
+                                                    marginRight: '8px', fontSize: '16px', fontWeight: 'bold', color: '#555',
+                                                    padding: 0,
+                                                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                                    transition: 'transform 0.2s',
+                                                    transform: expandedId === order.id ? 'rotate(90deg)' : 'rotate(0deg)'
+                                                }}
+                                                title="View details"
+                                            >
+                                                &gt;
+                                            </button>
                                             #{order.id.slice(0, 8)}...
                                         </td>
 
                                         {/* Customer */}
-                                        <td style={{ padding: '14px' }}>
+                                        <td style={{ padding: '14px', minWidth: '200px' }}>
                                             <div style={{ fontWeight: 600, color: '#222' }}>
                                                 {order.customer.firstName} {order.customer.lastName}
                                             </div>
                                             <div style={{ fontSize: '12px', color: '#888' }}>{order.customer.phone}</div>
                                             {order.customer.email && (
-                                                <div style={{ fontSize: '12px', color: '#aaa' }}>{order.customer.email}</div>
+                                                <div style={{ fontSize: '12px', color: '#aaa', wordBreak: 'break-all' }}>{order.customer.email}</div>
                                             )}
                                         </td>
 
@@ -175,44 +203,36 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                                         </td>
 
                                         {/* Date */}
-                                        <td style={{ padding: '14px', color: '#888', fontSize: '12px', whiteSpace: 'nowrap' }}>
-                                            {formatDate(order.createdAt)}
+                                        <td style={{ padding: '14px', fontSize: '12px', whiteSpace: 'nowrap' }}>
+                                            {renderDate(order.createdAt)}
                                         </td>
 
-                                        {/* Status Badge */}
-                                        <td style={{ padding: '14px' }}>
-                                            <StatusBadge status={order.status} />
-                                        </td>
-
-                                        {/* Action */}
-                                        <td style={{ padding: '14px' }}>
+                                        {/* Status & Action */}
+                                        <td style={{ padding: '14px', minWidth: '160px' }}>
                                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                                 <select
                                                     value={order.status}
                                                     onChange={e => handleStatusChange(order.id, e.target.value as OrderStatus)}
                                                     disabled={updatingId === order.id}
                                                     style={{
-                                                        padding: '6px 10px', borderRadius: '6px', border: '1px solid #ddd',
-                                                        fontSize: '12px', background: '#fff', cursor: 'pointer',
-                                                        outline: 'none', minWidth: '130px',
+                                                        padding: '4px 28px 4px 12px', borderRadius: '20px', 
+                                                        border: `1px solid ${STATUS_COLORS[order.status]?.color || '#ddd'}`,
+                                                        fontSize: '12px', 
+                                                        background: STATUS_COLORS[order.status]?.bg || '#fff', 
+                                                        color: STATUS_COLORS[order.status]?.color || '#333',
+                                                        fontWeight: 600, letterSpacing: '0.5px',
+                                                        cursor: 'pointer', outline: 'none',
                                                         opacity: updatingId === order.id ? 0.6 : 1,
+                                                        appearance: 'none',
+                                                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(STATUS_COLORS[order.status]?.color || '#333')}' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                                                        backgroundRepeat: 'no-repeat',
+                                                        backgroundPosition: 'right 10px center',
                                                     }}
                                                 >
                                                     {STATUS_OPTIONS.map(s => (
                                                         <option key={s.value} value={s.value}>{s.label}</option>
                                                     ))}
                                                 </select>
-
-                                                <button
-                                                    onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}
-                                                    style={{
-                                                        padding: '6px 10px', borderRadius: '6px', border: '1px solid #ddd',
-                                                        background: '#f5f5f5', cursor: 'pointer', fontSize: '12px', color: '#555',
-                                                    }}
-                                                    title="View details"
-                                                >
-                                                    {expandedId === order.id ? '▲' : '▼'}
-                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -220,7 +240,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                                     {/* Expanded Details Row */}
                                     {expandedId === order.id && (
                                         <tr style={{ background: '#F0FDF8' }}>
-                                            <td colSpan={8} style={{ padding: '20px 24px' }}>
+                                            <td colSpan={7} style={{ padding: '20px 24px' }}>
                                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                                                     {/* Order Items */}
                                                     <div>

@@ -12,6 +12,7 @@ export interface StoreSettings {
     refundPolicy?: string;
     termsOfUse?: string;
     isLive?: boolean;
+    categories?: string[];
 }
 
 export const getSettings = async (): Promise<StoreSettings | null> => {

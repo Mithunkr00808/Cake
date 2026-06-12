@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product, addProduct, updateProduct } from '@/lib/db/products';
-import { CldUploadWidget } from 'next-cloudinary';
+import { getSettings } from '@/lib/db/settings';
 import toast from 'react-hot-toast';
 
 interface ProductFormProps {
@@ -13,30 +13,115 @@ interface ProductFormProps {
 
 export default function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
     const [name, setName] = useState(product?.name || '');
-    const [price, setPrice] = useState(product?.price || 0);
-    const [oldPrice, setOldPrice] = useState(product?.oldPrice || '');
+    const [price, setPrice] = useState<string | number>(product?.price !== undefined ? product.price : '');
+    const [oldPrice, setOldPrice] = useState<string | number>(product?.oldPrice || '');
     const [rating, setRating] = useState(product?.rating || 5);
-    const [images, setImages] = useState<string[]>(product?.images || (product?.image ? [product.image] : []));
+    const [imageUploads, setImageUploads] = useState<{id: string, previewUrl: string, isUploading: boolean, secureUrl?: string}[]>(
+        (product?.images || (product?.image ? [product.image] : [])).map((url, i) => ({
+            id: `existing-${i}`,
+            previewUrl: url,
+            isUploading: false,
+            secureUrl: url
+        }))
+    );
     const [sale, setSale] = useState(product?.sale || false);
     const [description, setDescription] = useState(product?.description || '');
     const [category, setCategory] = useState(product?.category || '');
     const [loading, setLoading] = useState(false);
+    const [dynamicCategories, setDynamicCategories] = useState<string[]>([
+        "Birthday Cakes", "Wedding Cakes", "Custom Cakes", "Cupcakes", "Pastries", "Brownies", "Vegan Cakes", "Gluten-Free Cakes", "Other"
+    ]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const settings = await getSettings();
+                if (settings?.categories && settings.categories.length > 0) {
+                    setDynamicCategories(settings.categories);
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files?.length) return;
+        
+        const files = Array.from(e.target.files);
+        const newUploads = files.map(file => ({
+            id: Math.random().toString(36).substring(7),
+            previewUrl: URL.createObjectURL(file),
+            isUploading: true,
+            file
+        }));
+
+        setImageUploads(prev => [...prev, ...newUploads]);
+
+        // Trigger background uploads
+        newUploads.forEach(async (uploadItem) => {
+            try {
+                const formData = new FormData();
+                formData.append('file', uploadItem.file as File);
+                formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "ml_default");
+
+                const res = await fetch(
+                    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dtnjy8o1m'}/image/upload`,
+                    { method: 'POST', body: formData }
+                );
+
+                const data = await res.json();
+                
+                if (data.secure_url) {
+                    setImageUploads(prev => prev.map(item => 
+                        item.id === uploadItem.id 
+                            ? { ...item, isUploading: false, secureUrl: data.secure_url } 
+                            : item
+                    ));
+                } else {
+                    toast.error('Failed to upload an image');
+                    setImageUploads(prev => prev.filter(item => item.id !== uploadItem.id));
+                }
+            } catch (err) {
+                console.error("Upload error:", err);
+                toast.error('Failed to upload an image');
+                setImageUploads(prev => prev.filter(item => item.id !== uploadItem.id));
+            }
+        });
+        
+        e.target.value = '';
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (images.length === 0) {
+        
+        if (imageUploads.length === 0) {
             toast.error('Please upload at least one image.');
             return;
         }
+
+        const isStillUploading = imageUploads.some(img => img.isUploading);
+        if (isStillUploading) {
+            toast.error('Please wait for images to finish uploading.');
+            return;
+        }
+
+        if (Number(price) < 0) {
+            toast.error('Price cannot be negative.');
+            return;
+        }
+
+        const finalImages = imageUploads.map(img => img.secureUrl as string);
 
         setLoading(true);
         const productData = {
             name,
             price: Number(price),
-            oldPrice,
+            oldPrice: oldPrice ? String(oldPrice) : undefined,
             rating: Number(rating),
-            image: images[0],
-            images,
+            image: finalImages[0],
+            images: finalImages,
             sale,
             description,
             category
@@ -76,17 +161,48 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
                     
                     <div className="col-lg-6 col-md-6 col-sm-12 form-group">
                         <label style={{ fontWeight: 'bold' }}>Price</label>
-                        <input type="number" value={price} onChange={e => setPrice(Number(e.target.value))} required style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                        <input 
+                            type="text" 
+                            value={price} 
+                            onChange={e => {
+                                const val = e.target.value;
+                                if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                                    setPrice(val);
+                                }
+                            }} 
+                            required 
+                            style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} 
+                        />
                     </div>
                     
                     <div className="col-lg-6 col-md-6 col-sm-12 form-group">
                         <label style={{ fontWeight: 'bold' }}>Old Price (Optional)</label>
-                        <input type="text" value={oldPrice} onChange={e => setOldPrice(e.target.value)} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                        <input 
+                            type="text" 
+                            value={oldPrice} 
+                            onChange={e => {
+                                const val = e.target.value;
+                                if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                                    setOldPrice(val);
+                                }
+                            }} 
+                            style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} 
+                        />
                     </div>
                     
                     <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                         <label style={{ fontWeight: 'bold' }}>Category</label>
-                        <input type="text" value={category} onChange={e => setCategory(e.target.value)} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                        <select 
+                            value={category} 
+                            onChange={e => setCategory(e.target.value)} 
+                            required
+                            style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', background: '#fff' }}
+                        >
+                            <option value="" disabled>Select a category</option>
+                            {dynamicCategories.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
                     </div>
                     
                     <div className="col-lg-12 col-md-12 col-sm-12 form-group">
@@ -101,39 +217,33 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
                         </label>
                     </div>
                     
-                    <div className="col-lg-12 col-md-12 col-sm-12 form-group" style={{ border: '1px dashed #ccc', padding: '20px', borderRadius: '4px' }}>
-                        <label style={{ fontWeight: 'bold' }}>Product Images</label><br/>
-                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '15px' }}>
-                            {images.map((img, index) => (
-                                <div key={index} style={{ position: 'relative', width: '100px', height: '100px' }}>
-                                    <img src={img} alt={`Preview ${index}`} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }} />
+                    <div className="col-lg-12 col-md-12 col-sm-12 form-group" style={{ border: '1px dashed #ccc', padding: '20px', borderRadius: '4px', background: '#fafafa' }}>
+                        <label style={{ fontWeight: 'bold', marginBottom: '10px', display: 'block' }}>Product Images</label>
+                        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '5px' }}>
+                            {imageUploads.map((img) => (
+                                <div key={img.id} style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #eee', background: '#fff' }}>
+                                    <img src={img.previewUrl} alt={`Preview`} style={{ width: '100px', height: '100px', objectFit: 'cover', opacity: img.isUploading ? 0.6 : 1 }} />
+                                    {img.isUploading && (
+                                        <span style={{ fontSize: '11px', background: 'rgba(0,0,0,0.7)', color: '#fff', padding: '2px 6px', borderRadius: '10px', position: 'absolute', bottom: '8px', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap' }}>
+                                            Uploading...
+                                        </span>
+                                    )}
                                     <div 
                                         role="button"
-                                        onClick={() => setImages(images.filter((_, i) => i !== index))}
-                                        style={{ position: 'absolute', top: '-8px', right: '-8px', background: 'red', color: 'white', borderRadius: '50%', width: '24px', height: '24px', minWidth: '24px', minHeight: '24px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
+                                        onClick={() => setImageUploads(imageUploads.filter((item) => item.id !== img.id))}
+                                        style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.5)', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
                                     >
-                                        ×
+                                        &times;
                                     </div>
                                 </div>
                             ))}
+                            
+                            <label style={{ width: '100px', height: '100px', border: '2px dashed #bbb', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#fff', transition: 'background 0.2s' }} onMouseOver={e => e.currentTarget.style.background = '#f5f5f5'} onMouseOut={e => e.currentTarget.style.background = '#fff'}>
+                                <span style={{ fontSize: '28px', color: '#888', lineHeight: 1 }}>+</span>
+                                <span style={{ fontSize: '12px', color: '#888', fontWeight: 500, marginTop: '4px' }}>Browse</span>
+                                <input type="file" multiple accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+                            </label>
                         </div>
-                        
-                        <CldUploadWidget 
-                            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "ml_default"}
-                            options={{ multiple: true }}
-                            onSuccess={(result: any) => {
-                                setImages(prev => [...prev, result.info.secure_url]);
-                            }}
-                        >
-                            {({ open }) => {
-                                return (
-                                    <button type="button" onClick={() => open()} className="theme-btn btn-style-three" style={{ display: 'block', padding: '10px 20px' }}>
-                                        Upload Images
-                                    </button>
-                                );
-                            }}
-                        </CldUploadWidget>
-                        <small style={{ color: '#888', display: 'block', marginTop: '8px' }}>Requires an unsigned upload preset named "{process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "ml_default"}" in Cloudinary.</small>
                     </div>
 
                     <div className="col-lg-12 col-md-12 col-sm-12 form-group" style={{ display: 'flex', gap: '15px', marginTop: '20px' }}>

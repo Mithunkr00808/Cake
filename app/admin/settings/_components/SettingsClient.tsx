@@ -4,10 +4,57 @@ import React, { useState } from 'react';
 import { updateSettings, StoreSettings } from '@/lib/db/settings';
 import toast from 'react-hot-toast';
 
+const TagInput = ({ tags, setTags, placeholder }: { tags: string[], setTags: (tags: string[]) => void, placeholder: string }) => {
+    const [input, setInput] = useState('');
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            const val = input.trim();
+            if (val && !tags.includes(val)) {
+                setTags([...tags, val]);
+            }
+            setInput('');
+        }
+    };
+
+    const removeTag = (indexToRemove: number) => {
+        setTags(tags.filter((_, index) => index !== indexToRemove));
+    };
+
+    return (
+        <div style={{ border: '1px solid #ccc', padding: '8px', borderRadius: '4px', display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', background: '#fff' }}>
+            {tags.map((tag, index) => (
+                <div key={index} style={{ background: '#ff7a7a', color: 'white', padding: '6px 12px', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 500 }}>
+                    <span>{tag}</span>
+                    <span 
+                        role="button" 
+                        onClick={() => removeTag(index)} 
+                        style={{ background: 'rgba(0,0,0,0.15)', cursor: 'pointer', fontSize: '14px', width: '20px', height: '20px', minWidth: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', lineHeight: 1 }}
+                    >
+                        &times;
+                    </span>
+                </div>
+            ))}
+            <input 
+                type="text" 
+                value={input} 
+                onChange={e => setInput(e.target.value)} 
+                onKeyDown={handleKeyDown} 
+                placeholder={tags.length === 0 ? placeholder : 'Add another...'}
+                style={{ border: 'none', outline: 'none', flex: 1, minWidth: '120px', padding: '4px', background: 'transparent' }} 
+            />
+        </div>
+    );
+};
+
 export default function SettingsClient({ initialSettings }: { initialSettings: StoreSettings }) {
     const [settings, setSettings] = useState<StoreSettings>(initialSettings);
-    const [pincodesInput, setPincodesInput] = useState(
-        initialSettings.deliverablePincodes ? initialSettings.deliverablePincodes.join(', ') : ''
+    const [pincodes, setPincodes] = useState<string[]>(
+        initialSettings.deliverablePincodes || []
+    );
+    const [categories, setCategories] = useState<string[]>(
+        initialSettings.categories || ['Birthday Cakes', 'Wedding Cakes', 'Custom Cakes', 'Cupcakes', 'Pastries', 'Brownies', 'Vegan Cakes', 'Gluten-Free Cakes', 'Other']
     );
     const [saving, setSaving] = useState(false);
 
@@ -15,9 +62,11 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
         e.preventDefault();
         setSaving(true);
         
-        // Convert comma-separated string back to array, trimming whitespace
-        const parsedPincodes = pincodesInput.split(',').map(pin => pin.trim()).filter(pin => pin.length > 0);
-        const updatedSettings = { ...settings, deliverablePincodes: parsedPincodes };
+        const updatedSettings = { 
+            ...settings, 
+            deliverablePincodes: pincodes,
+            categories: categories 
+        };
         
         const success = await updateSettings(updatedSettings);
         if (success) {
@@ -81,14 +130,16 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
 
                         {/* Delivery Pincodes */}
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
-                            <label style={{ fontWeight: 'bold' }}>Serviceable Pincodes (Comma-separated)</label>
-                            <textarea 
-                                value={pincodesInput} 
-                                onChange={e => setPincodesInput(e.target.value)} 
-                                style={{ minHeight: '100px' }}
-                                placeholder="e.g. 110001, 400001, 560001"
-                            ></textarea>
-                            <small style={{ color: '#666' }}>Enter all pincodes where delivery is supported, separated by commas.</small>
+                            <label style={{ fontWeight: 'bold' }}>Serviceable Pincodes</label>
+                            <TagInput tags={pincodes} setTags={setPincodes} placeholder="Type a pincode and press Enter" />
+                            <small style={{ color: '#666', display: 'block', marginTop: '8px' }}>Press <kbd>Enter</kbd> or comma to add a pincode.</small>
+                        </div>
+
+                        {/* Product Categories */}
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Product Categories</label>
+                            <TagInput tags={categories} setTags={setCategories} placeholder="Type a category and press Enter" />
+                            <small style={{ color: '#666', display: 'block', marginTop: '8px' }}>Press <kbd>Enter</kbd> or comma to add a category. These will appear in the Inventory Add/Edit form.</small>
                         </div>
 
                         {/* About Us */}
