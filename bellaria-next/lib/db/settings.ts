@@ -6,6 +6,9 @@ export interface StoreSettings {
     contactEmail?: string;
     contactPhone?: string;
     deliverablePincodes?: string[];
+    privacyPolicyText?: string;
+    termsOfUseText?: string;
+    refundPolicyText?: string;
 }
 
 export const getSettings = async (): Promise<StoreSettings | null> => {

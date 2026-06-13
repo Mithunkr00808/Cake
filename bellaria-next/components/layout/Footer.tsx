@@ -108,10 +108,15 @@ const Footer = () => {
 
             {/* Footer Bottom */}
             <div className="footer-bottom">
-                <div className="auto-container">
-                    <div className="copyright-text">
-                        <p>Slice of Cake - Layered in love</p>
+                <div className="auto-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div className="copyright-text" style={{ padding: '10px 0' }}>
+                        <p style={{ margin: 0 }}>Slice of Cake - Layered in love</p>
                     </div>
+                    <ul className="footer-policies" style={{ display: 'flex', gap: '20px', listStyle: 'none', margin: 0, padding: '10px 0' }}>
+                        <li><Link href="/privacy-policy" style={{ color: 'inherit', fontSize: '14px' }}>Privacy Policy</Link></li>
+                        <li><Link href="/terms-of-use" style={{ color: 'inherit', fontSize: '14px' }}>Terms of Use</Link></li>
+                        <li><Link href="/refund-policy" style={{ color: 'inherit', fontSize: '14px' }}>Refund Policy</Link></li>
+                    </ul>
                 </div>
             </div>
         </footer>

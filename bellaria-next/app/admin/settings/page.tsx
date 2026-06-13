@@ -5,7 +5,7 @@ import { getSettings, updateSettings, StoreSettings } from '@/lib/db/settings';
 import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
-    const [settings, setSettings] = useState<StoreSettings>({ aboutUsText: '', contactEmail: '', contactPhone: '', deliverablePincodes: [] });
+    const [settings, setSettings] = useState<StoreSettings>({ aboutUsText: '', contactEmail: '', contactPhone: '', deliverablePincodes: [], privacyPolicyText: '', termsOfUseText: '', refundPolicyText: '' });
     const [pincodesInput, setPincodesInput] = useState('');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -18,7 +18,10 @@ export default function SettingsPage() {
                     aboutUsText: data.aboutUsText || '',
                     contactEmail: data.contactEmail || '',
                     contactPhone: data.contactPhone || '',
-                    deliverablePincodes: data.deliverablePincodes || []
+                    deliverablePincodes: data.deliverablePincodes || [],
+                    privacyPolicyText: data.privacyPolicyText || '',
+                    termsOfUseText: data.termsOfUseText || '',
+                    refundPolicyText: data.refundPolicyText || ''
                 });
                 if (data.deliverablePincodes) {
                     setPincodesInput(data.deliverablePincodes.join(', '));
@@ -77,6 +80,18 @@ export default function SettingsPage() {
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <label style={{ fontWeight: 'bold' }}>About Us Text</label>
                             <textarea value={settings.aboutUsText} onChange={e => setSettings({...settings, aboutUsText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
+                        </div>
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Privacy Policy Text</label>
+                            <textarea value={settings.privacyPolicyText} onChange={e => setSettings({...settings, privacyPolicyText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
+                        </div>
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Terms of Use Text</label>
+                            <textarea value={settings.termsOfUseText} onChange={e => setSettings({...settings, termsOfUseText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
+                        </div>
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Refund Policy Text</label>
+                            <textarea value={settings.refundPolicyText} onChange={e => setSettings({...settings, refundPolicyText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
                         </div>
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <button 
