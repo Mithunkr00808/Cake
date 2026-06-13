@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getSettings, updateSettings, StoreSettings } from '@/lib/db/settings';
 import toast from 'react-hot-toast';
+import Skeleton from '@/components/common/Skeleton';
 
 export default function SettingsPage() {
     const [settings, setSettings] = useState<StoreSettings>({ aboutUsText: '', contactEmail: '', contactPhone: '', deliverablePincodes: [], privacyPolicyText: '', termsOfUseText: '', refundPolicyText: '' });
@@ -51,7 +52,29 @@ export default function SettingsPage() {
         setSaving(false);
     };
 
-    if (loading) return <div style={{ padding: '20px', color: '#666' }}>Loading settings...</div>;
+    if (loading) return (
+        <div>
+            <div className="sec-title">
+                <h2>Store Settings</h2>
+            </div>
+            <div className="contact-form">
+                <div className="row clearfix">
+                    {[1, 2].map(n => (
+                        <div key={n} className="col-lg-6 col-md-6 col-sm-12 form-group">
+                            <Skeleton type="text" width="150px" height="20px" style={{ marginBottom: '10px' }} />
+                            <Skeleton type="text" width="100%" height="50px" />
+                        </div>
+                    ))}
+                    {[1, 2, 3, 4, 5, 6].map(n => (
+                        <div key={n + 2} className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <Skeleton type="text" width="200px" height="20px" style={{ marginBottom: '10px' }} />
+                            <Skeleton type="text" width="100%" height="200px" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div>

@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { getOrders, updateOrderStatus, Order, OrderStatus } from '@/lib/db/orders';
 import toast from 'react-hot-toast';
+import Skeleton from '@/components/common/Skeleton';
 
 const STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [
     { value: 'pending', label: 'Pending' },
@@ -101,8 +102,32 @@ export default function AdminOrdersPage() {
             </div>
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '60px', color: '#aaa', fontSize: '16px' }}>
-                    Loading orders...
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+                        <thead>
+                            <tr style={{ background: '#f9f9f9', borderBottom: '2px solid #eee' }}>
+                                {['Order ID', 'Customer', 'Items', 'Total', 'Payment', 'Date', 'Status', 'Action'].map(h => (
+                                    <th key={h} style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 600, color: '#555', whiteSpace: 'nowrap' }}>
+                                        {h}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {[1, 2, 3, 4, 5].map(n => (
+                                <tr key={n} style={{ borderBottom: '1px solid #f0f0f0', background: '#fff' }}>
+                                    <td style={{ padding: '14px' }}><Skeleton type="text" width="80px" height="20px" /></td>
+                                    <td style={{ padding: '14px' }}><Skeleton type="text" width="120px" height="20px" /></td>
+                                    <td style={{ padding: '14px' }}><Skeleton type="text" width="50px" height="20px" /></td>
+                                    <td style={{ padding: '14px' }}><Skeleton type="text" width="70px" height="20px" /></td>
+                                    <td style={{ padding: '14px' }}><Skeleton type="text" width="90px" height="20px" /></td>
+                                    <td style={{ padding: '14px' }}><Skeleton type="text" width="100px" height="20px" /></td>
+                                    <td style={{ padding: '14px' }}><Skeleton type="button" width="80px" height="24px" /></td>
+                                    <td style={{ padding: '14px' }}><Skeleton type="button" width="100px" height="32px" /></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             ) : orders.length === 0 ? (
                 <div style={{

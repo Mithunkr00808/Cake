@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getOrdersByUserId, Order } from '@/lib/db/orders';
 import toast from 'react-hot-toast';
 import PageTitle from '@/components/common/PageTitle';
+import Skeleton from '@/components/common/Skeleton';
 
 type Tab = 'profile' | 'orders' | 'password';
 
@@ -162,9 +163,31 @@ export default function MyAccountPage() {
 
     if (loading || !user) {
         return (
-            <div className="auto-container" style={{ padding: '100px 0', textAlign: 'center' }}>
-                <p style={{ color: '#999' }}>Loading your account...</p>
-            </div>
+            <>
+                <Skeleton type="image" height="250px" style={{ width: '100%' }} />
+                <section className="sidebar-page-container" style={{ padding: '60px 0' }}>
+                    <div className="auto-container">
+                        <div className="row clearfix">
+                            <div className="sidebar-side col-lg-3 col-md-12 col-sm-12">
+                                <Skeleton type="image" height="300px" style={{ borderRadius: '12px' }} />
+                            </div>
+                            <div className="content-side col-lg-9 col-md-12 col-sm-12">
+                                <div style={{ background: '#fff', borderRadius: '12px', boxShadow: '0 2px 20px rgba(0,0,0,0.06)', padding: '36px' }}>
+                                    <Skeleton type="title" width="40%" height="30px" style={{ marginBottom: '24px' }} />
+                                    <div className="row clearfix">
+                                        {[1, 2, 3, 4].map(n => (
+                                            <div key={n} className="col-lg-6 col-md-6 col-sm-12" style={{ marginBottom: '18px' }}>
+                                                <Skeleton type="text" width="30%" height="20px" style={{ marginBottom: '6px' }} />
+                                                <Skeleton type="text" width="100%" height="40px" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </>
         );
     }
 
@@ -377,7 +400,20 @@ export default function MyAccountPage() {
                                     <div>
                                         <h3 style={{ marginBottom: '24px', fontSize: '20px', color: '#222' }}>My Orders</h3>
                                         {loadingOrders ? (
-                                            <p style={{ color: '#aaa', textAlign: 'center', padding: '40px 0' }}>Loading orders...</p>
+                                            <div>
+                                                {[1, 2, 3].map(n => (
+                                                    <div key={n} style={{ border: '1px solid #eee', borderRadius: '10px', marginBottom: '16px', padding: '16px 20px', background: '#fafafa' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                                                                <div><Skeleton type="text" width="100px" height="30px" /></div>
+                                                                <div><Skeleton type="text" width="100px" height="30px" /></div>
+                                                                <div><Skeleton type="text" width="80px" height="30px" /></div>
+                                                            </div>
+                                                            <div><Skeleton type="button" width="100px" height="30px" /></div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         ) : orders.length === 0 ? (
                                             <div style={{
                                                 textAlign: 'center', padding: '60px', background: '#fafafa',
