@@ -150,7 +150,7 @@ const Header = () => {
                     {/*Nav Box*/}
                     <div className="nav-outer clearfix">
                         {/* Main Menu */}
-                        <nav className="main-menu navbar-expand-md navbar-light">
+                        <nav className="main-menu navbar-expand-md navbar-light" aria-label="Main navigation">
                             <div className="clearfix">
                                 {/* Desktop Menu: Using shared components to ensure sync between Main, Sticky, and Mobile menus */}
                                 <NavLinksLeft />
@@ -222,7 +222,7 @@ const Header = () => {
                     {/*Nav Outer*/}
                     <div className="nav-outer">
                         {/* Main Menu */}
-                        <nav className="main-menu">
+                        <nav className="main-menu" aria-label="Main navigation">
                             {/* Sticky Header Desktop Menu */}
                             <div className="collapse navbar-collapse show clearfix">
                                 <NavLinksLeft />
@@ -260,7 +260,7 @@ const Header = () => {
                 <div className="menu-backdrop" onClick={closeMobileMenu}></div>
                 <div className="close-btn" onClick={closeMobileMenu}><span className="icon fa fa-times"></span></div>
 
-                <nav className="menu-box">
+                <nav className="menu-box" aria-label="Mobile navigation">
                     <div className="nav-logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
                     <div className="menu-outer">
                         <NavLinksMobile mobile={true} />

@@ -2,6 +2,7 @@
 
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -100,8 +101,16 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
                         <div className="inner-box">
                             <div className="image-box">
 
-                                <figure className="image">
-                                    <Link href={`/shop/${product.id}`}><img src={product.image || (product.images && product.images[0])} alt={product.name} style={{ width: '100%', height: '300px', objectFit: 'cover' }} /></Link>
+                                <figure className="image" style={{ position: 'relative', width: '100%', height: '300px' }}>
+                                    <Link href={`/shop/${product.id}`}>
+                                        <Image
+                                            src={product.image || (product.images && product.images[0]) || ''}
+                                            alt={product.name}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                            style={{ objectFit: 'cover' }}
+                                        />
+                                    </Link>
                                 </figure>
                                 <div className="btn-box">
                                     <motion.button 

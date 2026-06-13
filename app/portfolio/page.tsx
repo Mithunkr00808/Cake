@@ -1,44 +1,43 @@
-"use client";
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { getProducts, Product } from '@/lib/db/products';
-import Skeleton from '@/components/common/Skeleton';
+import Image from 'next/image';
+import { getCachedProducts } from '@/lib/db/cache';
+import type { Metadata } from 'next';
 
-export default function PortfolioPage() {
-    const [images, setImages] = useState<{ url: string; productId: string; title: string }[]>([]);
-    const [loading, setLoading] = useState(true);
+export const metadata: Metadata = {
+    title: "Portfolio – Our Cake Creations",
+    description:
+        "Explore our portfolio of premium handcrafted cakes. From elegant wedding cakes to fun birthday cakes — see the artistry of Slice of Cake, Thrissur.",
+    alternates: {
+        canonical: "https://sliceofcake.in/portfolio",
+    },
+    openGraph: {
+        title: "Portfolio – Slice of Cake Creations",
+        description:
+            "Explore our portfolio of premium handcrafted cakes from Thrissur, Kerala.",
+        url: "https://sliceofcake.in/portfolio",
+    },
+};
 
-    useEffect(() => {
-        const fetchImages = async () => {
-            try {
-                const products = await getProducts();
-                const allImages: { url: string; productId: string; title: string }[] = [];
-                
-                products.forEach(product => {
-                    // Extract main image
-                    if (product.image) {
-                        allImages.push({ url: product.image, productId: product.id, title: product.name });
-                    }
-                    // Extract additional images
-                    if (product.images && product.images.length > 0) {
-                        product.images.forEach(img => {
-                            if (img !== product.image) {
-                                allImages.push({ url: img, productId: product.id, title: product.name });
-                            }
-                        });
+export default async function PortfolioPage() {
+    const products = await getCachedProducts();
+
+    // Build image list from products (server-side)
+    const images: { url: string; productId: string; title: string }[] = [];
+    if (products && products.length > 0) {
+        products.forEach((product) => {
+            if (product.image) {
+                images.push({ url: product.image, productId: product.id, title: product.name });
+            }
+            if (product.images && product.images.length > 0) {
+                product.images.forEach((img) => {
+                    if (img !== product.image) {
+                        images.push({ url: img, productId: product.id, title: product.name });
                     }
                 });
-
-                setImages(allImages);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-            } finally {
-                setLoading(false);
             }
-        };
-
-        fetchImages();
-    }, []);
+        });
+    }
 
     return (
         <>
@@ -57,17 +56,7 @@ export default function PortfolioPage() {
             {/* Portfolio Section */}
             <section className="portfolio-section" style={{ padding: '80px 0' }}>
                 <div className="auto-container">
-                    {loading ? (
-                        <div className="row">
-                            {[1, 2, 3, 4, 5, 6].map((n) => (
-                                <div className="portfolio-block col-lg-4 col-md-6 col-sm-12" key={n} style={{ marginBottom: '30px' }}>
-                                    <div className="inner-box" style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
-                                        <Skeleton type="image" height="300px" />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : images.length === 0 ? (
+                    {images.length === 0 ? (
                         <div className="text-center py-5">
                             <p>No images found in the portfolio.</p>
                         </div>
@@ -77,14 +66,14 @@ export default function PortfolioPage() {
                                 <div className="portfolio-block col-lg-4 col-md-6 col-sm-12" key={index} style={{ marginBottom: '30px' }}>
                                     <div className="inner-box" style={{ borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
                                         <div className="image-box">
-                                            <figure className="image" style={{ margin: 0 }}>
+                                            <figure className="image" style={{ margin: 0, position: 'relative', height: '300px' }}>
                                                 <Link href={`/shop/${img.productId}`}>
-                                                    <img 
-                                                        src={img.url} 
-                                                        alt={img.title} 
-                                                        style={{ width: '100%', height: '300px', objectFit: 'cover', transition: 'transform 0.3s ease' }} 
-                                                        onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                                                        onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+                                                    <Image
+                                                        src={img.url}
+                                                        alt={img.title}
+                                                        fill
+                                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                        style={{ objectFit: 'cover', transition: 'transform 0.3s ease' }}
                                                     />
                                                 </Link>
                                             </figure>

@@ -3,12 +3,51 @@ import ShopSidebar from '@/components/shop/ShopSidebar';
 import ProductGrid from '@/components/shop/ProductGrid';
 import Link from 'next/link';
 import { getCachedProducts } from '@/lib/db/cache';
+import type { Metadata } from 'next';
 
+export const metadata: Metadata = {
+    title: "Shop Premium Cakes Online – Thrissur",
+    description:
+        "Browse and order premium handcrafted cakes online. Birthday cakes, wedding cakes, cupcakes, pastries & more. Fresh delivery from Slice of Cake, Thrissur, Kerala.",
+    alternates: {
+        canonical: "https://sliceofcake.in/shop",
+    },
+    openGraph: {
+        title: "Shop Premium Cakes Online – Slice of Cake",
+        description:
+            "Browse and order premium handcrafted cakes. Birthday cakes, wedding cakes, cupcakes & pastries. Fresh delivery in Thrissur.",
+        url: "https://sliceofcake.in/shop",
+    },
+};
+
+const shopBreadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://sliceofcake.in",
+        },
+        {
+            "@type": "ListItem",
+            position: 2,
+            name: "Shop",
+            item: "https://sliceofcake.in/shop",
+        },
+    ],
+};
 export default async function ShopPage() {
     const initialProducts = await getCachedProducts();
 
     return (
         <>
+            {/* Breadcrumb JSON-LD */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(shopBreadcrumbJsonLd) }}
+            />
             {/* Page Title */}
             <section className="page-title" style={{ backgroundImage: 'url(/assets/images/main-slider/slide_2.jpg)' }}>
                 <div className="auto-container">

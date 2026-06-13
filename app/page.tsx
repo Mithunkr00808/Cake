@@ -4,8 +4,16 @@ import ServicesSection from "@/components/home/ServicesSection";
 import CallToAction from "@/components/home/CallToAction";
 import PortfolioSection from "@/components/home/PortfolioSection";
 import { getCachedSettings } from "@/lib/db/cache";
+import type { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "Slice of Cake – Premium Cakes & Bakery in Thrissur, Kerala",
+  description:
+    "Order premium handcrafted cakes online from Slice of Cake, Thrissur. Custom birthday cakes, wedding cakes, cupcakes & pastries. Layered in love, delivered fresh.",
+  alternates: {
+    canonical: "https://sliceofcake.in",
+  },
+};
 
 export default async function Home() {
   let isLive = true;

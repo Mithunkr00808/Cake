@@ -1,5 +1,6 @@
 "use client";
 import Link from 'next/link';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { getProducts, Product } from '@/lib/db/products';
 import Skeleton from '@/components/common/Skeleton';
@@ -50,12 +51,14 @@ const PortfolioSection = () => {
                             <div className="shop-item col-lg-3 col-md-6 col-sm-12" key={product.id}>
                                 <div className="inner-box">
                                     <div className="image-box">
-                                        <figure className="image">
+                                        <figure className="image" style={{ position: 'relative', width: '100%', height: '250px' }}>
                                             <Link href={`/shop/${product.id}`}>
-                                                <img 
-                                                    src={product.image || (product.images && product.images[0])} 
+                                                <Image 
+                                                    src={product.image || (product.images && product.images[0]) || ''} 
                                                     alt={product.name} 
-                                                    style={{ width: '100%', height: '250px', objectFit: 'cover', borderRadius: '8px' }} 
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                                    style={{ objectFit: 'cover', borderRadius: '8px' }} 
                                                 />
                                             </Link>
                                         </figure>

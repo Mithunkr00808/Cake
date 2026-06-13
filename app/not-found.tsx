@@ -27,17 +27,18 @@ export default function NotFound() {
                         boxShadow: '0 20px 40px rgba(0,0,0,0.04)',
                         border: '1px solid #f0f0f0'
                     }}>
-                        <h1 style={{ 
+                        <span aria-hidden="true" style={{ 
                             fontSize: '140px', 
                             fontWeight: '900', 
                             color: '#ff7a7a', 
                             margin: '0', 
                             lineHeight: '1',
-                            textShadow: '0 10px 20px rgba(255, 122, 122, 0.2)'
+                            textShadow: '0 10px 20px rgba(255, 122, 122, 0.2)',
+                            display: 'block',
                         }}>
                             404
-                        </h1>
-                        <h2 style={{ 
+                        </span>
+                        <h1 style={{ 
                             fontSize: '32px', 
                             fontWeight: '800', 
                             color: '#1a1a1a', 
@@ -45,7 +46,7 @@ export default function NotFound() {
                             marginBottom: '15px' 
                         }}>
                             Oops! Looks like you're lost.
-                        </h2>
+                        </h1>
                         <p style={{ 
                             fontSize: '16px', 
                             color: '#666', 

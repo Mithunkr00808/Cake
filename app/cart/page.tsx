@@ -1,7 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 import ShoppingCart from '@/components/shop/ShoppingCart';
+import type { Metadata } from 'next';
 
+export const metadata: Metadata = {
+    title: "Shopping Cart",
+    description: "Review your selected items and proceed to checkout at Slice of Cake.",
+    robots: { index: false, follow: false },
+};
 export default function CartPage() {
     return (
         <>

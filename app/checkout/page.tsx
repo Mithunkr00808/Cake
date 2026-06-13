@@ -1,7 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 import Checkout from '@/components/shop/Checkout';
+import type { Metadata } from 'next';
 
+export const metadata: Metadata = {
+    title: "Checkout",
+    description: "Complete your order and enjoy fresh premium cakes from Slice of Cake.",
+    robots: { index: false, follow: false },
+};
 export default function CheckoutPage() {
     return (
         <>

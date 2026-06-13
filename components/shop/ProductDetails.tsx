@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
@@ -78,7 +79,7 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                         <div className="image-column col-md-6 col-sm-12">
                             <figure className="image-box">
                                 <a href={mainImage} className="lightbox-image" title={product.name}>
-                                    <img src={mainImage} alt={product.name} style={{ width: '100%', height: '400px', objectFit: 'contain', background: '#f9f9f9', borderRadius: '8px' }} />
+                                    <Image src={mainImage} alt={product.name} width={600} height={400} priority style={{ width: '100%', height: '400px', objectFit: 'contain', background: '#f9f9f9', borderRadius: '8px' }} />
                                 </a>
                             </figure>
                             {/* Thumbnails Gallery */}
@@ -98,7 +99,7 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                                 flexShrink: 0
                                             }}
                                         >
-                                            <img src={img} alt={`Thumbnail ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <Image src={img} alt={`${product.name} thumbnail ${idx + 1}`} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         </div>
                                     ))}
                                 </div>
@@ -221,9 +222,15 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                     <div className="inner-box">
                                         <div className="image-box">
 
-                                            <figure className="image">
+                                            <figure className="image" style={{ position: 'relative', width: '100%', height: '300px' }}>
                                                 <Link href={`/shop/${relProduct.id}`}>
-                                                    <img src={relProduct.image || (relProduct.images && relProduct.images[0])} alt={relProduct.name} style={{ background: '#f9f9f9', width: '100%', height: '300px', objectFit: 'contain' }} />
+                                                    <Image
+                                                        src={relProduct.image || (relProduct.images && relProduct.images[0]) || ''}
+                                                        alt={relProduct.name}
+                                                        fill
+                                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                        style={{ objectFit: 'contain', background: '#f9f9f9' }}
+                                                    />
                                                 </Link>
                                             </figure>
                                             <div className="btn-box"><Link href={`/shop/${relProduct.id}`}>View Details</Link></div>

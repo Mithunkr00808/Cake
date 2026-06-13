@@ -5,7 +5,124 @@ import ProductDetails from '@/components/shop/ProductDetails';
 import ProductSidebar from '@/components/shop/ProductSidebar';
 import Skeleton from '@/components/common/Skeleton';
 import { getCachedProductById, getCachedRelatedProducts } from '@/lib/db/cache';
+import type { Metadata } from 'next';
 
+type Props = {
+    params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+    const product = await getCachedProductById(slug);
+
+    if (!product) {
+        return {
+            title: "Product Not Found",
+        };
+    }
+
+    return {
+        title: product.name,
+        description:
+            product.description ||
+            `Order ${product.name} online from Slice of Cake, Thrissur. Premium handcrafted cake, delivered fresh. ₹${product.price}`,
+        alternates: {
+            canonical: `https://sliceofcake.in/shop/${product.id}`,
+        },
+        openGraph: {
+            title: `${product.name} – Slice of Cake`,
+            description:
+                product.description ||
+                `Order ${product.name} online. Premium handcrafted cake from Thrissur, Kerala.`,
+            url: `https://sliceofcake.in/shop/${product.id}`,
+            images: product.image
+                ? [
+                      {
+                          url: product.image,
+                          width: 800,
+                          height: 800,
+                          alt: product.name,
+                      },
+                  ]
+                : [],
+            type: "website",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: `${product.name} – Slice of Cake`,
+            description:
+                product.description ||
+                `Order ${product.name} online from Slice of Cake.`,
+            images: product.image ? [product.image] : [],
+        },
+    };
+}
+
+function getProductJsonLd(product: {
+    id: string;
+    name: string;
+    price: number;
+    description?: string;
+    image: string;
+    images?: string[];
+    category?: string;
+    sale: boolean;
+}) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.name,
+        description:
+            product.description ||
+            `Premium handcrafted ${product.name} from Slice of Cake, Thrissur.`,
+        image: product.images?.length
+            ? product.images
+            : [product.image],
+        brand: {
+            "@type": "Brand",
+            name: "Slice of Cake",
+        },
+        category: product.category || "Cakes",
+        offers: {
+            "@type": "Offer",
+            url: `https://sliceofcake.in/shop/${product.id}`,
+            priceCurrency: "INR",
+            price: product.price,
+            availability: "https://schema.org/InStock",
+            seller: {
+                "@type": "Organization",
+                name: "Slice of Cake",
+            },
+        },
+    };
+}
+
+function getProductBreadcrumbJsonLd(productName: string, productId: string) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://sliceofcake.in",
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Shop",
+                item: "https://sliceofcake.in/shop",
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: productName,
+                item: `https://sliceofcake.in/shop/${productId}`,
+            },
+        ],
+    };
+}
 function ShopSingleLoading() {
     return (
         <div className="product-details">
@@ -43,6 +160,15 @@ async function ShopSingleContent({ slug }: { slug: string }) {
 
     return (
         <>
+            {/* Product JSON-LD */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(getProductJsonLd(product)) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(getProductBreadcrumbJsonLd(product.name, product.id)) }}
+            />
             {/* Page Title */}
             <section className="page-title" style={{ backgroundImage: 'url(/assets/images/main-slider/slide_2.jpg)' }}>
                 <div className="auto-container">
