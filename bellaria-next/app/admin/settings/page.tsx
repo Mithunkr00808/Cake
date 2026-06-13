@@ -21,7 +21,9 @@ export default function SettingsPage() {
                     deliverablePincodes: data.deliverablePincodes || [],
                     privacyPolicyText: data.privacyPolicyText || '',
                     termsOfUseText: data.termsOfUseText || '',
-                    refundPolicyText: data.refundPolicyText || ''
+                    refundPolicyText: data.refundPolicyText || '',
+                    homeCtaTitle: data.homeCtaTitle || '',
+                    homeCtaDescription: data.homeCtaDescription || ''
                 });
                 if (data.deliverablePincodes) {
                     setPincodesInput(data.deliverablePincodes.join(', '));
@@ -72,26 +74,34 @@ export default function SettingsPage() {
                             <textarea 
                                 value={pincodesInput} 
                                 onChange={e => setPincodesInput(e.target.value)} 
-                                style={{ minHeight: '100px' }}
+                                style={{ height: '100px', overflowY: 'auto', resize: 'vertical' }}
                                 placeholder="e.g. 110001, 400001, 560001"
                             ></textarea>
                             <small style={{ color: '#666' }}>Enter all pincodes where delivery is supported, separated by commas.</small>
                         </div>
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <label style={{ fontWeight: 'bold' }}>About Us Text</label>
-                            <textarea value={settings.aboutUsText} onChange={e => setSettings({...settings, aboutUsText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
+                            <textarea value={settings.aboutUsText} onChange={e => setSettings({...settings, aboutUsText: e.target.value})} style={{ height: '200px', overflowY: 'auto', resize: 'vertical' }}></textarea>
                         </div>
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <label style={{ fontWeight: 'bold' }}>Privacy Policy Text</label>
-                            <textarea value={settings.privacyPolicyText} onChange={e => setSettings({...settings, privacyPolicyText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
+                            <textarea value={settings.privacyPolicyText} onChange={e => setSettings({...settings, privacyPolicyText: e.target.value})} style={{ height: '200px', overflowY: 'auto', resize: 'vertical' }}></textarea>
                         </div>
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <label style={{ fontWeight: 'bold' }}>Terms of Use Text</label>
-                            <textarea value={settings.termsOfUseText} onChange={e => setSettings({...settings, termsOfUseText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
+                            <textarea value={settings.termsOfUseText} onChange={e => setSettings({...settings, termsOfUseText: e.target.value})} style={{ height: '200px', overflowY: 'auto', resize: 'vertical' }}></textarea>
+                        </div>
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Home Page Call-To-Action Title</label>
+                            <input type="text" value={settings.homeCtaTitle} onChange={e => setSettings({...settings, homeCtaTitle: e.target.value})} placeholder="e.g. Magic Processing" />
+                        </div>
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Home Page Call-To-Action Description</label>
+                            <textarea value={settings.homeCtaDescription} onChange={e => setSettings({...settings, homeCtaDescription: e.target.value})} style={{ height: '100px', overflowY: 'auto', resize: 'vertical' }} placeholder="Enter the text that appears beneath the title..."></textarea>
                         </div>
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <label style={{ fontWeight: 'bold' }}>Refund Policy Text</label>
-                            <textarea value={settings.refundPolicyText} onChange={e => setSettings({...settings, refundPolicyText: e.target.value})} style={{ minHeight: '200px' }}></textarea>
+                            <textarea value={settings.refundPolicyText} onChange={e => setSettings({...settings, refundPolicyText: e.target.value})} style={{ height: '200px', overflowY: 'auto', resize: 'vertical' }}></textarea>
                         </div>
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <button 

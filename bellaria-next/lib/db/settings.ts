@@ -9,6 +9,8 @@ export interface StoreSettings {
     privacyPolicyText?: string;
     termsOfUseText?: string;
     refundPolicyText?: string;
+    homeCtaTitle?: string;
+    homeCtaDescription?: string;
 }
 
 export const getSettings = async (): Promise<StoreSettings | null> => {

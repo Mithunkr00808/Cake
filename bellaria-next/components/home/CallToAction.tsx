@@ -1,10 +1,22 @@
 'use client';
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getSettings } from "@/lib/db/settings";
 
 const CallToAction = () => {
     const [isHovered, setIsHovered] = useState(false);
+    const [title, setTitle] = useState("Magic Processing");
+    const [description, setDescription] = useState("Vestibulum ante ipsum primis in faucibus orci luctus et ultrices\nposuere cubilia Curae; Praesent molestie eu turpis nec\nmolestie. Nam auctor magna mauris, non lacinia felis mattis nec.");
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            const data = await getSettings();
+            if (data?.homeCtaTitle) setTitle(data.homeCtaTitle);
+            if (data?.homeCtaDescription) setDescription(data.homeCtaDescription);
+        };
+        fetchSettings();
+    }, []);
 
     return (
         <section className="call-to-action">
@@ -30,12 +42,8 @@ const CallToAction = () => {
                         {/* cake img */}
                         <div className="icon icon_heart"></div>
                     </div>
-                    <h1>Magic Processing</h1>
-                    <p>
-                        Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-                        posuere cubilia Curae; Praesent molestie eu turpis nec<br /> molestie.
-                        Nam auctor magna mauris, non lacinia felis mattis nec.
-                    </p>
+                    <h1>{title}</h1>
+                    <p style={{ whiteSpace: 'pre-line' }}>{description}</p>
                     <div className="btn-box">
                         <Link
                             href="/shop"
