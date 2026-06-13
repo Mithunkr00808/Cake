@@ -32,8 +32,25 @@ function extractPublicId(url: string) {
     }
 }
 
+import { auth } from '@/lib/firebase-admin';
+
 export async function POST(req: Request) {
     try {
+        const authHeader = req.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        
+        const token = authHeader.split('Bearer ')[1];
+        try {
+            const decodedToken = await auth.verifyIdToken(token);
+            if (decodedToken.email !== 'sliceofcake2026@gmail.com') {
+                 return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+            }
+        } catch (err) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { urls } = await req.json();
 
         if (!urls || !Array.isArray(urls)) {

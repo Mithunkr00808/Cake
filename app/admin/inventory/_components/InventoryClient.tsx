@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { getProducts, deleteProduct, Product } from '@/lib/db/products';
+import { auth } from '@/lib/firebase';
 import ProductForm from '../ProductForm';
 import Skeleton from '@/components/common/Skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,9 +44,13 @@ export default function InventoryClient({ initialProducts }: { initialProducts: 
             
             // Silently delete images from Cloudinary via secure server API
             if (imagesToDelete.length > 0) {
+                const token = await auth.currentUser?.getIdToken();
                 fetch('/api/cloudinary/delete', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify({ urls: imagesToDelete })
                 }).catch(err => console.error("Background image cleanup failed:", err));
             }

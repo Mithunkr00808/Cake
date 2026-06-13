@@ -11,6 +11,8 @@ export interface StoreSettings {
     facebook?: string;
     refundPolicy?: string;
     termsOfUse?: string;
+    privacyPolicy?: string;
+    shippingPolicy?: string;
     isLive?: boolean;
     categories?: string[];
 }

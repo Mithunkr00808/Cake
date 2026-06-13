@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { updateSettings, StoreSettings } from '@/lib/db/settings';
+import { revalidateSettingsCache } from '../actions';
 import toast from 'react-hot-toast';
 
 const TagInput = ({ tags, setTags, placeholder }: { tags: string[], setTags: (tags: string[]) => void, placeholder: string }) => {
@@ -68,11 +69,16 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
             categories: categories 
         };
         
-        const success = await updateSettings(updatedSettings);
-        if (success) {
-            toast.success("Settings updated!");
-        } else {
-            toast.error("Failed to update settings.");
+        try {
+            const success = await updateSettings(updatedSettings);
+            if (success) {
+                await revalidateSettingsCache();
+                toast.success("Settings updated!");
+            } else {
+                toast.error("Failed to update settings.");
+            }
+        } catch (error) {
+            toast.error("An error occurred while updating settings.");
         }
         setSaving(false);
     };
@@ -143,19 +149,27 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         </div>
 
                         {/* About Us */}
-                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                        <div className="form-group col-lg-12 col-md-12 col-sm-12">
                             <label style={{ fontWeight: 'bold' }}>About Us Text</label>
-                            <textarea value={settings.aboutUsText} onChange={e => setSettings({...settings, aboutUsText: e.target.value})} style={{ minHeight: '150px' }}></textarea>
+                            <textarea value={settings.aboutUsText} onChange={e => setSettings({...settings, aboutUsText: e.target.value})} style={{ minHeight: '150px', overflowY: 'auto', resize: 'vertical' }}></textarea>
                         </div>
 
                         {/* Policies */}
-                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
-                            <label style={{ fontWeight: 'bold' }}>Refund Policy</label>
-                            <textarea placeholder="Enter your full refund policy..." value={settings.refundPolicy} onChange={e => setSettings({...settings, refundPolicy: e.target.value})} style={{ minHeight: '150px' }}></textarea>
+                        <div className="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label>Refund Policy</label>
+                            <textarea placeholder="Enter your full refund policy..." value={settings.refundPolicy} onChange={e => setSettings({...settings, refundPolicy: e.target.value})} style={{ minHeight: '150px', overflowY: 'auto', resize: 'vertical' }}></textarea>
                         </div>
-                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
-                            <label style={{ fontWeight: 'bold' }}>Terms of Use</label>
-                            <textarea placeholder="Enter your terms of use..." value={settings.termsOfUse} onChange={e => setSettings({...settings, termsOfUse: e.target.value})} style={{ minHeight: '150px' }}></textarea>
+                        <div className="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label>Terms of Use</label>
+                            <textarea placeholder="Enter your terms of use..." value={settings.termsOfUse} onChange={e => setSettings({...settings, termsOfUse: e.target.value})} style={{ minHeight: '150px', overflowY: 'auto', resize: 'vertical' }}></textarea>
+                        </div>
+                        <div className="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label>Privacy Policy</label>
+                            <textarea placeholder="Enter your privacy policy..." value={settings.privacyPolicy || ''} onChange={e => setSettings({...settings, privacyPolicy: e.target.value})} style={{ minHeight: '150px', overflowY: 'auto', resize: 'vertical' }}></textarea>
+                        </div>
+                        <div className="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label>Shipping Policy</label>
+                            <textarea placeholder="Enter your shipping policy..." value={settings.shippingPolicy || ''} onChange={e => setSettings({...settings, shippingPolicy: e.target.value})} style={{ minHeight: '150px', overflowY: 'auto', resize: 'vertical' }}></textarea>
                         </div>
 
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
