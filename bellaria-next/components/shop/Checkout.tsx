@@ -153,6 +153,7 @@ const Checkout = () => {
                 price: item.price,
                 quantity: item.quantity,
                 image: item.image,
+                options: item.options,
             })),
             total: cartTotal,
             paymentMethod: 'Cash on Delivery',

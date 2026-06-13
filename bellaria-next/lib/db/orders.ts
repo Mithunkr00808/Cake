@@ -20,11 +20,18 @@ export type OrderStatus =
     | 'cancelled';
 
 export interface OrderItem {
-    id: number;
+    id: number | string;
     name: string;
     price: number;
     quantity: number;
     image: string;
+    options?: {
+        size?: { label: string; priceModifier: number };
+        flavor?: string;
+        message?: string;
+        topper?: string;
+        photoUrl?: string;
+    };
 }
 
 export interface OrderCustomer {

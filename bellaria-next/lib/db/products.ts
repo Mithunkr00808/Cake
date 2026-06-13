@@ -13,6 +13,28 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 
+export type StockStatus = 'in_stock' | 'low_stock' | 'out_of_stock' | 'preorder';
+
+export interface ProductSize {
+    id: string;
+    label: string;
+    servings: string;
+    priceModifier: number;
+}
+
+export interface CustomizationOptions {
+    allowMessage: boolean;
+    messageMaxLength?: number;
+    allowTopper: boolean;
+    topperOptions?: string[];
+    allowPhotoUpload: boolean;
+}
+
+export interface DeliveryConfig {
+    fee: number;
+    leadTimeHours: number;
+}
+
 export interface Product {
     id: string;
     name: string;
@@ -24,6 +46,19 @@ export interface Product {
     sale: boolean;
     description?: string;
     category?: string;
+
+    // Advanced Options
+    shortDescription?: string;
+    fullDescription?: string; 
+    sizes?: ProductSize[];
+    flavors?: string[]; 
+    maxQuantity?: number;
+    stock?: StockStatus;
+    customization?: CustomizationOptions;
+    deliveryConfig?: DeliveryConfig;
+    relatedProductIds?: string[];
+    dietaryTags?: string[];
+    ctaText?: string;
 }
 
 export const getProducts = async (): Promise<Product[]> => {

@@ -229,9 +229,19 @@ export default function AdminOrdersPage() {
                                                             <tbody>
                                                                 {order.items.map((item, idx) => (
                                                                     <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
-                                                                        <td style={{ padding: '8px' }}>{item.name}</td>
-                                                                        <td style={{ padding: '8px', textAlign: 'center' }}>×{item.quantity}</td>
-                                                                        <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600 }}>
+                                                                        <td style={{ padding: '8px' }}>
+                                                                            <div style={{ fontWeight: 500, color: '#333' }}>{item.name}</div>
+                                                                            {item.options && (
+                                                                                <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                                                                                    {item.options.size && <div><span style={{ color: '#999' }}>Size:</span> {item.options.size.label}</div>}
+                                                                                    {item.options.flavor && <div><span style={{ color: '#999' }}>Flavor:</span> {item.options.flavor}</div>}
+                                                                                    {item.options.topper && <div><span style={{ color: '#999' }}>Topper:</span> {item.options.topper}</div>}
+                                                                                    {item.options.message && <div><span style={{ color: '#999' }}>Message:</span> {item.options.message}</div>}
+                                                                                </div>
+                                                                            )}
+                                                                        </td>
+                                                                        <td style={{ padding: '8px', textAlign: 'center', verticalAlign: 'top' }}>×{item.quantity}</td>
+                                                                        <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600, verticalAlign: 'top' }}>
                                                                             ₹{(item.price * item.quantity).toFixed(2)}
                                                                         </td>
                                                                     </tr>

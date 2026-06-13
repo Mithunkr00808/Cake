@@ -74,56 +74,52 @@ export default function InventoryPage() {
                     }} 
                 />
             ) : (
-                <div className="cart-outer">
-                    <div className="table-outer">
-                        <table className="cart-table" style={{ width: '100%', minWidth: '700px' }}>
-                            <thead className="cart-header">
-                                <tr>
-                                    <th className="prod-column">Image</th>
-                                    <th className="prod-column">Name</th>
-                                    <th className="price">Price</th>
-                                    <th>Category</th>
-                                    <th style={{ width: '200px' }}>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {loading ? (
-                                    [1, 2, 3].map(n => (
-                                        <tr key={n}>
-                                            <td className="prod-column"><Skeleton type="thumbnail" width="80px" height="80px" style={{ margin: '0 auto' }} /></td>
-                                            <td className="prod-column"><Skeleton type="text" width="150px" height="24px" /></td>
-                                            <td className="price"><Skeleton type="text" width="80px" height="24px" /></td>
-                                            <td><Skeleton type="text" width="100px" height="24px" /></td>
-                                            <td><Skeleton type="button" width="120px" height="36px" /></td>
-                                        </tr>
-                                    ))
-                                ) : products.length === 0 ? (
-                                    <tr><td colSpan={5} style={{ padding: '30px', textAlign: 'center', color: '#888' }}>No products found. Add one!</td></tr>
-                                ) : (
-                                    products.map(product => (
-                                        <tr key={product.id}>
-                                            <td className="prod-column">
-                                                <div className="column-box">
-                                                    <figure className="prod-thumb"><img src={product.image} alt={product.name} style={{ width: '80px', height: '80px', objectFit: 'cover' }} /></figure>
-                                                </div>
-                                            </td>
-                                            <td className="prod-column">
-                                                <h4 className="prod-title">{product.name}</h4>
-                                            </td>
-                                            <td className="price">₹{product.price.toFixed(2)}</td>
-                                            <td>{product.category || '-'}</td>
-                                            <td>
-                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                                    <button onClick={() => handleEdit(product)} style={{ padding: '8px 15px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' }}>Edit</button>
-                                                    <button onClick={() => handleDelete(product.id)} style={{ padding: '8px 15px', background: '#dc3545', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' }}>Delete</button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', minWidth: '700px' }}>
+                        <thead>
+                            <tr style={{ background: '#f9f9f9', borderBottom: '2px solid #eee' }}>
+                                <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Image</th>
+                                <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Name</th>
+                                <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Price</th>
+                                <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 600, color: '#555' }}>Category</th>
+                                <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 600, color: '#555', width: '200px' }}>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                [1, 2, 3].map(n => (
+                                    <tr key={n} style={{ borderBottom: '1px solid #f0f0f0', background: '#fff' }}>
+                                        <td style={{ padding: '14px' }}><Skeleton type="thumbnail" width="60px" height="60px" /></td>
+                                        <td style={{ padding: '14px' }}><Skeleton type="text" width="150px" height="24px" /></td>
+                                        <td style={{ padding: '14px' }}><Skeleton type="text" width="80px" height="24px" /></td>
+                                        <td style={{ padding: '14px' }}><Skeleton type="text" width="100px" height="24px" /></td>
+                                        <td style={{ padding: '14px' }}><Skeleton type="button" width="120px" height="36px" /></td>
+                                    </tr>
+                                ))
+                            ) : products.length === 0 ? (
+                                <tr><td colSpan={5} style={{ padding: '30px', textAlign: 'center', color: '#888' }}>No products found. Add one!</td></tr>
+                            ) : (
+                                products.map(product => (
+                                    <tr key={product.id} style={{ borderBottom: '1px solid #f0f0f0', background: '#fff' }}>
+                                        <td style={{ padding: '14px' }}>
+                                            <img src={product.image} alt={product.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />
+                                        </td>
+                                        <td style={{ padding: '14px' }}>
+                                            <div style={{ fontWeight: 600, color: '#222' }}>{product.name}</div>
+                                        </td>
+                                        <td style={{ padding: '14px', fontWeight: 600, color: '#222' }}>₹{product.price.toFixed(2)}</td>
+                                        <td style={{ padding: '14px', color: '#555' }}>{product.category || '-'}</td>
+                                        <td style={{ padding: '14px' }}>
+                                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                <button onClick={() => handleEdit(product)} style={{ padding: '6px 12px', background: '#f5f5f5', color: '#333', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Edit</button>
+                                                <button onClick={() => handleDelete(product.id)} style={{ padding: '6px 12px', background: '#fff', color: '#dc3545', border: '1px solid #dc3545', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             )}
         </div>

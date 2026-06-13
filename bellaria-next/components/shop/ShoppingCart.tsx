@@ -10,7 +10,7 @@ import { useCart } from '@/context/CartContext';
 const ShoppingCart = () => {
     const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
 
-    const handleRemove = (id: number, name: string) => {
+    const handleRemove = (id: string, name: string) => {
         removeFromCart(id);
         toast.error(`${name} removed from cart`);
     };
@@ -78,9 +78,19 @@ const ShoppingCart = () => {
                                                 }}
                                             >
                                                 <td className="product-thumbnail">
-                                                    <Link href={`/shop/${item.id}`}><img src={item.image} alt={item.name} className="thumb" /></Link>
+                                                    <Link href={`/shop/${item.productId}`}><img src={item.image} alt={item.name} className="thumb" /></Link>
                                                 </td>
-                                                <td className="product-name"><Link href={`/shop/${item.id}`}>{item.name}</Link></td>
+                                                <td className="product-name">
+                                                    <Link href={`/shop/${item.productId}`} style={{ fontWeight: 'bold' }}>{item.name}</Link>
+                                                    {item.options && (
+                                                        <div style={{ fontSize: '13px', color: '#666', marginTop: '5px' }}>
+                                                            {item.options.size && <div>Size: {item.options.size.label}</div>}
+                                                            {item.options.flavor && <div>Flavor: {item.options.flavor}</div>}
+                                                            {item.options.message && <div style={{ fontStyle: 'italic' }}>Message: "{item.options.message}"</div>}
+                                                            {item.options.topper && <div>Topper: {item.options.topper}</div>}
+                                                        </div>
+                                                    )}
+                                                </td>
                                                 <td className="product-price">₹{item.price.toFixed(2)}</td>
                                                 <td className="product-quantity">
                                                     <div className="quantity">

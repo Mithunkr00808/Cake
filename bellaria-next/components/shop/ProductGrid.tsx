@@ -58,7 +58,7 @@ const ProductGrid = () => {
     const handleAddToCart = useCallback((e: React.MouseEvent, product: any) => {
         e.preventDefault();
         addToCart({
-            id: product.id,
+            productId: product.id,
             name: product.name,
             price: product.price,
             image: product.image

@@ -49,11 +49,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 backgroundImage="/assets/images/background/about-title-bg.png"
             />
             
-            <section className="sidebar-page-container">
-                <div className="auto-container">
+            <section className="sidebar-page-container" style={{ paddingBottom: '100px' }}>
+                <div className="container-fluid" style={{ padding: '0 3%' }}>
                     <div className="row clearfix">
                         {/* Sidebar */}
-                        <div className="sidebar-side col-lg-3 col-md-12 col-sm-12">
+                        <div className="sidebar-side col-lg-2 col-md-12 col-sm-12">
                             <aside className="sidebar">
                                 {/* Navigation Widget */}
                                 <div className="sidebar-widget categories-widget">
@@ -76,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         </div>
 
                         {/* Content Side */}
-                        <div className="content-side col-lg-9 col-md-12 col-sm-12">
+                        <div className="content-side col-lg-10 col-md-12 col-sm-12">
                             <div className="blog-single">
                                 <div className="inner-box" style={{ padding: '40px', background: '#fff', border: '1px solid #f4f4f4', boxShadow: '0px 0px 20px rgba(0,0,0,0.05)', borderRadius: '10px' }}>
                                     {children}

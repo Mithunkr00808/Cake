@@ -172,9 +172,11 @@ const Header = () => {
                                             cartItems.map((item) => (
                                                 <li className="cart-item" key={item.id}>
                                                     <img src={item.image} alt={item.name} className="thumb" />
-                                                    <span className="item-name">{item.name}</span>
+                                                    <span className="item-name" style={{ lineHeight: '1.2', display: 'block', marginBottom: '2px' }}>{item.name}</span>
+                                                    {item.options?.size && <span style={{ display: 'block', fontSize: '11px', color: '#888', lineHeight: '1.2' }}>Size: {item.options.size.label}</span>}
+                                                    {item.options?.flavor && <span style={{ display: 'block', fontSize: '11px', color: '#888', lineHeight: '1.2' }}>Flavor: {item.options.flavor}</span>}
                                                     <span className="item-quantity">{item.quantity} x <span className="item-amount">₹{item.price.toFixed(2)}</span></span>
-                                                    <Link href={`/shop/${item.id}`} className="product-detail"></Link>
+                                                    <Link href={`/shop/${item.productId}`} className="product-detail"></Link>
                                                     <a href="#" className="remove-item" onClick={(e) => { e.preventDefault(); removeFromCart(item.id); }}><span className="fa fa-times"></span></a>
                                                 </li>
                                             ))
