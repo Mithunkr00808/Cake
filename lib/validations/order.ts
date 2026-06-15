@@ -5,13 +5,13 @@ export const orderItemSchema = z.object({
     name: z.string().min(1, "Product name is required"),
     price: z.number().nonnegative("Price cannot be negative"),
     quantity: z.number().int().positive("Quantity must be at least 1"),
-    image: z.string().url("Invalid image URL").optional(),
+    image: z.string().optional(),
 });
 
 export const orderCustomerSchema = z.object({
     firstName: z.string().min(1, "First name is required").max(50, "First name is too long"),
     lastName: z.string().min(1, "Last name is required").max(50, "Last name is too long"),
-    email: z.string().email("Invalid email address"),
+    email: z.string().email("Invalid email address").optional().or(z.literal('')),
     phone: z.string().min(5, "Phone number is too short").max(20, "Phone number is too long"),
     address: z.string().min(5, "Address is required"),
     apartment: z.string().optional(),
