@@ -18,8 +18,8 @@ export async function createOrderServerAction(rawData: unknown): Promise<string 
 
         for (const item of data.items) {
             // Fetch the actual product from the database
-            const lookupId = item.productId || item.id;
-            const product = await getProductByIdAdmin(lookupId.toString());
+            const lookupId = item.productId || String(item.id).split('-{')[0];
+            const product = await getProductByIdAdmin(lookupId);
             
             if (!product) {
                 throw new Error(`Product not found: ${lookupId}`);

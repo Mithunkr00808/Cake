@@ -87,7 +87,7 @@ const CheckoutForm = () => {
             },
             items: cartItems.map(item => ({
                 id: item.id,
-                productId: item.productId || item.id,
+                productId: item.productId || String(item.id).split('-{')[0],
                 name: item.name,
                 price: item.price, // Will be overridden by server with DB price
                 quantity: item.quantity,
