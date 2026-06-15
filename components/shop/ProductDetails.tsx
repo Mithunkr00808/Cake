@@ -57,8 +57,6 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
     };
 
     const { addToCart } = useCart();
-    const [quantity, setQuantity] = useState(1);
-    
     // Support multiple images
     const images = product.images && product.images.length > 0 
         ? product.images 

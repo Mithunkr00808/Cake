@@ -21,10 +21,19 @@ export type OrderStatus =
 
 export interface OrderItem {
     id: string;
+    productId?: string;
+    slug?: string;
     name: string;
     price: number;
     quantity: number;
     image: string;
+    options?: {
+        size?: { label: string; priceModifier: number };
+        flavor?: string;
+        message?: string;
+        topper?: string;
+        photoUrl?: string;
+    };
 }
 
 export interface OrderCustomer {
