@@ -107,7 +107,7 @@ const Footer = ({ facebook, instagram }: { facebook?: string, instagram?: string
                         <p style={{ margin: '0' }}>Slice of Cake - Layered in love</p>
                         <ul style={{ display: 'flex', gap: '15px', margin: '0', padding: '0', listStyle: 'none', flexWrap: 'wrap' }}>
                             <li><Link href="/privacy-policy" style={{ color: '#aaa', fontSize: '14px' }}>Privacy Policy</Link></li>
-                            <li><Link href="/terms" style={{ color: '#aaa', fontSize: '14px' }}>Terms & Conditions</Link></li>
+                            <li><Link href="/terms-of-use" style={{ color: '#aaa', fontSize: '14px' }}>Terms & Conditions</Link></li>
                             <li><Link href="/refund-policy" style={{ color: '#aaa', fontSize: '14px' }}>Refund Policy</Link></li>
                             <li><Link href="/shipping-policy" style={{ color: '#aaa', fontSize: '14px' }}>Shipping Policy</Link></li>
                         </ul>
