@@ -46,7 +46,7 @@ const ShopSidebar = () => {
                                             <Image src={item.image} alt={item.name} width={80} height={80} className="thumb" />
                                             <span className="item-name">{item.name}</span>
                                             <span className="item-quantity">{item.quantity} x <span className="item-amount">₹{item.price.toFixed(2)}</span></span>
-                                            <Link href={`/shop/${item.id}`} className="product-detail"></Link>
+                                            <Link href={`/shop/${item.slug || item.id}`} className="product-detail"></Link>
                                             <button className="remove-item" onClick={() => removeFromCart(item.id)}><span className="fa fa-times"></span></button>
                                         </motion.li>
                                     ))

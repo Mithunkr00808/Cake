@@ -191,7 +191,7 @@ export default async function RootLayout({
               <SiteAccessControl isLive={isLive}>
                 <Preloader />
                 <Header />
-                {children}
+                <main>{children}</main>
                 <ConditionalFooter isLive={isLive}>
                   <Footer facebook={facebook} instagram={instagram} />
                 </ConditionalFooter>

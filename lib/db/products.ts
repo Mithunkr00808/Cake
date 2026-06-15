@@ -15,6 +15,7 @@ import { db } from "../firebase";
 
 export interface Product {
     id: string;
+    slug?: string;
     name: string;
     price: number;
     oldPrice?: string;
@@ -69,6 +70,24 @@ export const getProductById = async (id: string): Promise<Product | null> => {
         }
     } catch (error) {
         console.error("Error fetching product by ID:", error);
+        return null;
+    }
+};
+
+export const getProductBySlug = async (slug: string): Promise<Product | null> => {
+    try {
+        const productsCol = collection(db, 'products');
+        const q = query(productsCol, where('slug', '==', slug), limit(1));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            return { id: doc.id, ...doc.data() } as Product;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching product by slug:", error);
         return null;
     }
 };

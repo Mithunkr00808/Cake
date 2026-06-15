@@ -28,11 +28,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Refresh the token to ensure we have the latest claims
-                const idTokenResult = await user.getIdTokenResult(true);
-                setIsAdmin(!!idTokenResult.claims.admin);
+                // Check if user email matches the admin email from .env
+                const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+                setIsAdmin(user.email === adminEmail);
 
                 // User signed in, get token and create session
+                const idTokenResult = await user.getIdTokenResult(true);
                 const idToken = idTokenResult.token;
                 await fetch('/api/auth/session', {
                     method: 'POST',

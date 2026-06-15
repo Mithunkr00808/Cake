@@ -60,7 +60,8 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
         }
         
         addToCart({
-            id: Number(product.id),
+            id: product.id,
+            slug: product.slug,
             name: product.name,
             price: product.price,
             image: product.image || images[0],
@@ -77,7 +78,10 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                     <div className="row clearfix">
                         {/* Image Column */}
                         <div className="image-column col-md-6 col-sm-12">
-                            <figure className="image-box">
+                            <figure className="image-box" style={{ position: 'relative' }}>
+                                {product.sale && (
+                                    <div className="sale" style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 1, backgroundColor: '#ff7a7a', color: 'white', padding: '5px 15px', borderRadius: '4px', fontSize: '14px', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Sale!</div>
+                                )}
                                 <a href={mainImage} className="lightbox-image" title={product.name}>
                                     <Image src={mainImage} alt={product.name} width={600} height={400} priority style={{ width: '100%', height: '400px', objectFit: 'contain', background: '#f9f9f9', borderRadius: '8px' }} />
                                 </a>
@@ -221,9 +225,11 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                 <div key={relProduct.id} className="shop-item col-lg-4 col-md-6 col-sm-12">
                                     <div className="inner-box">
                                         <div className="image-box">
-
+                                            {relProduct.sale && (
+                                                <div className="sale" style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 1, backgroundColor: '#ff7a7a', color: 'white', padding: '5px 15px', borderRadius: '4px', fontSize: '14px', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Sale!</div>
+                                            )}
                                             <figure className="image" style={{ position: 'relative', width: '100%', height: '300px' }}>
-                                                <Link href={`/shop/${relProduct.id}`}>
+                                                <Link href={`/shop/${relProduct.slug || relProduct.id}`}>
                                                     <Image
                                                         src={relProduct.image || (relProduct.images && relProduct.images[0]) || ''}
                                                         alt={relProduct.name}
@@ -233,10 +239,10 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                                     />
                                                 </Link>
                                             </figure>
-                                            <div className="btn-box"><Link href={`/shop/${relProduct.id}`}>View Details</Link></div>
+                                            <div className="btn-box"><Link href={`/shop/${relProduct.slug || relProduct.id}`}>View Details</Link></div>
                                         </div>
                                         <div className="lower-content">
-                                            <h4 className="name"><Link href={`/shop/${relProduct.id}`}>{relProduct.name}</Link></h4>
+                                            <h4 className="name"><Link href={`/shop/${relProduct.slug || relProduct.id}`}>{relProduct.name}</Link></h4>
                                             <div className="rating">
                                                 {[...Array(5)].map((_, i) => (
                                                     <span key={i} className={`fa fa-star ${i < relProduct.rating ? '' : 'light'}`}></span>

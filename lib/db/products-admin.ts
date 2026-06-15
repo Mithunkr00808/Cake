@@ -32,6 +32,24 @@ export const getProductByIdAdmin = async (id: string): Promise<Product | null> =
     }
 };
 
+export const getProductBySlugAdmin = async (slug: string): Promise<Product | null> => {
+    try {
+        const productsCol = db.collection('products');
+        const q = productsCol.where('slug', '==', slug).limit(1);
+        const querySnapshot = await q.get();
+        
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            return { id: doc.id, ...doc.data() } as Product;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching product by slug via Admin SDK:", error);
+        return null;
+    }
+};
+
 export const getRelatedProductsAdmin = async (currentProductId: string, count: number = 3): Promise<Product[]> => {
     try {
         const productsCol = db.collection('products');

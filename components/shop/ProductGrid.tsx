@@ -52,6 +52,7 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
         e.preventDefault();
         addToCart({
             id: product.id,
+            slug: product.slug,
             name: product.name,
             price: product.price,
             image: product.image
@@ -97,12 +98,15 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
                         <p>No products found. Please seed the database.</p>
                     </div>
                 ) : products.map((product) => (
-                    <div className="shop-item col-lg-4 col-md-6 col-sm-12" key={product.id}>
+                    <article className="shop-item col-lg-4 col-md-6 col-sm-12" key={product.id}>
                         <div className="inner-box">
                             <div className="image-box">
 
+                                {product.sale && (
+                                    <div className="sale" style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 1, backgroundColor: '#ff7a7a', color: 'white', padding: '5px 15px', borderRadius: '4px', fontSize: '14px', fontWeight: 'bold', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>Sale!</div>
+                                )}
                                 <figure className="image" style={{ position: 'relative', width: '100%', height: '300px' }}>
-                                    <Link href={`/shop/${product.id}`}>
+                                    <Link href={`/shop/${product.slug || product.id}`}>
                                         <Image
                                             src={product.image || (product.images && product.images[0]) || ''}
                                             alt={product.name}
@@ -118,12 +122,12 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
                                         whileTap={{ scale: 0.95 }}
                                         style={{ background: 'none', border: 'none', width: '100%' }}
                                     >
-                                        <Link href={`/shop/${product.id}`}>View</Link>
+                                        <Link href={`/shop/${product.slug || product.id}`}>View</Link>
                                     </motion.button>
                                 </div>
                             </div>
                             <div className="lower-content">
-                                <h4 className="name"><Link href={`/shop/${product.id}`}>{product.name}</Link></h4>
+                                <h4 className="name"><Link href={`/shop/${product.slug || product.id}`}>{product.name}</Link></h4>
                                 <div className="rating">
                                     {[...Array(5)].map((_, i) => (
                                         <span key={i} className={`fa fa-star ${i < Math.floor(product.rating) ? '' : 'light'}`}></span>
@@ -134,7 +138,7 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </article>
                 ))}
             </div>
         </div>

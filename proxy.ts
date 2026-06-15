@@ -4,10 +4,10 @@ import type { NextRequest } from 'next/server';
 export async function proxy(request: NextRequest) {
     const sessionCookie = request.cookies.get('session')?.value;
 
-    // We only protect /admin routes
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    // We only protect /admin routes (except /admin/login)
+    if (request.nextUrl.pathname.startsWith('/admin') && request.nextUrl.pathname !== '/admin/login') {
         if (!sessionCookie) {
-            return NextResponse.redirect(new URL('/login', request.url));
+            return NextResponse.redirect(new URL('/admin/login', request.url));
         }
 
         try {
@@ -23,16 +23,17 @@ export async function proxy(request: NextRequest) {
             const payload = JSON.parse(payloadStr);
 
             // We decode the JWT here just to ensure it's a valid JSON format.
-            // Actual cryptographic verification AND Custom Claim checks happen in Server Components.
-            if (!payload.email) {
-                return NextResponse.redirect(new URL('/login', request.url));
+            // Actual cryptographic verification happens in Server Components.
+            const adminEmail = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+            if (!adminEmail || !payload.email || payload.email !== adminEmail) {
+                return NextResponse.redirect(new URL('/admin/login', request.url));
             }
 
             return NextResponse.next();
         } catch (error) {
             console.error("Middleware session verification error:", error);
             // If there's an error parsing the token, force login
-            return NextResponse.redirect(new URL('/login', request.url));
+            return NextResponse.redirect(new URL('/admin/login', request.url));
         }
     }
 

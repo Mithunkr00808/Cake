@@ -3,7 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import { Product, addProduct, updateProduct } from '@/lib/db/products';
 import { getSettings } from '@/lib/db/settings';
+import { revalidateShopCache } from '../actions';
 import toast from 'react-hot-toast';
+
+function createSlug(text: string) {
+    return text
+        .toString()
+        .toLowerCase()
+        .replace(/\s+/g, '-')           // Replace spaces with -
+        .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+        .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+        .replace(/^-+/, '')             // Trim - from start of text
+        .replace(/-+$/, '');            // Trim - from end of text
+}
 
 interface ProductFormProps {
     product?: Product;
@@ -124,12 +136,14 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
             images: finalImages,
             sale,
             description,
-            category
+            category,
+            slug: createSlug(name)
         };
 
         if (product?.id) {
             const success = await updateProduct(product.id, productData);
             if (success) {
+                await revalidateShopCache();
                 toast.success('Product updated!');
                 onSuccess();
             } else {
@@ -138,6 +152,7 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
         } else {
             const id = await addProduct(productData);
             if (id) {
+                await revalidateShopCache();
                 toast.success('Product added!');
                 onSuccess();
             } else {

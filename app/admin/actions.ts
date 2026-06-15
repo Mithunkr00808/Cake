@@ -25,3 +25,12 @@ export async function recordAdminAction(
     return { success: false };
   }
 }
+
+import { revalidatePath, revalidateTag } from 'next/cache';
+
+export async function revalidateShopCache() {
+  // @ts-ignore - Next.js 16 signature requires 2 args in typings, but works with 1 at runtime.
+  revalidateTag('products');
+  revalidatePath('/shop');
+  revalidatePath('/');
+}

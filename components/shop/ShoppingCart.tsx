@@ -79,9 +79,9 @@ const ShoppingCart = () => {
                                                 }}
                                             >
                                                 <td className="product-thumbnail">
-                                                    <Link href={`/shop/${item.id}`}><Image src={item.image} alt={item.name} width={100} height={100} className="thumb" /></Link>
+                                                    <Link href={`/shop/${item.slug || item.id}`}><Image src={item.image} alt={item.name} width={100} height={100} className="thumb" /></Link>
                                                 </td>
-                                                <td className="product-name"><Link href={`/shop/${item.id}`}>{item.name}</Link></td>
+                                                <td className="product-name"><Link href={`/shop/${item.slug || item.id}`}>{item.name}</Link></td>
                                                 <td className="product-price">₹{item.price.toFixed(2)}</td>
                                                 <td className="product-quantity">
                                                     <div className="quantity">

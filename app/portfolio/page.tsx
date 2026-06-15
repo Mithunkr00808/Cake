@@ -27,12 +27,12 @@ export default async function PortfolioPage() {
     if (products && products.length > 0) {
         products.forEach((product) => {
             if (product.image) {
-                images.push({ url: product.image, productId: product.id, title: product.name });
+                images.push({ url: product.image, productId: product.slug || product.id, title: product.name });
             }
             if (product.images && product.images.length > 0) {
                 product.images.forEach((img) => {
                     if (img !== product.image) {
-                        images.push({ url: img, productId: product.id, title: product.name });
+                        images.push({ url: img, productId: product.slug || product.id, title: product.name });
                     }
                 });
             }

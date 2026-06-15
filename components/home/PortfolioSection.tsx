@@ -52,7 +52,7 @@ const PortfolioSection = () => {
                                 <div className="inner-box">
                                     <div className="image-box">
                                         <figure className="image" style={{ position: 'relative', width: '100%', height: '250px' }}>
-                                            <Link href={`/shop/${product.id}`}>
+                                            <Link href={`/shop/${product.slug || product.id}`}>
                                                 <Image 
                                                     src={product.image || (product.images && product.images[0]) || ''} 
                                                     alt={product.name} 
@@ -65,7 +65,7 @@ const PortfolioSection = () => {
                                     </div>
                                     <div className="lower-content" style={{ textAlign: 'center', padding: '15px 0' }}>
                                         <h4 className="name" style={{ marginBottom: '5px' }}>
-                                            <Link href={`/shop/${product.id}`} style={{ color: '#333', textDecoration: 'none' }}>
+                                            <Link href={`/shop/${product.slug || product.id}`} style={{ color: '#333', textDecoration: 'none' }}>
                                                 {product.name}
                                             </Link>
                                         </h4>

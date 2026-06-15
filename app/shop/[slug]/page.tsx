@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import ProductDetails from '@/components/shop/ProductDetails';
 import ProductSidebar from '@/components/shop/ProductSidebar';
 import Skeleton from '@/components/common/Skeleton';
-import { getCachedProductById, getCachedRelatedProducts } from '@/lib/db/cache';
+import { getCachedProductBySlug, getCachedRelatedProducts } from '@/lib/db/cache';
 import type { Metadata } from 'next';
 
 type Props = {
@@ -13,7 +13,12 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const product = await getCachedProductById(slug);
+    let product = await getCachedProductBySlug(slug);
+
+    if (!product) {
+        const { getCachedProductById } = await import('@/lib/db/cache');
+        product = await getCachedProductById(slug);
+    }
 
     if (!product) {
         return {
@@ -27,14 +32,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             product.description ||
             `Order ${product.name} online from Slice of Cake, Thrissur. Premium handcrafted cake, delivered fresh. ₹${product.price}`,
         alternates: {
-            canonical: `https://sliceofcake.in/shop/${product.id}`,
+            canonical: `https://sliceofcake.in/shop/${product.slug || product.id}`,
         },
         openGraph: {
             title: `${product.name} – Slice of Cake`,
             description:
                 product.description ||
                 `Order ${product.name} online. Premium handcrafted cake from Thrissur, Kerala.`,
-            url: `https://sliceofcake.in/shop/${product.id}`,
+            url: `https://sliceofcake.in/shop/${product.slug || product.id}`,
             images: product.image
                 ? [
                       {
@@ -60,6 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function getProductJsonLd(product: {
     id: string;
+    slug?: string;
     name: string;
     price: number;
     description?: string;
@@ -85,7 +91,7 @@ function getProductJsonLd(product: {
         category: product.category || "Cakes",
         offers: {
             "@type": "Offer",
-            url: `https://sliceofcake.in/shop/${product.id}`,
+            url: `https://sliceofcake.in/shop/${product.slug || product.id}`,
             priceCurrency: "INR",
             price: product.price,
             availability: "https://schema.org/InStock",
@@ -97,7 +103,7 @@ function getProductJsonLd(product: {
     };
 }
 
-function getProductBreadcrumbJsonLd(productName: string, productId: string) {
+function getProductBreadcrumbJsonLd(productName: string, product: { slug?: string; id: string }) {
     return {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -118,7 +124,7 @@ function getProductBreadcrumbJsonLd(productName: string, productId: string) {
                 "@type": "ListItem",
                 position: 3,
                 name: productName,
-                item: `https://sliceofcake.in/shop/${productId}`,
+                item: `https://sliceofcake.in/shop/${product.slug || product.id}`,
             },
         ],
     };
@@ -150,7 +156,12 @@ function ShopSingleLoading() {
 }
 
 async function ShopSingleContent({ slug }: { slug: string }) {
-    const product = await getCachedProductById(slug);
+    let product = await getCachedProductBySlug(slug);
+    
+    if (!product) {
+        const { getCachedProductById } = await import('@/lib/db/cache');
+        product = await getCachedProductById(slug);
+    }
     
     if (!product) {
         notFound();
@@ -167,7 +178,7 @@ async function ShopSingleContent({ slug }: { slug: string }) {
             />
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(getProductBreadcrumbJsonLd(product.name, product.id)) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(getProductBreadcrumbJsonLd(product.name, product)) }}
             />
             {/* Page Title */}
             <section className="page-title" style={{ backgroundImage: 'url(/assets/images/main-slider/slide_2.jpg)' }}>

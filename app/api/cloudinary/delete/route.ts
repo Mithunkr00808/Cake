@@ -44,7 +44,8 @@ export async function POST(req: Request) {
         const token = authHeader.split('Bearer ')[1];
         try {
             const decodedToken = await auth.verifyIdToken(token);
-            if (decodedToken.email !== 'sliceofcake2026@gmail.com') {
+            const adminEmail = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+            if (!adminEmail || decodedToken.email !== adminEmail) {
                  return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
             }
         } catch (err) {

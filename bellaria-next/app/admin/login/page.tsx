@@ -27,8 +27,8 @@ export default function AdminLoginPage() {
         setLoading(true);
         try {
             const cred = await signInWithEmailAndPassword(auth, email, password);
-            const adminEmail = 'sliceofcake2026@gmail.com';
-            if (cred.user.email !== adminEmail) {
+            const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+            if (!adminEmail || cred.user.email !== adminEmail) {
                 await auth.signOut();
                 toast.error('Access denied. This login is for admins only.');
                 setLoading(false);

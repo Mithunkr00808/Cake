@@ -174,7 +174,7 @@ const Header = () => {
                                                     <img src={item.image} alt={item.name} className="thumb" />
                                                     <span className="item-name">{item.name}</span>
                                                     <span className="item-quantity">{item.quantity} x <span className="item-amount">₹{item.price.toFixed(2)}</span></span>
-                                                    <Link href={`/shop/${item.id}`} className="product-detail"></Link>
+                                                    <Link href={`/shop/${item.slug || item.id}`} className="product-detail"></Link>
                                                     <a href="#" className="remove-item" onClick={(e) => { e.preventDefault(); removeFromCart(item.id); }}><span className="fa fa-times"></span></a>
                                                 </li>
                                             ))

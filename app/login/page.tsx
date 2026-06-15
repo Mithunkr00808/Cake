@@ -13,7 +13,8 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (!loading && user) {
-            if (user.email === 'sliceofcake2026@gmail.com') {
+            const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+            if (adminEmail && user.email === adminEmail) {
                 router.push('/admin');
             } else {
                 router.push('/');
