@@ -110,12 +110,11 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
             try {
                 const formData = new FormData();
                 formData.append('file', uploadItem.file as File);
-                formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "ml_default");
 
-                const res = await fetch(
-                    `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dtnjy8o1m'}/image/upload`,
-                    { method: 'POST', body: formData }
-                );
+                const res = await fetch('/api/cloudinary/upload', { 
+                    method: 'POST', 
+                    body: formData 
+                });
 
                 const data = await res.json();
                 
