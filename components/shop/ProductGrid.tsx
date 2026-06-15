@@ -4,7 +4,7 @@ import React, { useCallback, useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 import { useCart } from '@/context/CartContext';
 import Skeleton from '@/components/common/Skeleton';
@@ -26,6 +26,7 @@ interface ProductGridProps {
 const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
     const { addToCart } = useCart();
     const [products, setProducts] = useState<Product[]>(initialProducts);
+    const prefersReducedMotion = useReducedMotion();
     
     // Custom dropdown state
     const [isSortOpen, setIsSortOpen] = useState(false);
@@ -118,8 +119,8 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
                                 </figure>
                                 <div className="btn-box">
                                     <motion.button 
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
+                                        whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
+                                        whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
                                         style={{ background: 'none', border: 'none', width: '100%' }}
                                     >
                                         <Link href={`/shop/${product.slug || product.id}`}>View</Link>

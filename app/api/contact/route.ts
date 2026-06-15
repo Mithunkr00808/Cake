@@ -6,7 +6,33 @@ const contactSchema = z.object({
     message: z.string().min(10, { message: 'Message must be at least 10 characters long' }),
 });
 
+// In-memory rate limiter (per-instance; use Redis for multi-instance deployments)
+const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
+const RATE_LIMIT = 5;       // max requests per window
+const RATE_WINDOW = 60_000; // 1 minute window
+
+function checkRateLimit(ip: string): boolean {
+    const now = Date.now();
+    const entry = rateLimitMap.get(ip);
+    if (!entry || now - entry.lastReset > RATE_WINDOW) {
+        rateLimitMap.set(ip, { count: 1, lastReset: now });
+        return true;
+    }
+    if (entry.count >= RATE_LIMIT) return false;
+    entry.count++;
+    return true;
+}
+
 export async function POST(request: Request) {
+    // Rate limit by IP
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (!checkRateLimit(ip)) {
+        return NextResponse.json(
+            { success: false, message: 'Too many requests. Please try again later.' },
+            { status: 429 }
+        );
+    }
+
     try {
         const body = await request.json();
         

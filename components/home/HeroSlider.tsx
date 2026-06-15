@@ -48,7 +48,7 @@ const HeroSlider = () => {
                         <div className="absolute inset-0 animate-hero-slow-zoom smooth-layer">
                             <Image
                                 src={slide.bg}
-                                alt="Slide Background"
+                                alt={`Slice of Cake bakery - premium handcrafted cakes slide ${slide.id}`}
                                 fill
                                 className="object-cover"
                                 priority={slide.id === 1}

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/db/products';
 import { getSettings } from '@/lib/db/settings';
@@ -17,6 +17,7 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
     const [activeTab, setActiveTab] = useState('details');
     const [pincode, setPincode] = useState('');
     const [deliveryStatus, setDeliveryStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle');
+    const prefersReducedMotion = useReducedMotion();
 
     const handlePincodeCheck = async () => {
         if (!/^[1-9]\d{5}$/.test(pincode)) {
@@ -179,8 +180,8 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                             <div className="other-options clearfix">
                                 <div className="item-quantity">Quantity <input className="qty" type="number" min="1" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value) || 1)} name="quantity" /></div>
                                 <motion.button 
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
+                                    whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
+                                    whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
                                     type="button" 
                                     className="theme-btn add-to-cart" 
                                     onClick={handleAddToCart}

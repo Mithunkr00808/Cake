@@ -41,7 +41,7 @@ const FeaturesSection = ({
                 {title && (
                     <div className={`sec-title text-center ${lightTitle ? 'light' : ''}`}>
                         <h2>{title}</h2>
-                        {description && <div className="text" dangerouslySetInnerHTML={{ __html: description }}></div>}
+                        {description && <div className="text"><p>{description}</p></div>}
                     </div>
                 )}
                 

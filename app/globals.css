@@ -223,3 +223,33 @@ body {
   border-radius: 4px;
   width: 100%;
 }
+
+/* Accessibility: Respect user's reduced motion preference (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-hero-slow-zoom,
+  .animate-hero-fade-in-up,
+  .animate-hero-fade-in-down,
+  .animate-hero-fade-in-left,
+  .animate-hero-fade-in-right {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .smooth-layer {
+    will-change: auto !important;
+  }
+
+  .page-transition {
+    animation: none !important;
+  }
+}

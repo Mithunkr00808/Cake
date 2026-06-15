@@ -13,7 +13,7 @@ export async function POST(request: Request) {
         const expiresIn = 60 * 60 * 24 * 5 * 1000;
         
         // Verify the idToken first, then create the session cookie
-        const decodedIdToken = await auth.verifyIdToken(idToken);
+        await auth.verifyIdToken(idToken);
         const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
 
         const response = NextResponse.json({ success: true }, { status: 200 });
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             path: "/",
-            sameSite: "lax",
+            sameSite: "strict",
         });
 
         return response;

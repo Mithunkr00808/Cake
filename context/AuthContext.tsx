@@ -28,12 +28,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Check if user email matches the admin email from .env
-                const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-                setIsAdmin(user.email === adminEmail);
-
-                // User signed in, get token and create session
+                // Use cryptographic custom claims, not a public env var
                 const idTokenResult = await user.getIdTokenResult(true);
+                setIsAdmin(idTokenResult.claims.admin === true);
+
+                // User signed in, sync session cookie
                 const idToken = idTokenResult.token;
                 await fetch('/api/auth/session', {
                     method: 'POST',

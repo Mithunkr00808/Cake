@@ -4,7 +4,7 @@ service cloud.firestore {
     
     // Helper functions
     function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'sliceofcake2026@gmail.com';
+      return request.auth != null && request.auth.token.admin == true;
     }
     
     function isOwner(userId) {

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useCart } from '@/context/CartContext';
-import { createOrder } from '@/lib/db/orders';
+import { createOrderServerAction } from '@/lib/actions/orderActions';
 
 const CheckoutForm = () => {
     const router = useRouter();
@@ -72,7 +72,7 @@ const CheckoutForm = () => {
             cod: 'Cash on Delivery',
         };
 
-        const orderId = await createOrder({
+        const orderId = await createOrderServerAction({
             customer: {
                 firstName: form.firstName,
                 lastName: form.lastName,
@@ -88,13 +88,13 @@ const CheckoutForm = () => {
             items: cartItems.map(item => ({
                 id: item.id,
                 name: item.name,
-                price: item.price,
+                price: item.price, // Will be overridden by server with DB price
                 quantity: item.quantity,
                 image: item.image,
             })),
-            total: cartTotal,
+            total: cartTotal, // Will be recalculated by server
             paymentMethod: paymentLabels[form.paymentMethod] || form.paymentMethod,
-            notes: form.notes,
+            notes: form.notes || '',
             status: 'pending',
         });
 

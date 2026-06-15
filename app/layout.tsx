@@ -39,7 +39,7 @@ export const metadata: Metadata = {
       "Order premium handcrafted cakes online from Slice of Cake, Thrissur. Custom birthday cakes, wedding cakes, cupcakes & pastries delivered fresh.",
     images: [
       {
-        url: "/assets/images/main-slider/slide_2.jpg",
+        url: "https://sliceofcake.in/assets/images/main-slider/slide_2.jpg",
         width: 1200,
         height: 630,
         alt: "Slice of Cake – Premium Bakery in Thrissur",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: "Slice of Cake – Premium Cakes & Bakery in Thrissur",
     description:
       "Order premium handcrafted cakes online. Custom birthday cakes, wedding cakes & pastries delivered fresh across Kerala.",
-    images: ["/assets/images/main-slider/slide_2.jpg"],
+    images: ["https://sliceofcake.in/assets/images/main-slider/slide_2.jpg"],
   },
   alternates: {
     canonical: "https://sliceofcake.in",
@@ -202,7 +202,7 @@ export default async function RootLayout({
         </div>
 
         {/* Scripts */}
-        <Script src="/assets/js/jquery.js" strategy="beforeInteractive" />
+        <Script src="/assets/js/jquery.js" strategy="afterInteractive" />
         <Script src="/assets/js/popper.min.js" strategy="afterInteractive" />
         <Script src="/assets/js/bootstrap.min.js" strategy="afterInteractive" />
 

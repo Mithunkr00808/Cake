@@ -113,21 +113,6 @@ export default function MyAccountPage() {
         }
     }, [user, loading, router]);
 
-    // Hydrate from cache on mount
-    useEffect(() => {
-        try {
-            const cachedProfile = sessionStorage.getItem('my_account_profile');
-            if (cachedProfile) {
-                setProfile(JSON.parse(cachedProfile));
-                setProfileLoading(false);
-            }
-            const cachedOrders = sessionStorage.getItem('my_account_orders');
-            if (cachedOrders) {
-                setOrders(JSON.parse(cachedOrders));
-                setLoadingOrders(false); // Cache exists, don't show loading spinner
-            }
-        } catch (e) {}
-    }, []);
 
     // Load profile from Firestore
     useEffect(() => {
