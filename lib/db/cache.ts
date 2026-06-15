@@ -17,14 +17,14 @@ export const getCachedProducts = unstable_cache(
     { revalidate: CACHE_TTL, tags: ['products'] }
 );
 
-export const getCachedProductById = unstable_cache(
-    async (id: string) => getProductByIdAdmin(id),
-    ['product-by-id'], // We rely on unstable_cache's internal stringification of args, but it's best to keep key static or use it as a prefix
-    { revalidate: CACHE_TTL, tags: ['products'] }
-);
+export const getCachedProductById = (id: string) => unstable_cache(
+    async () => getProductByIdAdmin(id),
+    ['product-by-id', id], 
+    { revalidate: CACHE_TTL, tags: ['products', `product-${id}`] }
+)();
 
-export const getCachedRelatedProducts = unstable_cache(
-    async (id: string, count: number = 3) => getRelatedProductsAdmin(id, count),
-    ['related-products'],
+export const getCachedRelatedProducts = (id: string, count: number = 3) => unstable_cache(
+    async () => getRelatedProductsAdmin(id, count),
+    ['related-products', id, count.toString()],
     { revalidate: CACHE_TTL, tags: ['products'] }
-);
+)();

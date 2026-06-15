@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
@@ -42,7 +43,7 @@ const ShopSidebar = () => {
                                             transition={{ type: "spring", stiffness: 400, damping: 25, mass: 0.5 }}
                                             className="cart-item"
                                         >
-                                            <img src={item.image} alt={item.name} className="thumb" />
+                                            <Image src={item.image} alt={item.name} width={80} height={80} className="thumb" />
                                             <span className="item-name">{item.name}</span>
                                             <span className="item-quantity">{item.quantity} x <span className="item-amount">₹{item.price.toFixed(2)}</span></span>
                                             <Link href={`/shop/${item.id}`} className="product-detail"></Link>

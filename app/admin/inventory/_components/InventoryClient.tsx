@@ -8,9 +8,13 @@ import Skeleton from '@/components/common/Skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
-export default function InventoryClient({ initialProducts }: { initialProducts: Product[] }) {
+import { getProductsPaginatedServerAction } from '@/lib/actions/inventoryActions';
+
+export default function InventoryClient({ initialProducts, initialHasMore }: { initialProducts: Product[], initialHasMore: boolean }) {
     const [products, setProducts] = useState<Product[]>(initialProducts);
+    const [hasMore, setHasMore] = useState(initialHasMore);
     const [loading, setLoading] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [editingProduct, setEditingProduct] = useState<Product | undefined>(undefined);
 
@@ -19,9 +23,21 @@ export default function InventoryClient({ initialProducts }: { initialProducts: 
 
     const loadProducts = async () => {
         setLoading(true);
-        const data = await getProducts();
-        setProducts(data);
+        // Load first page from server action
+        const result = await getProductsPaginatedServerAction(null, 12);
+        setProducts(result.products);
+        setHasMore(result.hasMore);
         setLoading(false);
+    };
+
+    const handleLoadMore = async () => {
+        if (loadingMore || !hasMore || products.length === 0) return;
+        setLoadingMore(true);
+        const lastId = products[products.length - 1].id;
+        const result = await getProductsPaginatedServerAction(lastId, 12);
+        setProducts(prev => [...prev, ...result.products]);
+        setHasMore(result.hasMore);
+        setLoadingMore(false);
     };
 
     const handleDeleteClick = (product: Product) => {
@@ -170,6 +186,30 @@ export default function InventoryClient({ initialProducts }: { initialProducts: 
                             </tbody>
                         </table>
                     </div>
+                    
+                    {hasMore && (
+                        <div style={{ textAlign: 'center', margin: '30px 0' }}>
+                            <button 
+                                onClick={handleLoadMore}
+                                disabled={loadingMore}
+                                style={{
+                                    background: '#f4f4f4',
+                                    color: '#333',
+                                    padding: '10px 25px',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold',
+                                    transition: 'all 0.2s',
+                                    opacity: loadingMore ? 0.7 : 1
+                                }}
+                                onMouseOver={e => e.currentTarget.style.background = '#e9e9e9'}
+                                onMouseOut={e => e.currentTarget.style.background = '#f4f4f4'}
+                            >
+                                {loadingMore ? 'Loading...' : 'Load More'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
 

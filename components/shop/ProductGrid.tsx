@@ -48,7 +48,7 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleAddToCart = useCallback((e: React.MouseEvent, product: any) => {
+    const handleAddToCart = useCallback((e: React.MouseEvent, product: Product) => {
         e.preventDefault();
         addToCart({
             id: product.id,

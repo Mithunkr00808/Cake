@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'react-hot-toast';
-import { createOrder } from '@/lib/db/orders';
+import { createOrderServerAction } from '@/lib/actions/orderActions';
 import { useAuth } from '@/context/AuthContext';
 
 
@@ -67,7 +67,7 @@ const Checkout = () => {
 
         setSubmitting(true);
 
-        const orderId = await createOrder({
+        const orderId = await createOrderServerAction({
             userId: user?.uid,
             customer: {
                 firstName: formData.firstName,

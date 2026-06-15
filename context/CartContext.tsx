@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useMemo, useCall
 
 // Define the shape of a Cart Item
 export interface CartItem {
-    id: number;
+    id: string;
     name: string;
     price: number;
     image: string;
@@ -15,8 +15,8 @@ export interface CartItem {
 interface CartContextType {
     cartItems: CartItem[];
     addToCart: (product: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
-    removeFromCart: (id: number) => void;
-    updateQuantity: (id: number, quantity: number) => void;
+    removeFromCart: (id: string) => void;
+    updateQuantity: (id: string, quantity: number) => void;
     clearCart: () => void;
     cartTotal: number;
     cartCount: number;
@@ -67,12 +67,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     // Remove Item from Cart (memoized)
-    const removeFromCart = useCallback((id: number) => {
+    const removeFromCart = useCallback((id: string) => {
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     }, []);
 
     // Update Item Quantity (memoized)
-    const updateQuantity = useCallback((id: number, quantity: number) => {
+    const updateQuantity = useCallback((id: string, quantity: number) => {
         if (quantity < 1) return; // Prevent 0 or negative
         setCartItems((prevItems) =>
             prevItems.map((item) =>

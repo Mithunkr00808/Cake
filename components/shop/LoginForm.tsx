@@ -24,12 +24,9 @@ const LoginForm = () => {
 
     useEffect(() => {
         if (!authLoading && user) {
-            // Redirect logged-in users away from the login page
-            if (user.email === 'sliceofcake2026@gmail.com') {
-                router.push('/admin');
-            } else {
-                router.push('/');
-            }
+            // We rely on the layout/components to render correct links,
+            // but if they hit the login page while logged in, just redirect to home.
+            router.push('/');
         }
     }, [user, authLoading, router]);
 
@@ -41,15 +38,24 @@ const LoginForm = () => {
             await setPersistence(auth, persistenceType);
             
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            
+            // Explicitly sync the session cookie before routing
+            const idTokenResult = await userCredential.user.getIdTokenResult();
+            await fetch('/api/auth/session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken: idTokenResult.token }),
+            });
+
             toast.success("Logged in successfully!");
             
-            // If it's the admin, redirect to admin panel
-            if (userCredential.user.email === 'sliceofcake2026@gmail.com') {
+            // Route to admin if they have the claim, otherwise home
+            if (idTokenResult.claims.admin) {
                 router.push('/admin');
             } else {
                 router.push('/');
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.error("Invalid email or password. Please try again.");
         } finally {
             setLoading(false);
@@ -63,16 +69,25 @@ const LoginForm = () => {
             await setPersistence(auth, persistenceType);
             
             const userCredential = await signInWithPopup(auth, googleProvider);
+
+            // Explicitly sync the session cookie before routing
+            const idTokenResult = await userCredential.user.getIdTokenResult();
+            await fetch('/api/auth/session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken: idTokenResult.token }),
+            });
+
             toast.success("Logged in with Google successfully!");
             
-            // If it's the admin, redirect to admin panel
-            if (userCredential.user.email === 'sliceofcake2026@gmail.com') {
+            // Route to admin if they have the claim, otherwise home
+            if (idTokenResult.claims.admin) {
                 router.push('/admin');
             } else {
                 router.push('/');
             }
-        } catch (error: any) {
-            toast.error(error.message || "Google Sign-In failed. Please try again.");
+        } catch (error: unknown) {
+            toast.error((error as Error).message || "Google Sign-In failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -89,8 +104,8 @@ const LoginForm = () => {
             await sendPasswordResetEmail(auth, email);
             setResetSent(true);
             toast.success("Password reset email sent!");
-        } catch (error: any) {
-            toast.error(error.message || "Failed to send reset email.");
+        } catch (error: unknown) {
+            toast.error((error as Error).message || "Failed to send reset email.");
         } finally {
             setLoading(false);
         }
@@ -246,6 +261,15 @@ const LoginForm = () => {
                                     <FcGoogle size={24} />
                                     Sign in with Google
                                 </button>
+
+                                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                                    <p style={{ color: '#666', fontSize: '14px' }}>
+                                        Don't have an account?{' '}
+                                        <Link href="/register" style={{ color: '#ff7a7a', fontWeight: '600', textDecoration: 'none' }}>
+                                            Sign up
+                                        </Link>
+                                    </p>
+                                </div>
                             </form>
                         </>
                     ) : (

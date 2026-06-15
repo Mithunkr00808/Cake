@@ -15,8 +15,8 @@ export async function sendOrderStatusEmail(orderId: string, status: string) {
     const order = orderDoc.data();
     if (!order) return;
 
-    let email = order.customer?.email;
-    let customerName = `${order.customer?.firstName || ''} ${order.customer?.lastName || ''}`.trim() || "Customer";
+    const email = order.customer?.email;
+    const customerName = `${order.customer?.firstName || ''} ${order.customer?.lastName || ''}`.trim() || "Customer";
 
     if (!email) {
       console.warn(`No email found for order ${orderId}, skipping status email.`);
@@ -33,7 +33,7 @@ export async function sendOrderStatusEmail(orderId: string, status: string) {
         orderId,
         customerName,
         status,
-        items: (order.items || []).map((item: any) => ({
+        items: (order.items || []).map((item: { name: string, quantity: number, price: number, image: string }) => ({
           name: item.name,
           quantity: item.quantity,
           price: formatter.format(item.price || 0),

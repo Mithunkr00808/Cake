@@ -1,36 +1,18 @@
-"use client";
-
-import React, { useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import Link from 'next/link';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-
+import { redirect } from 'next/navigation';
 import PageTitle from '@/components/common/PageTitle';
+import { verifySession } from '@/lib/auth/verifySession';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-    const { user, loading, isAdmin } = useAuth();
-    const router = useRouter();
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+    // Cryptographically verify the session token.
+    // This is the true security boundary for all /admin routes.
+    const decodedClaims = await verifySession();
 
-    useEffect(() => {
-        if (!loading && (!user || !isAdmin)) {
-            router.push('/login');
-        }
-    }, [user, loading, isAdmin, router]);
-
-    if (loading || !isAdmin) {
-        return (
-            <div className="auto-container" style={{ padding: '100px 0', textAlign: 'center' }}>
-                <h3>Loading Admin Panel...</h3>
-            </div>
-        );
+    // Ensure the token has the Cryptographic Admin Custom Claim
+    if (!decodedClaims || decodedClaims.admin !== true) {
+        redirect('/login');
     }
-
-    const handleLogout = async () => {
-        await signOut(auth);
-        router.push('/');
-    };
 
     return (
         <>
@@ -62,9 +44,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     </div>
                                 </div>
                                 <div className="sidebar-widget">
-                                    <button onClick={handleLogout} className="theme-btn btn-style-two" style={{ width: '100%', padding: '10px 0', marginTop: '20px' }}>
-                                        <span></span>Logout<span></span>
-                                    </button>
+                                    <Link href="/login" className="theme-btn btn-style-two" style={{ width: '100%', padding: '10px 0', marginTop: '20px', textAlign: 'center', display: 'block' }}>
+                                        <span></span>Sign Out / Login<span></span>
+                                    </Link>
                                 </div>
                             </aside>
                         </div>

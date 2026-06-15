@@ -75,7 +75,7 @@ const Header = () => {
     };
 
     // Navigation Items - Left Part
-    const ItemsLeft = ({ mobile = false }) => (
+    const renderItemsLeft = (mobile = false) => (
         <>
             <li className={`${pathname === '/' ? 'current' : ''}`}>
                 <Link href="/" onClick={mobile ? closeMobileMenu : undefined}>Home</Link>
@@ -88,7 +88,7 @@ const Header = () => {
     );
 
     // Navigation Items - Right Part
-    const ItemsRight = ({ mobile = false }) => (
+    const renderItemsRight = (mobile = false) => (
         <>
 
             <li className={`dropdown ${pathname.startsWith('/shop') || pathname === '/cart' || pathname === '/checkout' || pathname === '/login' ? 'current' : ''}`}>
@@ -110,24 +110,24 @@ const Header = () => {
     );
 
     // Mobile Menu (Unified)
-    const NavLinksMobile = ({ mobile = true }) => (
+    const renderNavLinksMobile = (mobile = true) => (
         <ul className="navigation clearfix" style={{ display: 'block' }}>
-            <ItemsLeft mobile={mobile} />
-            <ItemsRight mobile={mobile} />
+            {renderItemsLeft(mobile)}
+            {renderItemsRight(mobile)}
         </ul>
     );
 
     // Desktop Left Menu
-    const NavLinksLeft = () => (
+    const renderNavLinksLeft = () => (
         <ul className="navigation menu-left clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
-            <ItemsLeft />
+            {renderItemsLeft(false)}
         </ul>
     );
 
     // Desktop Right Menu
-    const NavLinksRight = () => (
+    const renderNavLinksRight = () => (
         <ul className="navigation menu-right clearfix" style={{ visibility: 'visible', opacity: 1, zIndex: 100, position: 'relative' }}>
-            <ItemsRight />
+            {renderItemsRight(false)}
         </ul>
     );
 
@@ -153,8 +153,8 @@ const Header = () => {
                         <nav className="main-menu navbar-expand-md navbar-light" aria-label="Main navigation">
                             <div className="clearfix">
                                 {/* Desktop Menu: Using shared components to ensure sync between Main, Sticky, and Mobile menus */}
-                                <NavLinksLeft />
-                                <NavLinksRight />
+                                {renderNavLinksLeft()}
+                                {renderNavLinksRight()}
                             </div>
                         </nav>
                         {/* Main Menu End*/}
@@ -225,8 +225,8 @@ const Header = () => {
                         <nav className="main-menu" aria-label="Main navigation">
                             {/* Sticky Header Desktop Menu */}
                             <div className="collapse navbar-collapse show clearfix">
-                                <NavLinksLeft />
-                                <NavLinksRight />
+                                {renderNavLinksLeft()}
+                                {renderNavLinksRight()}
                             </div>
                         </nav>{/* Main Menu End*/}
                     </div>
@@ -263,7 +263,7 @@ const Header = () => {
                 <nav className="menu-box" aria-label="Mobile navigation">
                     <div className="nav-logo"><Link href="/" style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'Leckerli One, cursive', color: '#4b4342', textDecoration: 'none' }}>Slice of Cake</Link></div>
                     <div className="menu-outer">
-                        <NavLinksMobile mobile={true} />
+                        {renderNavLinksMobile(true)}
                     </div>
                 </nav>
             </div>{/* End Mobile Menu */}

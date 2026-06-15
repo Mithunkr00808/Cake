@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,7 +11,7 @@ import { useCart } from '@/context/CartContext';
 const ShoppingCart = () => {
     const { cartItems, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
 
-    const handleRemove = (id: number, name: string) => {
+    const handleRemove = (id: string, name: string) => {
         removeFromCart(id);
         toast.error(`${name} removed from cart`);
     };
@@ -78,7 +79,7 @@ const ShoppingCart = () => {
                                                 }}
                                             >
                                                 <td className="product-thumbnail">
-                                                    <Link href={`/shop/${item.id}`}><img src={item.image} alt={item.name} className="thumb" /></Link>
+                                                    <Link href={`/shop/${item.id}`}><Image src={item.image} alt={item.name} width={100} height={100} className="thumb" /></Link>
                                                 </td>
                                                 <td className="product-name"><Link href={`/shop/${item.id}`}>{item.name}</Link></td>
                                                 <td className="product-price">₹{item.price.toFixed(2)}</td>

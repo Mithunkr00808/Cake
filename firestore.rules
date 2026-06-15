@@ -1,9 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper function to check if the user is the admin
+    // Helper function to check if the user has the Admin Custom Claim
     function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'sliceofcake2026@gmail.com';
+      return request.auth != null && request.auth.token.admin == true;
     }
 
     // Publicly readable, but only writable by admin
@@ -22,9 +22,9 @@ service cloud.firestore {
       allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
     }
 
-    // Orders: users can create/read their own, admin has full access
+    // Orders: users can read their own, admin has full access. Creation is handled securely via Server Actions (Admin SDK).
     match /orders/{orderId} {
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow create: if false; // Block client-side creation
       allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
       allow update, delete: if isAdmin();
     }
