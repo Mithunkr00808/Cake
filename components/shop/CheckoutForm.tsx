@@ -87,10 +87,12 @@ const CheckoutForm = () => {
             },
             items: cartItems.map(item => ({
                 id: item.id,
+                productId: item.productId || item.id,
                 name: item.name,
                 price: item.price, // Will be overridden by server with DB price
                 quantity: item.quantity,
                 image: item.image,
+                options: item.options,
             })),
             total: cartTotal, // Will be recalculated by server
             paymentMethod: paymentLabels[form.paymentMethod] || form.paymentMethod,

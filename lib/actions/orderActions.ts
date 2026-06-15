@@ -18,10 +18,11 @@ export async function createOrderServerAction(rawData: unknown): Promise<string 
 
         for (const item of data.items) {
             // Fetch the actual product from the database
-            const product = await getProductByIdAdmin(item.id.toString());
+            const lookupId = item.productId || item.id;
+            const product = await getProductByIdAdmin(lookupId.toString());
             
             if (!product) {
-                throw new Error(`Product not found: ${item.id}`);
+                throw new Error(`Product not found: ${lookupId}`);
             }
 
             // Use the database price, not the client-provided price
@@ -43,8 +44,9 @@ export async function createOrderServerAction(rawData: unknown): Promise<string 
         const docRef = await db.collection("orders").add(orderData);
         
         return docRef.id;
-    } catch (error) {
+    } catch (error: any) {
         console.error("Server Action - Error creating order:", error);
+        require('fs').writeFileSync('/tmp/order-error.log', String(error?.stack || error?.message || error));
         return null;
     }
 }

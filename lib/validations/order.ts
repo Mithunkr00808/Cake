@@ -2,10 +2,12 @@ import { z } from 'zod';
 
 export const orderItemSchema = z.object({
     id: z.union([z.string(), z.number()]).transform(val => val.toString()),
+    productId: z.union([z.string(), z.number()]).transform(val => val.toString()).optional(),
     name: z.string().min(1, "Product name is required"),
     price: z.number().nonnegative("Price cannot be negative"),
     quantity: z.number().int().positive("Quantity must be at least 1"),
     image: z.string().optional(),
+    options: z.any().optional(),
 });
 
 export const orderCustomerSchema = z.object({
