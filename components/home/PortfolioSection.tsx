@@ -48,7 +48,7 @@ const PortfolioSection = () => {
                 ) : (
                     <div className="row">
                         {products.map((product) => (
-                            <div className="shop-item col-lg-3 col-md-6 col-sm-12" key={product.id}>
+                            <div className="portfolio-block col-lg-3 col-md-6 col-sm-12" key={product.id}>
                                 <div className="inner-box">
                                     <div className="image-box">
                                         <figure className="image">
@@ -56,7 +56,7 @@ const PortfolioSection = () => {
                                                 <img 
                                                     src={product.image || (product.images && product.images[0])} 
                                                     alt={product.name} 
-                                                    style={{ width: '100%', height: '250px', objectFit: 'cover', borderRadius: '8px' }} 
+                                                    style={{ width: '100%', height: '250px', objectFit: 'cover' }} 
                                                 />
                                             </Link>
                                         </figure>
