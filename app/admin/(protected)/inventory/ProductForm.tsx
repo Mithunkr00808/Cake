@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Product, addProduct, updateProduct } from '@/lib/db/products';
 import { getSettings } from '@/lib/db/settings';
-import { revalidateShopCache } from '../actions';
+import { revalidateShopCache } from '../../actions';
 import toast from 'react-hot-toast';
 
 function createSlug(text: string) {
