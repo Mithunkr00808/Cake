@@ -500,7 +500,11 @@ export default function MyAccountPage() {
                                     <div>
                                         <h3 style={{ marginBottom: '24px', fontSize: '20px', color: '#222' }}>My Orders</h3>
                                         {loadingOrders ? (
-                                            <p style={{ color: '#aaa', textAlign: 'center', padding: '40px 0' }}>Loading orders...</p>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                                {[1, 2, 3].map(i => (
+                                                    <Skeleton key={i} type="text" height="60px" style={{ borderRadius: '10px' }} />
+                                                ))}
+                                            </div>
                                         ) : orders.length === 0 ? (
                                             <div style={{
                                                 textAlign: 'center', padding: '60px', background: '#fafafa',
@@ -579,9 +583,19 @@ export default function MyAccountPage() {
                                                                         <tbody>
                                                                             {order.items.map((item, i) => (
                                                                                 <tr key={i} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                                                                                    <td style={{ padding: '10px 8px' }}>{item.name}</td>
-                                                                                    <td style={{ padding: '10px 8px', textAlign: 'center', color: '#666' }}>×{item.quantity}</td>
-                                                                                    <td style={{ padding: '10px 8px', textAlign: 'right', fontWeight: 600 }}>
+                                                                                    <td style={{ padding: '10px 8px' }}>
+                                                                                        <div style={{ fontWeight: 500, color: '#333' }}>{item.name}</div>
+                                                                                        {item.options && (
+                                                                                            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                                                                                                {item.options.size && <div><span style={{ color: '#999' }}>Size:</span> {item.options.size.label}</div>}
+                                                                                                {item.options.flavor && <div><span style={{ color: '#999' }}>Flavor:</span> {item.options.flavor}</div>}
+                                                                                                {item.options.topper && <div><span style={{ color: '#999' }}>Topper:</span> {item.options.topper}</div>}
+                                                                                                {item.options.message && <div><span style={{ color: '#999' }}>Message:</span> {item.options.message}</div>}
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </td>
+                                                                                    <td style={{ padding: '10px 8px', textAlign: 'center', color: '#666', verticalAlign: 'top' }}>×{item.quantity}</td>
+                                                                                    <td style={{ padding: '10px 8px', textAlign: 'right', fontWeight: 600, verticalAlign: 'top' }}>
                                                                                         ₹{(item.price * item.quantity).toFixed(2)}
                                                                                     </td>
                                                                                 </tr>

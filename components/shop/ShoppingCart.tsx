@@ -81,7 +81,17 @@ const ShoppingCart = () => {
                                                 <td className="product-thumbnail">
                                                     <Link href={`/shop/${item.slug || item.id}`}><Image src={item.image} alt={item.name} width={100} height={100} className="thumb" /></Link>
                                                 </td>
-                                                <td className="product-name"><Link href={`/shop/${item.slug || item.id}`}>{item.name}</Link></td>
+                                                <td className="product-name">
+                                                    <Link href={`/shop/${item.slug || item.id}`} style={{ fontWeight: '600', color: '#333', fontSize: '16px' }}>{item.name}</Link>
+                                                    {item.options && (
+                                                        <div style={{ fontSize: '13px', color: '#777', marginTop: '8px', lineHeight: '1.4' }}>
+                                                            {item.options.size && <div><span style={{ color: '#aaa' }}>Size:</span> {item.options.size.label}</div>}
+                                                            {item.options.flavor && <div><span style={{ color: '#aaa' }}>Flavor:</span> {item.options.flavor}</div>}
+                                                            {item.options.message && <div style={{ fontStyle: 'italic' }}><span style={{ color: '#aaa' }}>Message:</span> "{item.options.message}"</div>}
+                                                            {item.options.topper && <div><span style={{ color: '#aaa' }}>Topper:</span> {item.options.topper}</div>}
+                                                        </div>
+                                                    )}
+                                                </td>
                                                 <td className="product-price">₹{item.price.toFixed(2)}</td>
                                                 <td className="product-quantity">
                                                     <div className="quantity">

@@ -15,6 +15,8 @@ export interface StoreSettings {
     shippingPolicy?: string;
     isLive?: boolean;
     categories?: string[];
+    homeCtaTitle?: string;
+    homeCtaDescription?: string;
 }
 
 export const getSettings = async (): Promise<StoreSettings | null> => {

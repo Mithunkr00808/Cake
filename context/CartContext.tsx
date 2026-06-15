@@ -2,20 +2,29 @@
 
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from 'react';
 
-// Define the shape of a Cart Item
+export interface CartItemOptions {
+    size?: { label: string, priceModifier: number };
+    flavor?: string;
+    message?: string;
+    topper?: string;
+    photoUrl?: string;
+}
+
 export interface CartItem {
-    id: string;
+    id: string; // Unique cart item ID (composite if it has options)
+    productId?: string | number; // Base product ID
     slug?: string;
     name: string;
     price: number;
     image: string;
     quantity: number;
+    options?: CartItemOptions;
 }
 
 // Define the Context State
 interface CartContextType {
     cartItems: CartItem[];
-    addToCart: (product: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
+    addToCart: (product: Omit<CartItem, 'quantity' | 'id'> & { id?: string, quantity?: number }) => void;
     removeFromCart: (id: string) => void;
     updateQuantity: (id: string, quantity: number) => void;
     clearCart: () => void;
@@ -51,19 +60,25 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }, [cartItems, isLoaded]);
 
     // Add Item to Cart (memoized to prevent re-creation on every render)
-    const addToCart = useCallback((product: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+    const addToCart = useCallback((product: Omit<CartItem, 'quantity' | 'id'> & { id?: string, quantity?: number }) => {
         setCartItems((prevItems) => {
-            const existingItem = prevItems.find((item) => item.id === product.id);
+            // Generate a unique ID based on product ID and selected options
+            const baseId = product.id || product.productId;
+            const optionsHash = product.options ? JSON.stringify(product.options) : '';
+            const cartItemId = optionsHash ? `${baseId}-${optionsHash}` : String(baseId);
+
+            const existingItemIndex = prevItems.findIndex((item) => item.id === cartItemId);
             const quantityToAdd = product.quantity || 1;
 
-            if (existingItem) {
-                return prevItems.map((item) =>
-                    item.id === product.id
-                        ? { ...item, quantity: item.quantity + quantityToAdd }
-                        : item
-                );
+            if (existingItemIndex >= 0) {
+                const newItems = [...prevItems];
+                newItems[existingItemIndex] = {
+                    ...newItems[existingItemIndex],
+                    quantity: newItems[existingItemIndex].quantity + quantityToAdd
+                };
+                return newItems;
             }
-            return [...prevItems, { ...product, quantity: quantityToAdd }];
+            return [...prevItems, { ...product, id: cartItemId, productId: baseId, quantity: quantityToAdd }];
         });
     }, []);
 

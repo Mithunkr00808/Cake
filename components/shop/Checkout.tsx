@@ -87,6 +87,7 @@ const Checkout = () => {
                 price: item.price,
                 quantity: item.quantity,
                 image: item.image,
+                options: item.options,
             })),
             total: cartTotal,
             paymentMethod: 'Cash on Delivery',
@@ -212,8 +213,16 @@ const Checkout = () => {
                         <tbody>
                             {cartItems.map((item) => (
                                 <tr className="cart-item" key={item.id}>
-                                    <td className="product-name">{item.name}&nbsp;
-                                        <strong className="product-quantity">× {item.quantity}</strong>
+                                    <td className="product-name">
+                                        <div style={{ fontWeight: '600' }}>{item.name} <strong className="product-quantity">× {item.quantity}</strong></div>
+                                        {item.options && (
+                                            <div style={{ fontSize: '12px', color: '#777', marginTop: '4px', lineHeight: '1.4' }}>
+                                                {item.options.size && <div><span style={{ color: '#aaa' }}>Size:</span> {item.options.size.label}</div>}
+                                                {item.options.flavor && <div><span style={{ color: '#aaa' }}>Flavor:</span> {item.options.flavor}</div>}
+                                                {item.options.message && <div style={{ fontStyle: 'italic' }}><span style={{ color: '#aaa' }}>Msg:</span> "{item.options.message}"</div>}
+                                                {item.options.topper && <div><span style={{ color: '#aaa' }}>Topper:</span> {item.options.topper}</div>}
+                                            </div>
+                                        )}
                                     </td> 
                                     <td className="product-total">
                                         <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">₹</span>{(item.price * item.quantity).toFixed(2)}</span>

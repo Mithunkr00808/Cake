@@ -122,8 +122,13 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
             </div>
 
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '60px', color: '#aaa', fontSize: '16px' }}>
-                    Loading orders...
+                <div style={{ padding: '20px' }}>
+                    <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+                        {[1, 2, 3, 4, 5].map(i => <div key={i} style={{ flex: 1, height: '40px', background: '#f5f5f5', borderRadius: '4px' }} />)}
+                    </div>
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} style={{ height: '60px', background: '#fafafa', borderRadius: '4px', marginBottom: '10px' }} />
+                    ))}
                 </div>
             ) : orders.length === 0 ? (
                 <div style={{
@@ -256,9 +261,19 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                                                             <tbody>
                                                                 {order.items.map((item, idx) => (
                                                                     <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
-                                                                        <td style={{ padding: '8px' }}>{item.name}</td>
-                                                                        <td style={{ padding: '8px', textAlign: 'center' }}>×{item.quantity}</td>
-                                                                        <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600 }}>
+                                                                        <td style={{ padding: '8px' }}>
+                                                                            <div style={{ fontWeight: 500, color: '#333' }}>{item.name}</div>
+                                                                            {item.options && (
+                                                                                <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                                                                                    {item.options.size && <div><span style={{ color: '#999' }}>Size:</span> {item.options.size.label}</div>}
+                                                                                    {item.options.flavor && <div><span style={{ color: '#999' }}>Flavor:</span> {item.options.flavor}</div>}
+                                                                                    {item.options.topper && <div><span style={{ color: '#999' }}>Topper:</span> {item.options.topper}</div>}
+                                                                                    {item.options.message && <div><span style={{ color: '#999' }}>Message:</span> {item.options.message}</div>}
+                                                                                </div>
+                                                                            )}
+                                                                        </td>
+                                                                        <td style={{ padding: '8px', textAlign: 'center', verticalAlign: 'top' }}>×{item.quantity}</td>
+                                                                        <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600, verticalAlign: 'top' }}>
                                                                             ₹{(item.price * item.quantity).toFixed(2)}
                                                                         </td>
                                                                     </tr>

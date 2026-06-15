@@ -19,6 +19,18 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
     const [deliveryStatus, setDeliveryStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle');
     const prefersReducedMotion = useReducedMotion();
 
+    // User Selections
+    const [quantity, setQuantity] = useState(1);
+    const [selectedSize, setSelectedSize] = useState<any>(product.sizes && product.sizes.length > 0 ? product.sizes[0] : null);
+    const [selectedFlavor, setSelectedFlavor] = useState<string>(product.flavors && product.flavors.length > 0 ? product.flavors[0] : '');
+    const [customMessage, setCustomMessage] = useState('');
+    const [customTopper, setCustomTopper] = useState(product.customization?.topperOptions && product.customization.topperOptions.length > 0 ? product.customization.topperOptions[0] : '');
+    const [photoUrl, setPhotoUrl] = useState('');
+
+    const currentPrice = selectedSize && selectedSize.priceModifier > 0 
+        ? selectedSize.priceModifier 
+        : product.price;
+
     const handlePincodeCheck = async () => {
         if (!/^[1-9]\d{5}$/.test(pincode)) {
             toast.error("Please enter a valid 6-digit Indian pincode");
@@ -64,9 +76,16 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
             id: product.id,
             slug: product.slug,
             name: product.name,
-            price: product.price,
+            price: currentPrice,
             image: product.image || images[0],
-            quantity: quantity
+            quantity: quantity,
+            options: {
+                size: selectedSize ? { label: selectedSize.label, priceModifier: selectedSize.priceModifier } : undefined,
+                flavor: selectedFlavor || undefined,
+                message: product.customization?.allowMessage && customMessage ? customMessage : undefined,
+                topper: product.customization?.allowTopper && customTopper ? customTopper : undefined,
+                photoUrl: product.customization?.allowPhotoUpload && photoUrl ? photoUrl : undefined
+            }
         });
         toast.success(`${product.name} added to cart!`);
     };
@@ -122,9 +141,111 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                 </div>
                                 <div className="item-price">
                                     {product.oldPrice && <><del>₹{product.oldPrice}</del>{' '}</>}
-                                    ₹{product.price.toFixed(2)}
+                                    ₹{currentPrice.toFixed(2)}
                                 </div>
                             </div>
+
+                            {/* Options: Sizes */}
+                            {product.sizes && product.sizes.length > 0 && (
+                                <div style={{ marginBottom: '20px' }}>
+                                    <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '10px' }}>Select Size / Weight:</label>
+                                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                        {product.sizes.map(size => (
+                                            <button 
+                                                key={size.id}
+                                                onClick={() => setSelectedSize(size)}
+                                                style={{ 
+                                                    padding: '10px 15px', 
+                                                    border: selectedSize?.id === size.id ? '2px solid #ff7a7a' : '1px solid #ccc',
+                                                    borderRadius: '6px',
+                                                    background: selectedSize?.id === size.id ? '#fff0f0' : '#fff',
+                                                    cursor: 'pointer',
+                                                    textAlign: 'center',
+                                                    minWidth: '100px'
+                                                }}
+                                            >
+                                                <div style={{ fontWeight: 'bold', color: '#333' }}>{size.label}</div>
+                                                {size.servings && <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>{size.servings}</div>}
+                                                {size.priceModifier > 0 && <div style={{ fontSize: '12px', color: '#28a745', marginTop: '2px' }}>₹{size.priceModifier}</div>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Options: Flavors */}
+                            {product.flavors && product.flavors.length > 0 && (
+                                <div style={{ marginBottom: '20px' }}>
+                                    <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Select Flavor:</label>
+                                    <select 
+                                        value={selectedFlavor} 
+                                        onChange={e => setSelectedFlavor(e.target.value)} 
+                                        style={{ padding: '10px', width: '100%', maxWidth: '300px', border: '1px solid #ccc', borderRadius: '6px', background: '#fff' }}
+                                    >
+                                        {product.flavors.map(flavor => (
+                                            <option key={flavor} value={flavor}>{flavor}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {/* Customizations */}
+                            {product.customization && (product.customization.allowMessage || product.customization.allowTopper || product.customization.allowPhotoUpload) && (
+                                <div style={{ marginBottom: '25px' }}>
+                                    <h5 style={{ marginBottom: '15px', fontSize: '16px', fontWeight: 'bold', color: '#333' }}>
+                                        <i className="fa fa-magic" style={{ marginRight: '8px', color: '#ff7a7a' }}></i>
+                                        Personalization
+                                    </h5>
+                                    
+                                    {product.customization.allowMessage && (
+                                        <div style={{ marginBottom: '15px' }}>
+                                            <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>Message on Cake:</label>
+                                            <input 
+                                                type="text" 
+                                                value={customMessage} 
+                                                onChange={e => setCustomMessage(e.target.value)} 
+                                                maxLength={product.customization.messageMaxLength || 25} 
+                                                placeholder="e.g., Happy Birthday!" 
+                                                style={{ padding: '10px', width: '100%', border: '1px solid #ccc', borderRadius: '6px' }} 
+                                            />
+                                            <div style={{ fontSize: '12px', color: '#666', marginTop: '5px', textAlign: 'right' }}>
+                                                {customMessage.length} / {product.customization.messageMaxLength || 25}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {product.customization.allowTopper && product.customization.topperOptions && product.customization.topperOptions.length > 0 && (
+                                        <div style={{ marginBottom: '15px' }}>
+                                            <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>Cake Topper:</label>
+                                            <select 
+                                                value={customTopper} 
+                                                onChange={e => setCustomTopper(e.target.value)} 
+                                                style={{ padding: '10px', width: '100%', border: '1px solid #ccc', borderRadius: '6px', background: '#fff' }}
+                                            >
+                                                <option value="">None</option>
+                                                {product.customization.topperOptions.map(topper => (
+                                                    <option key={topper} value={topper}>{topper}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    {product.customization.allowPhotoUpload && (
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 'bold' }}>Photo for Cake:</label>
+                                            {photoUrl ? (
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img src={photoUrl} alt="Custom upload" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #eee' }} />
+                                                    <button onClick={() => setPhotoUrl('')} style={{ background: 'none', color: '#dc3545', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Remove Photo</button>
+                                                </div>
+                                            ) : (
+                                                <div style={{ color: '#666', fontSize: '14px' }}>Photo upload component omitted for security audit compatibility.</div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             <div className="text">
                                 <p>{product.description || 'No description available for this product.'}</p>

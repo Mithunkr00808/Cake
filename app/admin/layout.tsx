@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
     // Ensure the token has the Cryptographic Admin Custom Claim
     if (!decodedClaims || decodedClaims.admin !== true) {
-        redirect('/login');
+        redirect('/admin/login');
     }
 
     return (
@@ -45,7 +45,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                                 </div>
                                 <div className="sidebar-widget">
                                     <Link href="/login" className="theme-btn btn-style-two" style={{ width: '100%', padding: '10px 0', marginTop: '20px', textAlign: 'center', display: 'block' }}>
-                                        <span></span>Sign Out / Login<span></span>
+                                        <span></span>Sign Out<span></span>
                                     </Link>
                                 </div>
                             </aside>

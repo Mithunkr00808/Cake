@@ -14,7 +14,9 @@ export default async function SettingsPage() {
         facebook: '',
         refundPolicy: '',
         termsOfUse: '',
-        isLive: true
+        isLive: true,
+        homeCtaTitle: '',
+        homeCtaDescription: ''
     };
 
     try {

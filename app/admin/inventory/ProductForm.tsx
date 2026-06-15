@@ -44,6 +44,40 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
         "Birthday Cakes", "Wedding Cakes", "Custom Cakes", "Cupcakes", "Pastries", "Brownies", "Vegan Cakes", "Gluten-Free Cakes", "Other"
     ]);
 
+    // Advanced Options State
+    const [shortDescription, setShortDescription] = useState(product?.shortDescription || '');
+    const [fullDescription, setFullDescription] = useState(product?.fullDescription || '');
+    const [sizes, setSizes] = useState<{id: string, label: string, servings: string, priceModifier: number}[]>(
+        product?.sizes || []
+    );
+    const [flavors, setFlavors] = useState(product?.flavors?.join(', ') || '');
+    const [dietaryTags, setDietaryTags] = useState(product?.dietaryTags?.join(', ') || '');
+    
+    // Customization State
+    const [allowMessage, setAllowMessage] = useState(product?.customization?.allowMessage || false);
+    const [allowTopper, setAllowTopper] = useState(product?.customization?.allowTopper || false);
+    const [topperOptions, setTopperOptions] = useState(product?.customization?.topperOptions?.join(', ') || '');
+    const [allowPhotoUpload, setAllowPhotoUpload] = useState(product?.customization?.allowPhotoUpload || false);
+    
+    // Limits and Delivery State
+    const [maxQuantity, setMaxQuantity] = useState(product?.maxQuantity || 10);
+    const [deliveryFee, setDeliveryFee] = useState(product?.deliveryConfig?.fee || 0);
+    const [leadTimeHours, setLeadTimeHours] = useState(product?.deliveryConfig?.leadTimeHours || 24);
+
+    const handleAddSize = () => {
+        setSizes([...sizes, { id: Date.now().toString(), label: '', servings: '', priceModifier: 0 }]);
+    };
+
+    const handleUpdateSize = (index: number, field: string, value: string | number) => {
+        const newSizes = [...sizes];
+        newSizes[index] = { ...newSizes[index], [field]: value };
+        setSizes(newSizes);
+    };
+
+    const handleRemoveSize = (index: number) => {
+        setSizes(sizes.filter((_, i) => i !== index));
+    };
+
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -137,7 +171,25 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
             sale,
             description,
             category,
-            slug: createSlug(name)
+            slug: createSlug(name),
+            
+            // Advanced fields
+            fullDescription,
+            shortDescription,
+            sizes,
+            flavors: flavors.split(',').map(f => f.trim()).filter(Boolean),
+            dietaryTags: dietaryTags.split(',').map(t => t.trim()).filter(Boolean),
+            maxQuantity,
+            customization: {
+                allowMessage,
+                allowTopper,
+                topperOptions: topperOptions.split(',').map(t => t.trim()).filter(Boolean),
+                allowPhotoUpload
+            },
+            deliveryConfig: {
+                fee: deliveryFee,
+                leadTimeHours
+            }
         };
 
         if (product?.id) {
@@ -258,6 +310,80 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
                                 <span style={{ fontSize: '12px', color: '#888', fontWeight: 500, marginTop: '4px' }}>Browse</span>
                                 <input type="file" multiple accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
                             </label>
+                        </div>
+                    </div>
+
+                    {/* Advanced Options UI */}
+                    <div className="col-lg-12 col-md-12 col-sm-12 form-group" style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '4px', marginTop: '20px' }}>
+                        <h4 style={{ marginBottom: '15px', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>Detailed Description</h4>
+                        <label style={{ fontWeight: 'bold' }}>Full Description / Ingredients / Allergens</label>
+                        <textarea value={fullDescription} onChange={e => setFullDescription(e.target.value)} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', minHeight: '150px' }} placeholder="Provide rich text description, ingredients, and allergen info here..."></textarea>
+                    </div>
+
+                    <div className="col-lg-12 col-md-12 col-sm-12 form-group" style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '4px', marginTop: '20px' }}>
+                        <h4 style={{ marginBottom: '15px', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>Variations & Options</h4>
+                        <div className="row">
+                            <div className="col-lg-6 col-md-12">
+                                <label style={{ fontWeight: 'bold' }}>Flavors / Fillings (Comma separated)</label>
+                                <input type="text" value={flavors} onChange={e => setFlavors(e.target.value)} placeholder="e.g. Vanilla, Chocolate, Red Velvet" style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                            </div>
+                            <div className="col-lg-6 col-md-12">
+                                <label style={{ fontWeight: 'bold' }}>Dietary Tags (Comma separated)</label>
+                                <input type="text" value={dietaryTags} onChange={e => setDietaryTags(e.target.value)} placeholder="e.g. eggless, vegan, gluten_free" style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                            </div>
+                        </div>
+                        
+                        <label style={{ fontWeight: 'bold', marginTop: '15px' }}>Sizes & Weights</label>
+                        {sizes.map((size, index) => (
+                            <div key={size.id} style={{ display: 'flex', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
+                                <input type="text" placeholder="Label (e.g. 1 Kg)" value={size.label} onChange={e => handleUpdateSize(index, 'label', e.target.value)} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', flex: 2 }} />
+                                <input type="text" placeholder="Servings (e.g. 8-10)" value={size.servings} onChange={e => handleUpdateSize(index, 'servings', e.target.value)} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', flex: 2 }} />
+                                <input type="number" placeholder="Price (₹)" value={size.priceModifier === 0 ? '' : size.priceModifier} onChange={e => handleUpdateSize(index, 'priceModifier', Number(e.target.value))} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', flex: 1 }} />
+                                <button type="button" onClick={() => handleRemoveSize(index)} style={{ background: '#ff4444', color: 'white', border: 'none', padding: '10px', borderRadius: '4px', cursor: 'pointer' }}>Remove</button>
+                            </div>
+                        ))}
+                        <button type="button" onClick={handleAddSize} style={{ background: '#eee', padding: '8px 15px', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', marginTop: '5px' }}>+ Add Size Option</button>
+                    </div>
+
+                    <div className="col-lg-12 col-md-12 col-sm-12 form-group" style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '4px', marginTop: '20px' }}>
+                        <h4 style={{ marginBottom: '15px', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>Customizations</h4>
+                        <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', marginBottom: '15px' }}>
+                            <label style={{ cursor: 'pointer', fontWeight: 'bold' }}>
+                                <input type="checkbox" checked={allowMessage} onChange={e => setAllowMessage(e.target.checked)} style={{ marginRight: '8px' }} />
+                                Allow Custom Message on Cake
+                            </label>
+                            <label style={{ cursor: 'pointer', fontWeight: 'bold' }}>
+                                <input type="checkbox" checked={allowTopper} onChange={e => setAllowTopper(e.target.checked)} style={{ marginRight: '8px' }} />
+                                Allow Topper Selection
+                            </label>
+                            <label style={{ cursor: 'pointer', fontWeight: 'bold' }}>
+                                <input type="checkbox" checked={allowPhotoUpload} onChange={e => setAllowPhotoUpload(e.target.checked)} style={{ marginRight: '8px' }} />
+                                Allow Photo Upload
+                            </label>
+                        </div>
+                        {allowTopper && (
+                            <div style={{ marginTop: '15px' }}>
+                                <label style={{ fontWeight: 'bold' }}>Topper Options (Comma separated)</label>
+                                <input type="text" value={topperOptions} onChange={e => setTopperOptions(e.target.value)} placeholder="e.g. Chocolate ganache, Nuts (chopped)" style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="col-lg-12 col-md-12 col-sm-12 form-group" style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '4px', marginTop: '20px' }}>
+                        <h4 style={{ marginBottom: '15px', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>Delivery & Limits</h4>
+                        <div className="row">
+                            <div className="col-lg-4 col-md-6 col-sm-12">
+                                <label style={{ fontWeight: 'bold' }}>Max Quantity per Order</label>
+                                <input type="number" value={maxQuantity} onChange={e => setMaxQuantity(Number(e.target.value))} min="1" style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                            </div>
+                            <div className="col-lg-4 col-md-6 col-sm-12">
+                                <label style={{ fontWeight: 'bold' }}>Est. Delivery Fee (₹)</label>
+                                <input type="number" value={deliveryFee} onChange={e => setDeliveryFee(Number(e.target.value))} min="0" style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                            </div>
+                            <div className="col-lg-4 col-md-6 col-sm-12">
+                                <label style={{ fontWeight: 'bold' }}>Lead Time (Hours)</label>
+                                <input type="number" value={leadTimeHours} onChange={e => setLeadTimeHours(Number(e.target.value))} min="0" style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }} />
+                            </div>
                         </div>
                     </div>
 

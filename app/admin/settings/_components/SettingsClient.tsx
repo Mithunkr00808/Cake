@@ -134,6 +134,16 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                             <input type="url" placeholder="https://facebook.com/..." value={settings.facebook} onChange={e => setSettings({...settings, facebook: e.target.value})} />
                         </div>
 
+                        {/* Home Page Call To Action */}
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Home Page Call-To-Action Title</label>
+                            <input type="text" value={settings.homeCtaTitle || ''} onChange={e => setSettings({...settings, homeCtaTitle: e.target.value})} placeholder="e.g. Magic Processing" />
+                        </div>
+                        <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label style={{ fontWeight: 'bold' }}>Home Page Call-To-Action Description</label>
+                            <textarea value={settings.homeCtaDescription || ''} onChange={e => setSettings({...settings, homeCtaDescription: e.target.value})} style={{ height: '100px', overflowY: 'auto', resize: 'vertical' }} placeholder="Enter the text that appears beneath the title..."></textarea>
+                        </div>
+
                         {/* Delivery Pincodes */}
                         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
                             <label style={{ fontWeight: 'bold' }}>Serviceable Pincodes</label>
