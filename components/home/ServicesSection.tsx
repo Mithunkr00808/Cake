@@ -79,7 +79,7 @@ const ServicesSection = () => {
             <div className="auto-container">
 
                 <div className="sec-title text-center">
-
+                    <div className="divider"><img src="/assets/images/icons/divider_1.png" alt="" /></div>
                     <h2>Our Specialties</h2>
                 </div>
                 {/* Services Carousel */}

@@ -202,7 +202,7 @@ export default async function RootLayout({
         </div>
 
         {/* Scripts */}
-        <Script src="/assets/js/jquery.js" strategy="afterInteractive" />
+        <Script src="/assets/js/jquery.js" strategy="beforeInteractive" />
         <Script src="/assets/js/popper.min.js" strategy="afterInteractive" />
         <Script src="/assets/js/bootstrap.min.js" strategy="afterInteractive" />
 
