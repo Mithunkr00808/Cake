@@ -38,8 +38,20 @@ const shopBreadcrumbJsonLd = {
         },
     ],
 };
-export default async function ShopPage() {
-    const initialProducts = await getCachedProducts();
+export default async function ShopPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+    const resolvedParams = await searchParams;
+    const category = typeof resolvedParams?.category === 'string' ? resolvedParams.category : undefined;
+
+    let initialProducts = await getCachedProducts();
+    
+    if (category) {
+        // Special case mapping if Occasion Cakes is used, map it to Custom Cakes if no Occasion Cakes exist
+        // Or just do a simple case-insensitive match
+        initialProducts = initialProducts.filter(p => 
+            p.category?.toLowerCase() === category.toLowerCase() || 
+            (category.toLowerCase() === 'occasion cakes' && p.category?.toLowerCase() === 'custom cakes')
+        );
+    }
 
     return (
         <>

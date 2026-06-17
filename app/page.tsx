@@ -3,7 +3,7 @@ import FeaturesSection from "@/components/common/FeaturesSection";
 import ServicesSection from "@/components/home/ServicesSection";
 import CallToAction from "@/components/home/CallToAction";
 import PortfolioSection from "@/components/home/PortfolioSection";
-import { getCachedSettings } from "@/lib/db/cache";
+import { getCachedSettings, getCachedProducts } from "@/lib/db/cache";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   let isLive = true;
+  let products: any[] = [];
   try {
     const data = await getCachedSettings();
     if (data) {
@@ -24,6 +25,8 @@ export default async function Home() {
         isLive = data.isLive;
       }
     }
+    const allProducts = await getCachedProducts();
+    products = allProducts.slice(0, 8);
   } catch (error) {
     console.error("Error fetching settings for page:", error);
   }
@@ -59,8 +62,8 @@ export default async function Home() {
     <main>
       <HeroSlider />
       <ServicesSection />
-      <PortfolioSection />
       <CallToAction />
+      <PortfolioSection initialProducts={products} />
     </main>
   );
 }

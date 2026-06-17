@@ -160,6 +160,21 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
         const finalImages = imageUploads.map(img => img.secureUrl as string);
 
         setLoading(true);
+
+        let finalSlug = product?.slug || createSlug(name);
+
+        // If it's a new product, ensure the slug is unique
+        if (!product?.id) {
+            const { getProductBySlug } = await import('@/lib/db/products');
+            let slugExists = await getProductBySlug(finalSlug);
+            let counter = 1;
+            while (slugExists) {
+                finalSlug = `${createSlug(name)}-${counter}`;
+                slugExists = await getProductBySlug(finalSlug);
+                counter++;
+            }
+        }
+
         const productData = {
             name,
             price: Number(price),
@@ -170,7 +185,7 @@ export default function ProductForm({ product, onClose, onSuccess }: ProductForm
             sale,
             description,
             category,
-            slug: createSlug(name),
+            slug: finalSlug,
             
             // Advanced fields
             fullDescription,
