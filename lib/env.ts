@@ -11,9 +11,9 @@ const envSchema = z.object({
   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: z.string().optional(),
 
   // Server-side Firebase admin config
-  FIREBASE_PROJECT_ID: z.string().min(1, "Admin Project ID is required"),
-  FIREBASE_CLIENT_EMAIL: z.string().email("Valid admin client email is required"),
-  FIREBASE_PRIVATE_KEY: z.string().min(1, "Admin private key is required"),
+  FIREBASE_PROJECT_ID: typeof window === 'undefined' ? z.string().min(1, "Admin Project ID is required") : z.any().optional(),
+  FIREBASE_CLIENT_EMAIL: typeof window === 'undefined' ? z.string().email("Valid admin client email is required") : z.any().optional(),
+  FIREBASE_PRIVATE_KEY: typeof window === 'undefined' ? z.string().min(1, "Admin private key is required") : z.any().optional(),
 
   // Cloudinary config
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().optional(),

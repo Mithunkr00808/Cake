@@ -1008,6 +1008,7 @@ ul,li{
 
 .cws_divider {
     -webkit-appearance: none;
+    appearance: none;
     position: relative;
     z-index: 1;
     margin-left: auto;
@@ -1156,11 +1157,9 @@ ul,li{
 	background-color: #ffffff;
 	border-color: #ffffff;
 	color: #5fcac7;
-}
+}/* 
 
-.btn-style-one.alt span:before{
-
-}
+.btn-style-one.alt span:before {} */
 
 .btn-style-one.alt:hover span:before{
 	-webkit-transition: all 500ms ease;
@@ -2025,15 +2024,20 @@ hr{
     height: 100%;
     background-color: #fff;
     -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     -webkit-mask-position: bottom;
+    mask-position: bottom;
     -webkit-mask-size: cover;
+    mask-size: cover;
     padding-bottom: 20px;
     margin-bottom: -20px;
 }
 
 .menu_wave{
     -webkit-mask-image: url(../images/icons/shape_menu_1.svg);
+    mask-image: url(../images/icons/shape_menu_1.svg);
     -webkit-mask-position: bottom !important;
+    mask-position: bottom !important;
 }
 
 .main-header .nav-outer{
@@ -2651,12 +2655,10 @@ hr{
 	-ms-transition:all 500ms ease;
 	-o-transition:all 500ms ease;
 	transition:all 500ms ease;
-}
+}/* 
 
 .search-popup .form-group input[type="submit"]:hover,
-.search-popup .form-group button:hover{
-
-}
+.search-popup .form-group button:hover {} */
 
 .search-popup input::placeholder,
 .search-popup textarea::placeholder{
@@ -3265,9 +3267,13 @@ hr{
     background-position: center;
     text-align: center;
     -webkit-mask-image: url(../images/icons/shape_menu_1.svg);
+    mask-image: url(../images/icons/shape_menu_1.svg);
     -webkit-mask-position: bottom;
+    mask-position: bottom;
     -webkit-mask-size: cover;
+    mask-size: cover;
     -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 }
 
 .page-title:before{
@@ -3360,60 +3366,79 @@ hr{
     background-size: cover;
     overflow: hidden;
     -webkit-mask-position: top;
+    mask-position: top;
     -webkit-mask-size: cover;
+    mask-size: cover;
     -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 }
 
 .wave_up{
     -webkit-mask-image: url(../images/icons/wave_up.svg);
+    mask-image: url(../images/icons/wave_up.svg);
 }
 
 .shape_one{
     -webkit-mask-image: url(../images/icons/shape_one.svg);
+    mask-image: url(../images/icons/shape_one.svg);
 }
 
 .shape_two{
     -webkit-mask-image: url(../images/icons/shape_two.svg);
+    mask-image: url(../images/icons/shape_two.svg);
     -webkit-mask-position: bottom;
+    mask-position: bottom;
 }
 
 .shape_three{
     -webkit-mask-image: url(../images/icons/shape_three.svg);
+    mask-image: url(../images/icons/shape_three.svg);
 }
 
 .shape_four_up{
     -webkit-mask-image: url(../images/icons/shape_four_up.svg);
+    mask-image: url(../images/icons/shape_four_up.svg);
 }
 
 .shape_four_down{
     -webkit-mask-image: url(../images/icons/shape_four_down.svg);
+    mask-image: url(../images/icons/shape_four_down.svg);
     -webkit-mask-position: bottom;
+    mask-position: bottom;
 }
 
 .shape_five{
     -webkit-mask-image: url(../images/icons/shape_five.svg);
+    mask-image: url(../images/icons/shape_five.svg);
 }
 
 .shape_six_up{
     -webkit-mask-image: url(../images/icons/shape_six_up.svg);
+    mask-image: url(../images/icons/shape_six_up.svg);
 }
 
 .shape_six_down{
     -webkit-mask-image: url(../images/icons/shape_six_down.svg);
+    mask-image: url(../images/icons/shape_six_down.svg);
     -webkit-mask-position: bottom;
+    mask-position: bottom;
 }
 
 .shape_seven_up{
     -webkit-mask-image: url(../images/icons/shape_seven_up.svg);
+    mask-image: url(../images/icons/shape_seven_up.svg);
 }
 
 .shape_seven_down{
     -webkit-mask-image: url(../images/icons/shape_seven_down.svg);
+    mask-image: url(../images/icons/shape_seven_down.svg);
     -webkit-mask-position: bottom;
+    mask-position: bottom;
 }
 
 .footer_shape{
     -webkit-mask-image: url(../images/icons/footer_shape.svg);
+    mask-image: url(../images/icons/footer_shape.svg);
 }
 
 .shape_wrapper .overlay{
@@ -3439,9 +3464,13 @@ hr{
 	display: block;
 	background-color: transparent;
     -webkit-mask-image: url(../images/icons/shape_menu_1.svg);
+    mask-image: url(../images/icons/shape_menu_1.svg);
     -webkit-mask-position: bottom;
+    mask-position: bottom;
     -webkit-mask-size: cover;
+    mask-size: cover;
     -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     margin-bottom: -40px;
     z-index: 8;
 }
@@ -6399,6 +6428,7 @@ blockquote:after {
     border-top: 1px solid rgba(0,0,0,.1);
     border-bottom: 1px solid rgba(0,0,0,.1);
     -webkit-appearance: none;
+    appearance: none;
     -moz-appearance: none;
     appearance: none;
     height: 100%;
@@ -9077,9 +9107,13 @@ iframe#gmap_canvas {
 .main-footer .footer-bottom{
 	position: relative;
     -webkit-mask-image: url(../images/icons/shape_three.svg);
+    mask-image: url(../images/icons/shape_three.svg);
     -webkit-mask-position: top;
+    mask-position: top;
     -webkit-mask-size: cover;
+    mask-size: cover;
     -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
     background-color: rgba(0,0,0,0.3);
     color: #ffffff;
 	padding: 30px 0;
@@ -10834,7 +10868,8 @@ iframe#gmap_canvas {
 
 .checkout-form select{
 	cursor:pointer;
-	-webkit-appearance:none;
+	-webkit-appearance: none;
+	appearance: none;
 	-ms-appearance:none;
 	-o-appearance:none;
 	-moz-appearance:none;
