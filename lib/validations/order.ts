@@ -15,7 +15,7 @@ export const orderCustomerSchema = z.object({
     lastName: z.string().min(1, "Last name is required").max(50, "Last name is too long"),
     email: z.string().email("Invalid email address").optional().or(z.literal('')),
     phone: z.string().min(5, "Phone number is too short").max(20, "Phone number is too long"),
-    address: z.string().min(5, "Address is required"),
+    address: z.string().min(2, "Address is required"),
     apartment: z.string().optional(),
     city: z.string().min(2, "City is required"),
     state: z.string().min(2, "State is required"),

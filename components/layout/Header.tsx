@@ -97,7 +97,6 @@ const Header = () => {
                 <ul style={{ display: mobile && activeMobileDropdown === 'shop' ? 'block' : undefined }}>
                     <li className={pathname === '/shop' ? 'current' : ''}><Link href="/shop" onClick={mobile ? closeMobileMenu : undefined}>Shop</Link></li>
                     <li className={pathname === '/cart' ? 'current' : ''}><Link href="/cart" onClick={mobile ? closeMobileMenu : undefined}>Cart</Link></li>
-                    <li className={pathname === '/checkout' ? 'current' : ''}><Link href="/checkout" onClick={mobile ? closeMobileMenu : undefined}>Checkout</Link></li>
                     <li className={pathname === '/my-account' || pathname === '/login' ? 'current' : ''}>
                         <Link href={user ? '/my-account' : '/login'} onClick={mobile ? closeMobileMenu : undefined}>
                             {user ? 'My Account' : 'Login'}

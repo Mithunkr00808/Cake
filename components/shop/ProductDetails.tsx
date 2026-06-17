@@ -1,19 +1,21 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/db/products';
-import { getSettings } from '@/lib/db/settings';
+import { useAuth } from '@/context/AuthContext';
+import { getUserProfileServerAction } from '@/lib/actions/userActions';
 
 interface ProductDetailsProps {
     product: Product;
     relatedProducts: Product[];
+    validPincodes: string[];
 }
 
-const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
+const ProductDetails = ({ product, relatedProducts, validPincodes }: ProductDetailsProps) => {
     const [activeTab, setActiveTab] = useState('details');
     const [pincode, setPincode] = useState('');
     const [deliveryStatus, setDeliveryStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle');
@@ -26,37 +28,56 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
     const [customMessage, setCustomMessage] = useState('');
     const [customTopper, setCustomTopper] = useState(product.customization?.topperOptions && product.customization.topperOptions.length > 0 ? product.customization.topperOptions[0] : '');
     const [photoUrl, setPhotoUrl] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
 
     const currentPrice = selectedSize && selectedSize.priceModifier > 0 
         ? selectedSize.priceModifier 
         : product.price;
+        
+    const { user } = useAuth();
+    const { addToCart, setDeliveryPincode, deliveryPincode } = useCart();
 
-    const handlePincodeCheck = async () => {
-        if (!/^[1-9]\d{5}$/.test(pincode)) {
-            toast.error("Please enter a valid 6-digit Indian pincode");
+    useEffect(() => {
+        if (deliveryPincode) {
+            setPincode(deliveryPincode);
+            handlePincodeCheck(deliveryPincode);
+        } else if (user) {
+            getUserProfileServerAction(user.uid).then(profile => {
+                if (profile?.zip) {
+                    setPincode(profile.zip);
+                    handlePincodeCheck(profile.zip);
+                }
+            });
+        }
+    }, [user, deliveryPincode]);
+
+    const handlePincodeCheck = async (autoCheckCode?: string) => {
+        const checkCode = autoCheckCode || pincode;
+        const isAuto = !!autoCheckCode;
+
+        if (!/^[1-9]\d{5}$/.test(checkCode)) {
+            if (!isAuto) toast.error("Please enter a valid 6-digit Indian pincode");
             return;
         }
 
         setDeliveryStatus('checking');
         
+        // Use the instantly available pre-fetched prop from the server instead of waiting for a network request
         try {
-            const settings = await getSettings();
-            const validPincodes = settings?.deliverablePincodes || [];
-            
-            if (validPincodes.includes(pincode)) {
+            if (validPincodes.includes(checkCode)) {
                 setDeliveryStatus('available');
-                toast.success("Delivery available to this pincode!");
+                setDeliveryPincode(checkCode);
+                if (!isAuto) toast.success("Delivery available to this pincode!");
             } else {
                 setDeliveryStatus('unavailable');
-                toast.error("Sorry, we do not deliver to this pincode yet.");
+                if (!isAuto) toast.error("Sorry, we do not deliver to this pincode yet.");
             }
         } catch (error) {
             setDeliveryStatus('idle');
-            toast.error("Failed to verify pincode. Please try again.");
+            if (!isAuto) toast.error("Failed to verify pincode. Please try again.");
         }
     };
 
-    const { addToCart } = useCart();
     // Support multiple images
     const images = product.images && product.images.length > 0 
         ? product.images 
@@ -70,6 +91,13 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
             return;
         }
         
+        if (isUploading) {
+            toast.error("Please wait for the photo to finish uploading.");
+            return;
+        }
+
+        setDeliveryPincode(pincode);
+
         addToCart({
             id: product.id,
             slug: product.slug,
@@ -238,7 +266,94 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                                     <button onClick={() => setPhotoUrl('')} style={{ background: 'none', color: '#dc3545', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Remove Photo</button>
                                                 </div>
                                             ) : (
-                                                <div style={{ color: '#666', fontSize: '14px' }}>Photo upload component omitted for security audit compatibility.</div>
+                                                <div style={{ position: 'relative' }}>
+                                                    <input 
+                                                        type="file" 
+                                                        accept="image/*"
+                                                        disabled={isUploading}
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                if (file.size > 5 * 1024 * 1024) {
+                                                                    toast.error("Image must be smaller than 5MB");
+                                                                    e.target.value = '';
+                                                                    return;
+                                                                }
+                                                                
+                                                                setIsUploading(true);
+                                                                const objectUrl = URL.createObjectURL(file);
+                                                                const img = document.createElement('img');
+                                                                
+                                                                img.onload = async () => {
+                                                                    try {
+                                                                        const canvas = document.createElement('canvas');
+                                                                        const MAX_WIDTH = 500;
+                                                                        const MAX_HEIGHT = 500;
+                                                                        let width = img.width;
+                                                                        let height = img.height;
+
+                                                                        if (width > height) {
+                                                                            if (width > MAX_WIDTH) {
+                                                                                height *= MAX_WIDTH / width;
+                                                                                width = MAX_WIDTH;
+                                                                            }
+                                                                        } else {
+                                                                            if (height > MAX_HEIGHT) {
+                                                                                width *= MAX_HEIGHT / height;
+                                                                                height = MAX_HEIGHT;
+                                                                            }
+                                                                        }
+
+                                                                        canvas.width = width;
+                                                                        canvas.height = height;
+                                                                        const ctx = canvas.getContext('2d');
+                                                                        ctx?.drawImage(img, 0, 0, width, height);
+                                                                        
+                                                                        const dataUrl = canvas.toDataURL('image/webp', 0.8);
+                                                                        
+                                                                        // Upload directly to Cloudinary
+                                                                        const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+                                                                        const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+                                                                        
+                                                                        if (!cloudName || !uploadPreset) {
+                                                                            throw new Error("Cloudinary not configured");
+                                                                        }
+
+                                                                        const formData = new FormData();
+                                                                        formData.append('file', dataUrl);
+                                                                        formData.append('upload_preset', uploadPreset);
+
+                                                                        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                                                                            method: 'POST',
+                                                                            body: formData,
+                                                                        });
+
+                                                                        const data = await response.json();
+                                                                        
+                                                                        if (data.secure_url) {
+                                                                            setPhotoUrl(data.secure_url);
+                                                                        } else {
+                                                                            throw new Error("Upload failed");
+                                                                        }
+                                                                    } catch (error) {
+                                                                        console.error("Error uploading image:", error);
+                                                                        toast.error("Failed to upload image. Please try again.");
+                                                                    } finally {
+                                                                        setIsUploading(false);
+                                                                        URL.revokeObjectURL(objectUrl);
+                                                                    }
+                                                                };
+                                                                img.src = objectUrl;
+                                                            }
+                                                        }}
+                                                        style={{ display: 'block', width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '6px', background: '#fff', opacity: isUploading ? 0.5 : 1 }}
+                                                    />
+                                                    {isUploading && (
+                                                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(255,255,255,0.9)', padding: '5px 10px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', color: '#ff7a7a', pointerEvents: 'none' }}>
+                                                            <i className="fa fa-spinner fa-spin" style={{ marginRight: '5px' }}></i> Uploading...
+                                                        </div>
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
                                     )}
@@ -267,7 +382,7 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                         style={{ padding: '8px 12px', border: '1px solid #ccc', borderRadius: '4px', flex: '1', maxWidth: '200px' }}
                                     />
                                     <button 
-                                        onClick={handlePincodeCheck}
+                                        onClick={() => handlePincodeCheck()}
                                         disabled={deliveryStatus === 'checking' || pincode.length !== 6}
                                         style={{ 
                                             padding: '8px 15px', 
@@ -304,8 +419,10 @@ const ProductDetails = ({ product, relatedProducts }: ProductDetailsProps) => {
                                     type="button" 
                                     className="theme-btn add-to-cart" 
                                     onClick={handleAddToCart}
+                                    style={{ opacity: isUploading ? 0.6 : 1, cursor: isUploading ? 'not-allowed' : 'pointer' }}
+                                    disabled={isUploading}
                                 >
-                                    <span className="btn-title">Add To Cart</span>
+                                    <span className="btn-title">{isUploading ? 'Wait...' : 'Add To Cart'}</span>
                                 </motion.button>
                                 <ul className="product-meta">
                                     {product.category && <li className="posted_in">Category: <Link href="#">{product.category}</Link></li>}

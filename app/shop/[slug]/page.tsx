@@ -5,6 +5,7 @@ import ProductDetails from '@/components/shop/ProductDetails';
 import ProductSidebar from '@/components/shop/ProductSidebar';
 import Skeleton from '@/components/common/Skeleton';
 import { getCachedProductBySlug, getCachedRelatedProducts } from '@/lib/db/cache';
+import { getSettingsAdmin } from '@/lib/db/settings-admin';
 import type { Metadata } from 'next';
 
 type Props = {
@@ -168,6 +169,8 @@ async function ShopSingleContent({ slug }: { slug: string }) {
     }
     
     const relatedProducts = await getCachedRelatedProducts(product.id, 3);
+    const settings = await getSettingsAdmin();
+    const validPincodes = settings?.deliverablePincodes || [];
 
     return (
         <>
@@ -199,7 +202,7 @@ async function ShopSingleContent({ slug }: { slug: string }) {
                     <div className="row clearfix">
                         {/* Content Side */}
                         <div className="content-side col-lg-9 col-md-12 col-sm-12">
-                            <ProductDetails product={product} relatedProducts={relatedProducts} />
+                            <ProductDetails product={product} relatedProducts={relatedProducts} validPincodes={validPincodes} />
                         </div>
 
                         {/* Sidebar Side */}

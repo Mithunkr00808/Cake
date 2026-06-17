@@ -253,3 +253,13 @@ body {
     animation: none !important;
   }
 }
+
+/* Global Form Placeholder Styles */
+::placeholder,
+::-webkit-input-placeholder,
+::-moz-placeholder,
+:-ms-input-placeholder {
+    color: #a0a0a0 !important;
+    font-weight: 300 !important;
+    font-style: italic !important;
+}

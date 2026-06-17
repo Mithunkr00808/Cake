@@ -30,6 +30,8 @@ interface CartContextType {
     clearCart: () => void;
     cartTotal: number;
     cartCount: number;
+    deliveryPincode: string | null;
+    setDeliveryPincode: (pincode: string) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -38,26 +40,36 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [deliveryPincode, setDeliveryPincode] = useState<string | null>(null);
 
     // Load from LocalStorage on mount
     useEffect(() => {
-        const savedCart = localStorage.getItem('sliceofcake_cart');
-        if (savedCart) {
-            try {
-                setCartItems(JSON.parse(savedCart));
-            } catch (e) {
-                console.error("Failed to parse cart data", e);
+        if (typeof window !== 'undefined') {
+            const savedCart = localStorage.getItem('sliceofcake_cart');
+            const savedPincode = localStorage.getItem('deliveryPincode');
+            if (savedCart) {
+                try {
+                    setCartItems(JSON.parse(savedCart));
+                } catch (e) {
+                    console.error("Failed to parse cart data", e);
+                }
             }
+            if (savedPincode) setDeliveryPincode(savedPincode);
         }
         setIsLoaded(true);
     }, []);
 
     // Save to LocalStorage whenever cart changes (only after initial load)
     useEffect(() => {
-        if (isLoaded) {
+        if (isLoaded && typeof window !== 'undefined') {
             localStorage.setItem('sliceofcake_cart', JSON.stringify(cartItems));
+            if (deliveryPincode) {
+                localStorage.setItem('deliveryPincode', deliveryPincode);
+            } else {
+                localStorage.removeItem('deliveryPincode');
+            }
         }
-    }, [cartItems, isLoaded]);
+    }, [cartItems, isLoaded, deliveryPincode]);
 
     // Add Item to Cart (memoized to prevent re-creation on every render)
     const addToCart = useCallback((product: Omit<CartItem, 'quantity' | 'id'> & { id?: string, quantity?: number }) => {
@@ -121,8 +133,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         updateQuantity,
         clearCart,
         cartTotal,
-        cartCount
-    }), [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount]);
+        cartCount,
+        deliveryPincode,
+        setDeliveryPincode
+    }), [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount, deliveryPincode]);
 
     return (
         <CartContext.Provider value={contextValue}>
@@ -135,6 +149,20 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 export const useCart = () => {
     const context = useContext(CartContext);
     if (!context) {
+        if (typeof window === 'undefined') {
+            // Return dummy context for SSR to prevent crash
+            return {
+                cartItems: [],
+                addToCart: () => {},
+                removeFromCart: () => {},
+                updateQuantity: () => {},
+                clearCart: () => {},
+                cartTotal: 0,
+                cartCount: 0,
+                deliveryPincode: null,
+                setDeliveryPincode: () => {}
+            } as CartContextType;
+        }
         throw new Error("useCart must be used within a CartProvider");
     }
     return context;
