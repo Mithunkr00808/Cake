@@ -67,23 +67,24 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
             } else {
                 toast.error(error || 'Failed to update status.');
             }
-        } catch (err: any) {
+        } catch (err) {
             console.error("Action error:", err);
-            toast.error(err.message || "An unexpected error occurred");
+            const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
+            toast.error(errorMessage);
         } finally {
             setUpdatingId(null);
         }
     };
 
-    const renderDate = (ts: any) => {
+    const renderDate = (ts: unknown) => {
         if (!ts) return '—';
         let dateObj;
         if (typeof ts === 'string') {
             dateObj = new Date(ts);
-        } else if (typeof ts.toDate === 'function') {
-            dateObj = ts.toDate();
-        } else if (ts._seconds) {
-            dateObj = new Date(ts._seconds * 1000);
+        } else if (typeof ts === 'object' && ts !== null && 'toDate' in ts && typeof (ts as any).toDate === 'function') {
+            dateObj = (ts as any).toDate();
+        } else if (typeof ts === 'object' && ts !== null && '_seconds' in ts) {
+            dateObj = new Date((ts as any)._seconds * 1000);
         } else {
             return '—';
         }

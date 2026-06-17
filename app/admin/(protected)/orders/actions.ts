@@ -53,8 +53,9 @@ export async function updateOrderStatusServer(
 
     console.log(`[updateOrderStatusServer] Returning success.`);
     return { success: true };
-  } catch (err: any) {
+  } catch (err) {
     console.error('[updateOrderStatusServer] FATAL error:', err);
-    return { success: false, error: `Failed to update order status: ${err.message}` };
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    return { success: false, error: `Failed to update order status: ${errorMessage}` };
   }
 }

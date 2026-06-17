@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Slice of Cake 🍰
 
-## Getting Started
+**Slice of Cake** is a premium, artisanal bakery e-commerce platform built with modern web technologies. It provides a seamless shopping experience for custom cakes, pastries, and sweet delights, complete with an intuitive shopping cart, order customization, and a comprehensive admin dashboard.
 
-First, run the development server:
+## 🚀 Tech Stack
+
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS, Framer Motion (for fluid animations)
+- **Database & Authentication:** Firebase (Firestore, Auth, Storage) & Firebase Admin
+- **Media Management:** Cloudinary
+- **Form Validation:** Zod
+- **Emails:** React Email & Resend
+
+## ✨ Key Features
+
+- **Premium UI/UX:** Responsive, beautifully designed frontend with fluid animations and a curated aesthetic.
+- **E-Commerce Flow:** Full shopping cart experience, customizable product options (size, flavor, topper, inscription), and checkout.
+- **Admin Dashboard:** Secure, role-protected admin area for managing:
+  - Inventory and Products
+  - Orders and Order Status (with automated status emails)
+  - Global Store Settings (Live toggle, social links)
+- **Production-Ready Resilience:**
+  - Global error boundaries and polished loading states.
+  - Strict runtime environment variable validation (`lib/env.ts`).
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+Ensure you have Node.js and `npm` installed on your machine.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/slice-of-cake-next.git
+cd slice-of-cake-next
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Environment Variables
+
+Create a `.env` or `.env.local` file in the root directory. Use the provided `.env.example` as a reference.
+
+You will need keys for:
+- Firebase (Client & Admin)
+- Cloudinary
+- Resend (for emails)
+
+*Note: The project uses strict environment validation. If any required keys are missing, the application will throw a descriptive error on startup.*
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 📂 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `/app` - Next.js App Router pages, layouts, and API routes.
+- `/components` - Reusable UI components (Shop, Cart, Admin, Layout).
+- `/lib` - Core utilities, database configuration, Firebase instances, and environment validation.
+- `/public` - Static assets, images, and fonts.
+- `/scripts` - Utility scripts (e.g., database seeding).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛡️ Security & Authentication
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Client-side authentication is handled via Firebase Auth.
+- Protected routes (like `/admin` and `/my-account`) are secured using Next.js Middleware and Firebase Admin token verification.
+- Passwords and private keys are never exposed to the client.
 
-## Deploy on Vercel
+## 🤝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.

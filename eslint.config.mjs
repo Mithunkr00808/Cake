@@ -14,7 +14,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Custom ignores:
     "public/assets/**",
-    "scripts/**"
+    "scripts/**",
+    ".agents/**",
+    ".claude/**",
+    ".gemini/**"
   ]),
 ]);
 
