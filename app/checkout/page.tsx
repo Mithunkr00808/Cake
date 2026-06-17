@@ -4,7 +4,7 @@ import Checkout from '@/components/shop/Checkout';
 import type { Metadata } from 'next';
 import { verifySession } from '@/lib/auth/verifySession';
 import { getUserProfile } from '@/lib/db/users';
-import { getSettingsAdmin } from '@/lib/db/settings-admin';
+import { getCachedSettings } from '@/lib/db/cache';
 
 export const metadata: Metadata = {
     title: "Checkout",
@@ -20,7 +20,7 @@ export default async function CheckoutPage() {
         userProfile = await getUserProfile(session.uid);
     }
     
-    const settings = await getSettingsAdmin();
+    const settings = await getCachedSettings();
     const validPincodes = settings?.deliverablePincodes || [];
 
     const authData = session ? {

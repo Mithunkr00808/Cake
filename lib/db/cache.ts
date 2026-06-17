@@ -17,20 +17,31 @@ export const getCachedProducts = unstable_cache(
     { revalidate: CACHE_TTL, tags: ['products'] }
 );
 
-export const getCachedProductById = (id: string) => unstable_cache(
-    async () => getProductByIdAdmin(id),
-    ['product-by-id', id], 
-    { revalidate: CACHE_TTL, tags: ['products', `product-${id}`] }
-)();
+import { cache } from 'react';
 
-export const getCachedProductBySlug = (slug: string) => unstable_cache(
-    async () => getProductBySlugAdmin(slug),
-    ['product-by-slug', slug], 
-    { revalidate: CACHE_TTL, tags: ['products', `product-slug-${slug}`] }
-)();
+export const getCachedProductById = cache(async (id: string) => {
+    const cachedFn = unstable_cache(
+        async () => getProductByIdAdmin(id),
+        ['product-by-id', id], 
+        { revalidate: CACHE_TTL, tags: ['products', `product-${id}`] }
+    );
+    return cachedFn();
+});
 
-export const getCachedRelatedProducts = (id: string, count: number = 3) => unstable_cache(
-    async () => getRelatedProductsAdmin(id, count),
-    ['related-products', id, count.toString()],
-    { revalidate: CACHE_TTL, tags: ['products'] }
-)();
+export const getCachedProductBySlug = cache(async (slug: string) => {
+    const cachedFn = unstable_cache(
+        async () => getProductBySlugAdmin(slug),
+        ['product-by-slug', slug], 
+        { revalidate: CACHE_TTL, tags: ['products', `product-slug-${slug}`] }
+    );
+    return cachedFn();
+});
+
+export const getCachedRelatedProducts = cache(async (id: string, count: number = 3) => {
+    const cachedFn = unstable_cache(
+        async () => getRelatedProductsAdmin(id, count),
+        ['related-products', id, count.toString()],
+        { revalidate: CACHE_TTL, tags: ['products'] }
+    );
+    return cachedFn();
+});

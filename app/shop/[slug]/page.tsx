@@ -4,8 +4,7 @@ import { notFound } from 'next/navigation';
 import ProductDetails from '@/components/shop/ProductDetails';
 import ProductSidebar from '@/components/shop/ProductSidebar';
 import Skeleton from '@/components/common/Skeleton';
-import { getCachedProductBySlug, getCachedRelatedProducts } from '@/lib/db/cache';
-import { getSettingsAdmin } from '@/lib/db/settings-admin';
+import { getCachedProductBySlug, getCachedRelatedProducts, getCachedSettings } from '@/lib/db/cache';
 import type { Metadata } from 'next';
 
 type Props = {
@@ -169,7 +168,7 @@ async function ShopSingleContent({ slug }: { slug: string }) {
     }
     
     const relatedProducts = await getCachedRelatedProducts(product.id, 3);
-    const settings = await getSettingsAdmin();
+    const settings = await getCachedSettings();
     const validPincodes = settings?.deliverablePincodes || [];
 
     return (

@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 import { getProductsPaginatedServerAction } from '@/lib/actions/inventoryActions';
+import { revalidateShopCache } from '@/app/admin/actions';
 
 export default function InventoryClient({ initialProducts, initialHasMore }: { initialProducts: Product[], initialHasMore: boolean }) {
     const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -57,6 +58,9 @@ export default function InventoryClient({ initialProducts, initialHasMore }: { i
             
             // Delete product from database
             await deleteProduct(idToDelete);
+            
+            // Revalidate cache to update Shop and Home pages
+            await revalidateShopCache();
             
             // Silently delete images from Cloudinary via secure server API
             if (imagesToDelete.length > 0) {
