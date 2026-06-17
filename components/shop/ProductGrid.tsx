@@ -12,9 +12,9 @@ import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/db/products';
 
 const sortOptions = [
-    { value: 'popularity', label: 'Sort by popularity' },
-    { value: 'rating', label: 'Sort by average rating' },
-    { value: 'date', label: 'Sort by newness' },
+    { value: 'popularity', label: 'Sort by our most loved' },
+    { value: 'rating', label: 'Sort by highest rated' },
+    { value: 'date', label: 'Sort by newest creations' },
     { value: 'price', label: 'Sort by price: low to high' },
     { value: 'price-desc', label: 'Sort by price: high to low' }
 ];
@@ -82,7 +82,7 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
         <div className="our-shop">
             <div className="shop-upper-box clearfix mb-[50px]">
                 <div className="items-label float-left text-[#4b4342] text-[17px] py-[5px]">
-                    Showing {sortedProducts.length} results {categoryFilter ? `for "${categoryFilter}"` : ''}
+                    Displaying {sortedProducts.length} artisanal selections {categoryFilter ? `for "${categoryFilter}"` : ''}
                     {categoryFilter && (
                         <Link href="/shop" className="ml-3 text-[14px] text-[#ff7a7a] hover:underline whitespace-nowrap">
                             (Clear filter)
@@ -119,7 +119,7 @@ const ProductGrid = ({ initialProducts = [] }: ProductGridProps) => {
             <div className="row clearfix">
                 {sortedProducts.length === 0 ? (
                     <div className="col-12 text-center py-5">
-                        <p>No products found. Please seed the database.</p>
+                        <p>Our pastry chefs are currently curating this collection. Please check back soon for fresh, artisanal offerings.</p>
                     </div>
                 ) : sortedProducts.map((product) => (
                     <article className="shop-item col-lg-4 col-md-6 col-sm-12" key={product.id}>

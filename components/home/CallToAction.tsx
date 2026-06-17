@@ -7,7 +7,7 @@ import { getSettings } from "@/lib/db/settings";
 const CallToAction = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [title, setTitle] = useState("Magic Processing");
-    const [description, setDescription] = useState("Vestibulum ante ipsum primis in faucibus orci luctus et ultrices\nposuere cubilia Curae; Praesent molestie eu turpis nec\nmolestie. Nam auctor magna mauris, non lacinia felis mattis nec.");
+    const [description, setDescription] = useState("Discover our exclusive range of premium desserts, handcrafted daily with the finest ingredients to make your celebrations truly memorable.\n\nFrom intricately designed wedding tiers to melt-in-your-mouth pastries, every creation is a testament to our passion for the art of baking. We source only the highest quality chocolates, fresh seasonal fruits, and pure extracts to ensure each bite is an unforgettable indulgence.");
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -43,7 +43,7 @@ const CallToAction = () => {
                         <div className="icon icon_heart"></div>
                     </div>
                     <h1>{title}</h1>
-                    <p style={{ whiteSpace: 'pre-line' }}>{description}</p>
+                    <p style={{ whiteSpace: 'pre-line', fontSize: '1.2rem', color: '#ffffff', lineHeight: '1.8', maxWidth: '800px', margin: '0 auto 30px' }}>{description}</p>
                     <div className="btn-box">
                         <Link
                             href="/shop"

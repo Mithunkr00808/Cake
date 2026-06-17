@@ -103,13 +103,13 @@ const Footer = ({ facebook, instagram }: { facebook?: string, instagram?: string
             {/* Footer Bottom */}
             <div className="footer-bottom">
                 <div className="auto-container">
-                    <div className="copyright-text" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <p style={{ margin: '0' }}>Slice of Cake - Layered in love</p>
-                        <ul style={{ display: 'flex', gap: '15px', margin: '0', padding: '0', listStyle: 'none', flexWrap: 'wrap' }}>
-                            <li><Link href="/privacy-policy" style={{ color: '#aaa', fontSize: '14px' }}>Privacy Policy</Link></li>
-                            <li><Link href="/terms-of-use" style={{ color: '#aaa', fontSize: '14px' }}>Terms & Conditions</Link></li>
-                            <li><Link href="/refund-policy" style={{ color: '#aaa', fontSize: '14px' }}>Refund Policy</Link></li>
-                            <li><Link href="/shipping-policy" style={{ color: '#aaa', fontSize: '14px' }}>Shipping Policy</Link></li>
+                    <div className="copyright-text" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', textAlign: 'center', color: '#ffffff' }}>
+                        <p style={{ margin: '0', fontSize: '16px' }}>Slice of Cake - Layered in love</p>
+                        <ul style={{ display: 'flex', gap: '20px', margin: '0', padding: '0', listStyle: 'none', flexWrap: 'wrap', justifyContent: 'center' }}>
+                            <li><Link href="/privacy-policy" style={{ color: '#eaeaea', fontSize: '16px' }}>Privacy Policy</Link></li>
+                            <li><Link href="/terms-of-use" style={{ color: '#eaeaea', fontSize: '16px' }}>Terms & Conditions</Link></li>
+                            <li><Link href="/refund-policy" style={{ color: '#eaeaea', fontSize: '16px' }}>Refund Policy</Link></li>
+                            <li><Link href="/shipping-policy" style={{ color: '#eaeaea', fontSize: '16px' }}>Shipping Policy</Link></li>
                         </ul>
                     </div>
                 </div>

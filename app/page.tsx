@@ -39,7 +39,7 @@ export default async function Home() {
         </h1>
         <div style={{ height: '2px', width: '60px', background: '#e0e0e0', margin: '0 auto 30px' }}></div>
         <h2 style={{ fontSize: '2rem', fontWeight: 300, color: '#333', marginBottom: '16px' }}>
-          Opening Soon
+          The Ovens are Preheating
         </h2>
         <p style={{ maxWidth: '500px', margin: '0 auto 40px', color: '#666', lineHeight: 1.8 }}>
           We are crafting something delicious for you. Our curated collection of cakes, pastries, and treats will be available shortly.

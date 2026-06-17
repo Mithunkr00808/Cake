@@ -11,7 +11,7 @@ const AboutSection = ({ aboutUsText }: AboutSectionProps) => {
             <div className="auto-container">
                 <div className="sec-title text-center">
 
-                    <h2>Our Story</h2>
+                    <h2>Our Legacy of Baking</h2>
                 </div>
                 <div className="content-box">
                     <span className="devider_icon_one"></span>

@@ -361,7 +361,7 @@ const ProductDetails = ({ product, relatedProducts, validPincodes }: ProductDeta
                             )}
 
                             <div className="text">
-                                <p>{product.description || 'No description available for this product.'}</p>
+                                <p>{product.description || 'Our master bakers are refining the details of this masterpiece. Rest assured, it is crafted with the utmost care and premium ingredients.'}</p>
                             </div>
 
                             {/* Pincode Checker */}
@@ -443,7 +443,7 @@ const ProductDetails = ({ product, relatedProducts, validPincodes }: ProductDeta
                             <div className="tab active-tab" id="prod-details">
                                 <h2 className="title">Description</h2>
                                 <div className="content">
-                                    <p>{product.description || 'No detailed description available.'}</p>
+                                    <p>{product.description || 'Our master bakers are refining the details of this masterpiece. Rest assured, it is crafted with the utmost care and premium ingredients.'}</p>
                                 </div>
                             </div>
                         </div>
@@ -454,7 +454,7 @@ const ProductDetails = ({ product, relatedProducts, validPincodes }: ProductDeta
                 {relatedProducts && relatedProducts.length > 0 && (
                     <div className="related-products">
                         <div className="sec-title">
-                            <h2>Related products</h2>
+                            <h2>You May Also Indulge In</h2>
                         </div>
 
                         <div className="row clearfix">

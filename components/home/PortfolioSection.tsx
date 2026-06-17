@@ -20,7 +20,7 @@ const PortfolioSection = ({ initialProducts = [] }: PortfolioSectionProps) => {
                 <div className="row">
                     {initialProducts.length === 0 ? (
                         <div className="col-12 text-center py-5">
-                            <p>No products available.</p>
+                            <p>Our display case is currently being updated with fresh, artisanal bakes.</p>
                         </div>
                     ) : initialProducts.map((product) => (
                         <div className="portfolio-block col-lg-3 col-md-6 col-sm-12" key={product.id}>

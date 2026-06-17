@@ -7,25 +7,25 @@ const services = [
         title: "Wedding Cakes",
         image: "/assets/images/resource/service-wedding-transparent-v3.png",
         iconClass: "flaticon-food-1",
-        description: "Elegant and delicious cakes for your special day."
+        description: "Bespoke, multi-tiered masterpieces crafted to elevate your unforgettable moments."
     },
     {
         title: "Birthday Cakes",
         image: "/assets/images/resource/service-birthday-transparent-v3.png",
         iconClass: "flaticon-technology",
-        description: "Celebrate with our custom birthday creations."
+        description: "Artisanal, custom-designed cakes that turn every birthday into a grand celebration."
     },
     {
         title: "Occasion Cakes",
         image: "/assets/images/resource/service-occasion-transparent-v3.png",
         iconClass: "flaticon-food",
-        description: "Perfect cakes for any event or gathering."
+        description: "Gourmet dessert centerpieces tailored exclusively for your most important events."
     },
     {
         title: "Donuts",
         image: "/assets/images/resource/service-donuts-transparent-v3.png",
         iconClass: "flaticon-food-7",
-        description: "Freshly baked donuts with delightful toppings."
+        description: "Decadent, handcrafted donuts meticulously glazed and finished to perfection."
     }
 ];
 

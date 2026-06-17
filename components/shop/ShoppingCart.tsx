@@ -51,7 +51,7 @@ const ShoppingCart = () => {
                                             exit={{ opacity: 0 }}
                                             transition={{ duration: 0.3, ease: "easeOut" }}
                                         >
-                                            <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>Your cart is currently empty.</td>
+                                            <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>Your dessert cart is awaiting your exquisite selections.</td>
                                         </motion.tr>
                                     ) : (
                                         cartItems.map((item) => (
@@ -140,7 +140,7 @@ const ShoppingCart = () => {
                                 className="theme-btn cart-btn" 
                                 onClick={handleClearCart}
                             >
-                                Clear Cart
+                                Empty Selection
                             </motion.button>
                         </div>
                     </div>
