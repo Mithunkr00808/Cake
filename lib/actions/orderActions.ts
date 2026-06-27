@@ -26,6 +26,8 @@ function checkOrderRateLimit(key: string): boolean {
     return true;
 }
 
+import { sendOrderStatusEmail } from "@/lib/email/actions";
+
 export async function createOrderServerAction(rawData: any): Promise<string | null> {
     try {
         // Security: Rate limit by user ID or IP
@@ -71,6 +73,11 @@ export async function createOrderServerAction(rawData: any): Promise<string | nu
 
         const docRef = await db.collection("orders").add(orderData);
         
+        // Dispatch order confirmation email asynchronously
+        sendOrderStatusEmail(docRef.id, 'pending').catch(err => 
+            console.error("Failed to send order confirmation email:", err)
+        );
+
         return docRef.id;
     } catch (error: any) {
         console.error("Server Action - Error creating order:", error);

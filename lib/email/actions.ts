@@ -1,5 +1,5 @@
 import { db as adminDb } from "@/lib/firebase-admin";
-import { getResendClient, SENDER_EMAIL } from "./client";
+import { getResendClient, SENDER_EMAIL, ADMIN_EMAIL } from "./client";
 import { OrderStatusEmail } from "./templates/OrderStatusEmail";
 
 export async function sendOrderStatusEmail(orderId: string, status: string) {
@@ -25,20 +25,27 @@ export async function sendOrderStatusEmail(orderId: string, status: string) {
 
     const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' });
 
-    const { data, error } = await resend.emails.send({
+    const payload: any = {
       from: SENDER_EMAIL,
       to: email,
-      subject: `Order Update: #${orderId.slice(-6).toUpperCase()}`,
+      subject: status === 'pending' ? `Order Confirmation: #${orderId.slice(-6).toUpperCase()}` : `Order Update: #${orderId.slice(-6).toUpperCase()}`,
       react: OrderStatusEmail({
         orderId,
         customerName,
         status,
-        items: (order.items || []).map((item: { name: string, quantity: number, price: number, image: string }) => ({
-          name: item.name,
-          quantity: item.quantity,
-          price: formatter.format(item.price || 0),
-          image: item.image,
-        })),
+        items: (order.items || []).map((item: { name: string, quantity: number, price: number, image: string }) => {
+          let imageUrl = item.image || '';
+          if (imageUrl.startsWith('/')) {
+            const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+            imageUrl = `${baseUrl}${imageUrl}`;
+          }
+          return {
+            name: item.name,
+            quantity: item.quantity,
+            price: formatter.format(item.price || 0),
+            image: imageUrl,
+          };
+        }),
         shippingAddress: order.customer ? {
           fullName: `${order.customer.firstName || ''} ${order.customer.lastName || ''}`.trim(),
           phone: order.customer.phone,
@@ -49,7 +56,13 @@ export async function sendOrderStatusEmail(orderId: string, status: string) {
         } : {},
         totalAmount: formatter.format(order.total || 0),
       }),
-    });
+    };
+
+    if (status === 'pending') {
+      payload.bcc = ADMIN_EMAIL;
+    }
+
+    const { data, error } = await resend.emails.send(payload);
 
     if (error) {
       console.error("Resend API Error (Status):", error);

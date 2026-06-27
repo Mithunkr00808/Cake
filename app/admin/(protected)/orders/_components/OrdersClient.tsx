@@ -224,7 +224,7 @@ export default function OrdersClient({ initialOrders }: { initialOrders: Order[]
                                                         padding: '4px 28px 4px 12px', borderRadius: '20px', 
                                                         border: `1px solid ${STATUS_COLORS[order.status]?.color || '#ddd'}`,
                                                         fontSize: '12px', 
-                                                        background: STATUS_COLORS[order.status]?.bg || '#fff', 
+                                                        backgroundColor: STATUS_COLORS[order.status]?.bg || '#fff', 
                                                         color: STATUS_COLORS[order.status]?.color || '#333',
                                                         fontWeight: 600, letterSpacing: '0.5px',
                                                         cursor: 'pointer', outline: 'none',
