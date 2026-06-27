@@ -32,23 +32,13 @@ function extractPublicId(url: string) {
     }
 }
 
-import { auth } from '@/lib/firebase-admin';
+import { verifySession } from '@/lib/auth/verifySession';
 
 export async function POST(req: Request) {
     try {
-        const authHeader = req.headers.get('authorization');
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-        
-        const token = authHeader.split('Bearer ')[1];
-        try {
-            const decodedToken = await auth.verifyIdToken(token);
-            const adminEmail = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-            if (!adminEmail || decodedToken.email !== adminEmail) {
-                 return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-            }
-        } catch (err) {
+        // Security: Only authenticated admins can delete files
+        const session = await verifySession();
+        if (!session || session.admin !== true) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

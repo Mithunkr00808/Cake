@@ -4,6 +4,7 @@ import { db as adminDb } from '@/lib/firebase-admin';
 import { revalidatePath } from 'next/cache';
 import { sendOrderStatusEmail } from '@/lib/email/actions';
 import type { OrderStatus } from '@/lib/db/orders';
+import { verifySession } from '@/lib/auth/verifySession';
 
 const VALID_STATUSES: OrderStatus[] = [
   'pending', 'confirmed', 'processing', 'out_for_delivery', 'delivered', 'cancelled'
@@ -13,7 +14,14 @@ export async function updateOrderStatusServer(
   orderId: string,
   newStatus: string
 ): Promise<{ success: boolean; error?: string }> {
-  console.log(`[updateOrderStatusServer] called with orderId=${orderId}, newStatus=${newStatus}`);
+  // Security: Only admins can update order statuses
+  const session = await verifySession();
+  if (!session || session.admin !== true) {
+    console.warn('Unauthorized order status update attempt');
+    return { success: false, error: 'Unauthorized' };
+  }
+
+  console.log(`[updateOrderStatusServer] called by admin=${session.uid}, orderId=${orderId}, newStatus=${newStatus}`);
 
   if (!VALID_STATUSES.includes(newStatus as OrderStatus)) {
     console.error(`[updateOrderStatusServer] Invalid status: ${newStatus}`);

@@ -1,7 +1,8 @@
 import { revalidateTag, revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
+import { env } from '@/lib/env';
 
-const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;
+const REVALIDATION_SECRET = env.REVALIDATION_SECRET;
 
 // Allowlist of valid cache tags to prevent arbitrary cache purging
 const ALLOWED_TAGS = ['products', 'settings'];

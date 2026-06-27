@@ -64,12 +64,10 @@ export default function InventoryClient({ initialProducts, initialHasMore }: { i
             
             // Silently delete images from Cloudinary via secure server API
             if (imagesToDelete.length > 0) {
-                const token = await auth.currentUser?.getIdToken();
                 fetch('/api/cloudinary/delete', {
                     method: 'POST',
                     headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ urls: imagesToDelete })
                 }).catch(err => console.error("Background image cleanup failed:", err));

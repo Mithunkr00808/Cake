@@ -19,6 +19,12 @@ const envSchema = z.object({
   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string().optional(),
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
+
+  // Backend Secrets
+  REVALIDATION_SECRET: typeof window === 'undefined' ? z.string().min(1, "Revalidation secret is required") : z.any().optional(),
+  RESEND_API_KEY: z.string().optional(),
+  RESEND_SENDER_EMAIL: z.string().optional(),
+  ADMIN_EMAIL: z.string().optional(),
 });
 
 // Using a try-catch to provide better error messages in production
@@ -38,6 +44,10 @@ try {
     NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+    REVALIDATION_SECRET: process.env.REVALIDATION_SECRET,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    RESEND_SENDER_EMAIL: process.env.RESEND_SENDER_EMAIL,
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   });
 } catch (error) {
   if (error instanceof z.ZodError) {

@@ -41,5 +41,11 @@ service cloud.firestore {
       // Only admins can edit store settings
       allow write: if isAdmin();
     }
+
+    // 5. ADMIN AUDIT LOGS Collection
+    match /adminAuditLogs/{document=**} {
+      // Handled securely via Server Actions (Admin SDK). Block all client-side access.
+      allow read, write: if false;
+    }
   }
 }

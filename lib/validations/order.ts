@@ -7,7 +7,13 @@ export const orderItemSchema = z.object({
     price: z.number().nonnegative("Price cannot be negative"),
     quantity: z.number().int().positive("Quantity must be at least 1"),
     image: z.string().optional(),
-    options: z.any().optional(),
+    options: z.object({
+        size: z.object({ label: z.string().max(50), priceModifier: z.number() }).optional(),
+        flavor: z.string().max(100).optional(),
+        message: z.string().max(200).optional(),
+        topper: z.string().max(100).optional(),
+        photoUrl: z.string().url().max(500).optional(),
+    }).optional(),
 });
 
 export const orderCustomerSchema = z.object({
